@@ -13,6 +13,7 @@ using System.IO;
 public class LoadLegend : MonoBehaviour
 {
 
+    public ImageSegmentationHandler2 m_SegmentationHandler;
     public int startIndex = 60;
     public int endIndex = 1010;
     public int indexIncrement = 5;
@@ -30,13 +31,14 @@ public class LoadLegend : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        LegendSystemPath = Application.dataPath + "/Resources/Legend/segment";
+        //LegendSystemPath = Application.dataPath + "/Resources/Legend/segment";
         imageColors = new List<Color>();
 
         //Precalc the tex dimensions by loading the first image.
         //TODO
         //string folderPath = LegendSystemPath + startIndex.ToString().PadLeft(4, '0');
         //folderPath = "Legend/segment0010.png";
+        Debug.Log("Loading legend from " + folderPath);
         Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
         int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
         int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
@@ -46,6 +48,8 @@ public class LoadLegend : MonoBehaviour
         {
             Texture2D anImage = new Texture2D(width, height);
             Texture2D temp = Resources.Load(folderPath + i.ToString().PadLeft(4, '0')) as Texture2D;
+            
+
             anImage.SetPixels(temp.GetPixels());
             addImageColorToList(anImage);
         }
@@ -85,6 +89,74 @@ public class LoadLegend : MonoBehaviour
 #if UNITY_EDITOR
         writeLoadedAssetsToFile(legendVolume);
 #endif
+    }
+
+    void LoadSegments()
+    {
+        //LegendSystemPath = Application.dataPath + "/Resources/Legend/segment";
+        imageColors = new List<Color>();
+
+        //Precalc the tex dimensions by loading the first image.
+        //TODO
+        //string folderPath = LegendSystemPath + startIndex.ToString().PadLeft(4, '0');
+        //folderPath = "Legend/segment0010.png";
+        Debug.Log("Loading legend from " + folderPath);
+        Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
+        int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
+        int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
+        int numImages = (endIndex - startIndex + 1) / indexIncrement;
+
+        Texture2D[] textures = m_SegmentationHandler.getSegments();
+        for (int i = startIndex; i <= endIndex; i += indexIncrement)
+        {
+            Texture2D anImage = new Texture2D(width, height);
+            Texture2D temp = textures[i];
+
+            anImage.SetPixels(temp.GetPixels());
+            addImageColorToList(anImage);
+        }
+
+        //Convert volTex dimensions to nearest power of two
+        int numSlices = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(numImages) / System.Math.Log(2)));
+
+        //Need to pad the 3D tex along the z axis with empty data due to the round off.
+        Texture2D emptyTex = new Texture2D(width, height);
+        Color[] emptyTexColors = emptyTex.GetPixels();
+        for (int a = 0; a < emptyTexColors.Length; a++)
+        {
+            emptyTexColors[a] = Color.white;
+        }
+        emptyTex.SetPixels(emptyTexColors);
+        emptyTex.Apply();
+        for (int j = numImages; j < numSlices; j++)
+        {
+            addImageColorToList(emptyTex);
+        }
+
+        //Allocate the texture memory.
+        Texture3D legendVolume = new Texture3D(width, height, numSlices, TextureFormat.ARGB32, false);
+
+        //Copy the data to the 3D texture.
+        Color[] allColors = imageColors.ToArray();
+        legendVolume.SetPixels(allColors);
+        legendVolume.Apply();
+
+        // assign it to the material of the parent object
+        GetComponent<Renderer>().material.SetTexture("Legend_Data", legendVolume);
+
+        //Update the shader slice axes;
+        setShaderSliceAxes(numImages, numSlices);
+
+        //As a sanity check, don't actually write out files if running from a compiled binary.
+#if UNITY_EDITOR
+        writeLoadedAssetsToFile(legendVolume);
+#endif
+    }
+
+    public void LoadLegendFrom(string path)
+    {
+        folderPath = path + "/segment";
+        LoadSegments();
     }
 
     /*

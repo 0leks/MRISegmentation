@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class ImageSegmentationHandler : MonoBehaviour
 {
 
+    public LoadLegend m_legendScript;
     public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public int m_numScans;
@@ -28,14 +29,18 @@ public class ImageSegmentationHandler : MonoBehaviour
     private Texture2D[] originalScanTextures;
     private float[,,] originalScans; // this is an array of all of the original Scans stored as 2d float arrays
 
+    private Texture2D[] segmentedTextures;
+
     // Use this for initialization
     void Start()
     {
 
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
+        Debug.Log("THIS IS THE NUMBER 1 VERSION");
         displayMode2D = true;
         originalScanTextures = new Texture2D[m_numScans];
         originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
+        segmentedTextures = new Texture2D[m_numScans];
 
         for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++)
         {
@@ -84,26 +89,32 @@ public class ImageSegmentationHandler : MonoBehaviour
 
         for (int z = 0; z < m_numScans; z++)
         {
-            Texture2D texture = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
+            segmentedTextures[indexInArray] = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
 
-            for (int x = 0; x < texture.width; x++)
+            for (int x = 0; x < segmentedTextures[indexInArray].width; x++)
             {
-                for (int y = 0; y < texture.height; y++)
+                for (int y = 0; y < segmentedTextures[indexInArray].height; y++)
                 {
                     if (segmentArray[x, y, z])
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(0, 0, 0));
+                        segmentedTextures[indexInArray].SetPixel(segmentedTextures[indexInArray].width - 1 - x, segmentedTextures[indexInArray].height - 1 - y, new Color(0, 0, 0));
                     }
                     else
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(1, 1, 1));
+                        segmentedTextures[indexInArray].SetPixel(segmentedTextures[indexInArray].width - 1 - x, segmentedTextures[indexInArray].height - 1 - y, new Color(1, 1, 1));
                         //texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
                     }
                 }
             }
-            byte[] bytes = texture.EncodeToPNG();
+
+            byte[] bytes = segmentedTextures[indexInArray].EncodeToPNG();
             File.WriteAllBytes(Application.dataPath + "/" + fileName + z.ToString().PadLeft(4, '0') + ".png", bytes);
         }
+    }
+
+    public Texture2D[] getSegments()
+    {
+        return segmentedTextures;
     }
 
     public void ValueChangeCheck()
@@ -146,6 +157,8 @@ public class ImageSegmentationHandler : MonoBehaviour
         m_Renderer.enabled = true;
         displayMode2D = false;
         m_sliderCanvas.SetActive(false);
+        m_legendScript.LoadLegendFrom("segment");
+
     }
 
     int count = 0;
@@ -180,7 +193,7 @@ public class ImageSegmentationHandler : MonoBehaviour
                 }
             }
         }
-        saveSegmentToFile(visited, originalScans, scanIndex, "segment");
+        saveSegmentToFile(visited, originalScans, scanIndex, "Resources/segment/segment");
 
     }
 

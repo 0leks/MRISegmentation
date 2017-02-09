@@ -4,8 +4,10 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-public class ImageSegmentationHandler2 : MonoBehaviour {
+public class ImageSegmentationHandler2 : MonoBehaviour
+{
 
+    public LoadLegend m_legendScript;
     public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public int m_numScans;
@@ -27,13 +29,18 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     private Texture2D[] originalScanTextures;
     private float[,,] originalScans; // this is an array of all of the original Scans stored as 2d float arrays
 
+    private Texture2D[] segmentedTextures;
+
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
+        Debug.Log("THIS IS THE NUMBER 2 VERSION");
         displayMode2D = true;
         originalScanTextures = new Texture2D[m_numScans];
         originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
+        segmentedTextures = new Texture2D[m_numScans];
 
         for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++)
         {
@@ -43,9 +50,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             string filePath = "Assets/Scans/png-0" + hundreds + tens + ones + ".png";
             Texture2D scanTexture = LoadScan(filePath);
 
-            for( int x = 0; x < scanTexture.width; x++ )
+            for (int x = 0; x < scanTexture.width; x++)
             {
-                for( int y = 0; y < scanTexture.height; y++ )
+                for (int y = 0; y < scanTexture.height; y++)
                 {
                     originalScans[scanIndex, x, y] = scanTexture.GetPixel(-x, -y).r;
                 }
@@ -66,9 +73,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     {
         Texture2D texture = new Texture2D(texturesArray.GetLength(1), texturesArray.GetLength(2));
 
-        for (int x = 0; x < texture.width; x ++)
+        for (int x = 0; x < texture.width; x++)
         {
-            for (int y = 0; y < texture.height; y ++)
+            for (int y = 0; y < texture.height; y++)
             {
                 texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
             }
@@ -82,26 +89,33 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         for (int z = 0; z < m_numScans; z++)
         {
-            Texture2D texture = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
+            segmentedTextures[z] = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
 
-            for (int x = 0; x < texture.width; x++)
+            for (int x = 0; x < segmentedTextures[z].width; x++)
             {
-                for (int y = 0; y < texture.height; y++)
+                for (int y = 0; y < segmentedTextures[z].height; y++)
                 {
                     if (segmentArray[x, y, z])
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(0, 0, 0));
+                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(0, 0, 0));
                     }
                     else
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(1, 1, 1));
+                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(1, 1, 1));
                         //texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
                     }
                 }
             }
-            byte[] bytes = texture.EncodeToPNG();
+
+            byte[] bytes = segmentedTextures[z].EncodeToPNG();
+            Debug.Log("segmentedTextures[" + z + "] = " + segmentedTextures[z]);
             File.WriteAllBytes(Application.dataPath + "/" + fileName + z.ToString().PadLeft(4, '0') + ".png", bytes);
         }
+    }
+
+    public Texture2D[] getSegments()
+    {
+        return segmentedTextures;
     }
 
     public void ValueChangeCheck()
@@ -121,18 +135,32 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
     }
 
-    void Update () {
+    void Update()
+    {
 
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         { // if left button pressed...
             int x = (int)((guiWidth - Input.mousePosition.x) * m_scanWidth / guiWidth);
             int y = (int)((Screen.height - Input.mousePosition.y + 3) * m_scanHeight / guiHeight);
-            Debug.LogFormat("Clicked on {0}, {1}", x, y);
+            Debug.LogErrorFormat("Clicked on {0}, {1}", x, y);
             if (x >= 0 && x < m_scanWidth && y >= 0 && y < m_scanHeight)
             {
+                Debug.LogError("beginning segmenting");
                 RunSegmentation(x, y, selectedScan);
-                Debug.Log("finished segmenting");
+                Debug.LogError("finished segmenting");
 
+                SwitchToDisplaySegment();
+                m_legendScript.LoadLegendFrom("segment");
+            }
+        }
+        if (Input.GetKeyDown("space"))
+        {
+            if (!displayMode2D)
+            {
+                SwitchToDisplayScans();
+            }
+            else
+            {
                 SwitchToDisplaySegment();
             }
         }
@@ -145,6 +173,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_sliderCanvas.SetActive(false);
     }
 
+    void SwitchToDisplayScans()
+    {
+        m_Renderer.enabled = false;
+        displayMode2D = true;
+        m_sliderCanvas.SetActive(true);
+    }
+
     int count = 0;
     public void RunSegmentation(int mousex, int mousey, int scanIndex)
     {
@@ -154,13 +189,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         Point seed = new Point(mousex, mousey, scanIndex, originalScans[scanIndex, mousex, mousey]);
         searchArea.Push(seed);
 
-        while(searchArea.Count > 0)
+        while (searchArea.Count > 0)
         {
             Point point = searchArea.Pop();
 
             if (point.x >= 0 && point.x < m_scanWidth && point.y >= 0 && point.y < m_scanHeight && point.z >= 0 && point.z < m_numScans)
             {
-                if( !visited[point.x, point.y, point.z] )
+                if (!visited[point.x, point.y, point.z])
                 {
                     float color = originalScans[point.z, point.x, point.y];
                     float diff = Mathf.Abs(point.from - color);
@@ -177,7 +212,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                 }
             }
         }
-        saveSegmentToFile(visited, originalScans, scanIndex, "segment" );
+        saveSegmentToFile(visited, originalScans, scanIndex, "Resources/segment/segment");
 
     }
 
