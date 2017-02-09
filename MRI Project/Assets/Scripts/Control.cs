@@ -57,8 +57,9 @@ public class Control : MonoBehaviour
             angleDelta = (Input.mousePosition - mouseOrigin) / Screen.width;
             angleDelta *= rotSpeed;
             angleDelta.x *= -1;
-            this.transform.RotateAround(rotationCentre.transform.position, rotationAxisX, angleDelta.x);
-            this.transform.RotateAround(rotationCentre.transform.position, rotationAxisY, angleDelta.y);
+            //this.transform.RotateAround(rotationCentre.transform.position, rotationAxisX, angleDelta.x);
+            this.transform.Rotate(angleDelta.y, angleDelta.x, 0);
+            //this.transform.RotateAround(rotationCentre.transform.position, rotationAxisY, angleDelta.y);
             if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1)) isRotating = false;
         }
 

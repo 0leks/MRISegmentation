@@ -89,7 +89,18 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
         for (int z = 0; z < m_numScans; z++)
         {
-            segmentedTextures[z] = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
+            if (segmentedTextures[z] == null)   // only create new texture when no textures yet, otherwise keep adding to the same segmented texture to allow
+            {                                   // multiple segments to be rendered 
+                segmentedTextures[z] = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
+                Debug.LogError("Creating new texture");
+                for (int x = 0; x < segmentedTextures[z].width; x++)
+                {
+                    for (int y = 0; y < segmentedTextures[z].height; y++)
+                    {
+                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(1, 1, 1));
+                    }
+                }
+            }
 
             for (int x = 0; x < segmentedTextures[z].width; x++)
             {
@@ -98,11 +109,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                     if (segmentArray[x, y, z])
                     {
                         segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(0, 0, 0));
-                    }
-                    else
-                    {
-                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(1, 1, 1));
-                        //texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
                     }
                 }
             }
@@ -163,6 +169,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             {
                 SwitchToDisplaySegment();
             }
+        }
+
+        if (Input.GetKeyDown("r"))
+        {
+            segmentedTextures = new Texture2D[m_numScans];
         }
     }
 
