@@ -77,9 +77,19 @@
   <ItemGroup>
     <Compile Include="Assets\ImageSegmentationHandler.cs" />
     <Compile Include="Assets\ScanLoaderScript.cs" />
-    <Compile Include="Assets\SliderScript.cs" />
+    <Compile Include="Assets\Scripts\Control.cs" />
+    <Compile Include="Assets\Scripts\DisplayBody.cs" />
+    <Compile Include="Assets\Scripts\ImageSegmentationHandler2.cs" />
+    <Compile Include="Assets\Scripts\LoadCadaver.cs" />
+    <Compile Include="Assets\Scripts\LoadLegend.cs" />
+    <Compile Include="Assets\Scripts\ScanLoaderScript2.cs" />
+    <Compile Include="Assets\Scripts\SetCadaver.cs" />
+    <Compile Include="Assets\Scripts\SetLegend.cs" />
+    <Compile Include="Assets\Scripts\SliderScript.cs" />
+    <Compile Include="Assets\SliderScript2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\LegendShader.shader" />
     <None Include="Assets\textHistogram.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

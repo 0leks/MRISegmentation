@@ -4,14 +4,20 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-public class ImageSegmentationHandler : MonoBehaviour {
+public class ImageSegmentationHandler : MonoBehaviour
+{
 
+    public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public int m_numScans;
     public int m_scanWidth;
     public int m_scanHeight;
 
+    public MeshRenderer m_Renderer;
+
     public bool m_viewCopiedTextures;
+
+    private bool displayMode2D;
 
     private int selectedScan;
 
@@ -23,10 +29,11 @@ public class ImageSegmentationHandler : MonoBehaviour {
     private float[,,] originalScans; // this is an array of all of the original Scans stored as 2d float arrays
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
 
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
-
+        displayMode2D = true;
         originalScanTextures = new Texture2D[m_numScans];
         originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
 
@@ -38,15 +45,15 @@ public class ImageSegmentationHandler : MonoBehaviour {
             string filePath = "Assets/Scans/png-0" + hundreds + tens + ones + ".png";
             Texture2D scanTexture = LoadScan(filePath);
 
-            for( int x = 0; x < scanTexture.width; x++ )
+            for (int x = 0; x < scanTexture.width; x++)
             {
-                for( int y = 0; y < scanTexture.height; y++ )
+                for (int y = 0; y < scanTexture.height; y++)
                 {
                     originalScans[scanIndex, x, y] = scanTexture.GetPixel(-x, -y).r;
                 }
             }
             originalScanTextures[scanIndex] = scanTexture;
-            saveTextureToFile(originalScans, scanIndex, "Saved Texture " + scanIndex + ".png");
+            //saveTextureToFile(originalScans, scanIndex, "Saved Texture " + scanIndex + ".png");
         }
 
         ValueChangeCheck();
@@ -61,9 +68,9 @@ public class ImageSegmentationHandler : MonoBehaviour {
     {
         Texture2D texture = new Texture2D(texturesArray.GetLength(1), texturesArray.GetLength(2));
 
-        for (int x = 0; x < texture.width; x ++)
+        for (int x = 0; x < texture.width; x++)
         {
-            for (int y = 0; y < texture.height; y ++)
+            for (int y = 0; y < texture.height; y++)
             {
                 texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
             }
@@ -85,16 +92,17 @@ public class ImageSegmentationHandler : MonoBehaviour {
                 {
                     if (segmentArray[x, y, z])
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(1.0f, 0, 0));
+                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(0, 0, 0));
                     }
                     else
                     {
-                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
+                        texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(1, 1, 1));
+                        //texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
                     }
                 }
             }
             byte[] bytes = texture.EncodeToPNG();
-            File.WriteAllBytes(Application.dataPath + "/" + fileName + "layer" + z + ".png", bytes);
+            File.WriteAllBytes(Application.dataPath + "/" + fileName + z.ToString().PadLeft(4, '0') + ".png", bytes);
         }
     }
 
@@ -107,21 +115,39 @@ public class ImageSegmentationHandler : MonoBehaviour {
 
     void OnGUI()
     {
-        guiWidth = Mathf.Max(Screen.height - 100, m_scanWidth);
-        guiHeight = Mathf.Max(Screen.height - 100, m_scanHeight);
-        GUI.DrawTexture(new Rect(0, 0, guiWidth, guiHeight), displayedTexture, ScaleMode.ScaleToFit, true, 1.0F);
+        if (displayMode2D == true)
+        {
+            guiWidth = Mathf.Max(Screen.height - 100, m_scanWidth);
+            guiHeight = Mathf.Max(Screen.height - 100, m_scanHeight);
+            GUI.DrawTexture(new Rect(0, 0, guiWidth, guiHeight), displayedTexture, ScaleMode.ScaleToFit, true, 1.0F);
+        }
     }
 
-    void Update () {
+    void Update()
+    {
 
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         { // if left button pressed...
             int x = (int)((guiWidth - Input.mousePosition.x) * m_scanWidth / guiWidth);
             int y = (int)((Screen.height - Input.mousePosition.y + 3) * m_scanHeight / guiHeight);
             Debug.LogFormat("Clicked on {0}, {1}", x, y);
-            RunSegmentation(x, y, selectedScan);
+            if (x >= 0 && x < m_scanWidth && y >= 0 && y < m_scanHeight)
+            {
+                RunSegmentation(x, y, selectedScan);
+                Debug.Log("finished segmenting");
+
+                SwitchToDisplaySegment();
+            }
         }
     }
+
+    void SwitchToDisplaySegment()
+    {
+        m_Renderer.enabled = true;
+        displayMode2D = false;
+        m_sliderCanvas.SetActive(false);
+    }
+
     int count = 0;
     public void RunSegmentation(int mousex, int mousey, int scanIndex)
     {
@@ -131,13 +157,13 @@ public class ImageSegmentationHandler : MonoBehaviour {
         Point seed = new Point(mousex, mousey, scanIndex, originalScans[scanIndex, mousex, mousey]);
         searchArea.Push(seed);
 
-        while(searchArea.Count > 0)
+        while (searchArea.Count > 0)
         {
             Point point = searchArea.Pop();
 
             if (point.x >= 0 && point.x < m_scanWidth && point.y >= 0 && point.y < m_scanHeight && point.z >= 0 && point.z < m_numScans)
             {
-                if( !visited[point.x, point.y, point.z] )
+                if (!visited[point.x, point.y, point.z])
                 {
                     float color = originalScans[point.z, point.x, point.y];
                     float diff = Mathf.Abs(point.from - color);
@@ -154,7 +180,7 @@ public class ImageSegmentationHandler : MonoBehaviour {
                 }
             }
         }
-        saveSegmentToFile(visited, originalScans, scanIndex, "asdf" + count++ );
+        saveSegmentToFile(visited, originalScans, scanIndex, "segment");
 
     }
 
