@@ -1,6 +1,7 @@
 *.png
 *.png.meta
 *Asset.asset
+*Asset.asset.meta
 
 # =============== #
 # Unity generated #
