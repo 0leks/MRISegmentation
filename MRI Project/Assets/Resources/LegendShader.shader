@@ -19,7 +19,7 @@
 
 		Pass{
 		Cull Off
-		ZTest Always
+		//ZTest Always
 		ZWrite Off
 		Fog{ Mode off }
 

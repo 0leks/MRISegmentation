@@ -40,7 +40,7 @@ public class ScanLoaderScript2 : MonoBehaviour {
 
     public Camera camera;
 
-    private Material fakeMaterial;
+    //private Material fakeMaterial;
 
 
     private bool[,] visited;
@@ -115,7 +115,7 @@ public class ScanLoaderScript2 : MonoBehaviour {
 
 
 
-        fakeMaterial = new Material(Shader.Find(" Diffuse"));
+        //fakeMaterial = new Material(Shader.Find(" Diffuse"));
 
         for (int scanIndex = 0; scanIndex < numScans; scanIndex++)
         {
