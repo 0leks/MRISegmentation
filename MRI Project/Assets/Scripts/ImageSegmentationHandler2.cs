@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -34,10 +35,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
     private List<Point> partOfObject;
     private List<Point> partOfBackground;
 
+    StreamWriter file;
+
     // Use this for initialization
     void Start()
     {
-
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
         displayMode2D = true;
@@ -55,9 +57,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             string filePath = "Assets/Scans/png-0" + hundreds + tens + ones + ".png";
             Texture2D scanTexture = LoadScan(filePath);
 
-            for (int x = 0; x < scanTexture.width; x++)
+            for (int x = 0; x < m_scanWidth; x++)
             {
-                for (int y = 0; y < scanTexture.height; y++)
+                for (int y = 0; y < m_scanHeight; y++)
                 {
                     originalScans[scanIndex, x, y] = scanTexture.GetPixel(-x, -y).r;
                 }
@@ -177,7 +179,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         if (Input.GetKeyDown("s"))
         {
             Debug.LogError("beginning max flow segmenting");
+            file = new StreamWriter("debugLog.txt");
             RunMaxFlowSegmentation(selectedScan);
+            file.Close();
             Debug.LogError("finished max flow segmenting");
             SwitchToDisplaySegment();
             m_legendScript.LoadLegendFrom("segment");
@@ -218,13 +222,23 @@ public class ImageSegmentationHandler2 : MonoBehaviour
     public struct Vertex
     {
         public Vertex[] neighbors;
-        public int[] flows;
+        public float[] flows;
 
         public Vertex(int numNeighbors)
         {
             neighbors = new Vertex[numNeighbors];
-            flows = new int[numNeighbors];
+            flows = new float[numNeighbors];
         }
+    }
+
+    public float MaxFlowBetweenPoints(int x1, int y1, int x2, int y2, int scanIndex)
+    {
+        float delta = (originalScans[scanIndex, x1, y1] - originalScans[scanIndex, x2, y2]);
+        float sigmaSquared = 0.01f * 0.01f;
+        float flow = (float)Math.Exp(-(delta * delta) / sigmaSquared);
+        file.WriteLine("\tPoint {0},{1} has intensity {2}, the delta is {3}, and the flow is {4}", x2, y2, originalScans[scanIndex, x2, y2], delta, flow);
+
+        return flow;
     }
 
     public void RunMaxFlowSegmentation(int scanIndex)
@@ -233,13 +247,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         Vertex[,] vertices = new Vertex[m_scanWidth, m_scanHeight];
         Vertex sink = new Vertex(0);
         Vertex source = new Vertex(m_scanWidth * m_scanHeight);
-        for( int x = 0; x < m_scanWidth; x++ )
+        for (int x = 0; x < m_scanWidth; x++)
         {
-            for( int y = 0; y < m_scanHeight; y++ )
+            for (int y = 0; y < m_scanHeight; y++)
             {
-                if( x == 0 || x == m_scanWidth - 1 || y == 0 || y == m_scanHeight - 1)
+                if (x == 0 || x == m_scanWidth - 1 || y == 0 || y == m_scanHeight - 1)
                 {
-                    if( (x==0 && y==0) || (x==0 && y==m_scanHeight-1) || (x==m_scanWidth-1 && y==0) || (x==m_scanWidth-1 && y==m_scanHeight-1))
+                    if ((x == 0 && y == 0) || (x == 0 && y == m_scanHeight - 1) || (x == m_scanWidth - 1 && y == 0) || (x == m_scanWidth - 1 && y == m_scanHeight - 1))
                     {
                         vertices[x, y] = new Vertex(3); // the corners have two pixel neighbors and the sink
                     }
@@ -254,6 +268,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                 }
             }
         }
+        float maximumFlow = 0.0f;
         for (int x = 0; x < m_scanWidth; x++)
         {
             for (int y = 0; y < m_scanHeight; y++)
@@ -261,21 +276,57 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                 source.neighbors[x * m_scanHeight + y] = vertices[x, y]; // the source is connected to each pixel
                 int n_i = 0;
                 vertices[x, y].neighbors[n_i++] = sink; // each vertex is connected to the sink
-                if (x != 0 ) { // Add the four neighbors of each pixel but check edge cases.
+                file.WriteLine("Point {0},{1} has intensity {2}", x, y, originalScans[scanIndex, x, y]);
+                file.WriteLine("Neighbors:");
+                if (x != 0)
+                { // Add the four neighbors of each pixel but check edge cases.
+                    vertices[x, y].flows[n_i] = MaxFlowBetweenPoints(x, y, x - 1, y, scanIndex);
+                    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y].flows[n_i]);
                     vertices[x, y].neighbors[n_i++] = vertices[x - 1, y];
+
                 }
-                if (x != m_scanWidth - 1) {
+                if (x != m_scanWidth - 1)
+                {
+                    vertices[x, y].flows[n_i] = MaxFlowBetweenPoints(x, y, x + 1, y, scanIndex);
+                    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y].flows[n_i]);
                     vertices[x, y].neighbors[n_i++] = vertices[x + 1, y];
                 }
-                if (y != 0) {
+                if (y != 0)
+                {
+                    vertices[x, y].flows[n_i] = MaxFlowBetweenPoints(x, y, x, y - 1, scanIndex);
+                    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y].flows[n_i]);
                     vertices[x, y].neighbors[n_i++] = vertices[x, y - 1];
                 }
-                if (y != m_scanHeight - 1) {
+                if (y != m_scanHeight - 1)
+                {
+                    vertices[x, y].flows[n_i] = MaxFlowBetweenPoints(x, y, x, y + 1, scanIndex);
+                    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y].flows[n_i]);
                     vertices[x, y].neighbors[n_i++] = vertices[x, y + 1];
                 }
             }
         }
+        file.WriteLine("The maximum flow between any two pixels was: {0}", maximumFlow);
 
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                source.flows[x * m_scanHeight + y] = 0.0f; // need to figure out what to put here
+            }
+        }
+        foreach (Point obj in partOfObject)
+        {
+            source.flows[obj.x * m_scanHeight + obj.y] = 1.0f + maximumFlow;
+
+            file.WriteLine("source to pixel {0},{1}  flow: {2}", obj.x, obj.y, source.flows[obj.x * m_scanHeight + obj.y]);
+        }
+        foreach (Point obj in partOfBackground)
+        {
+            source.flows[obj.x * m_scanHeight + obj.y] = 0.0f;
+        }
+
+        // now that total flows have been set up, run breadth first search and each time reach sink, update flows and run again.
+        // Upon parsing every accesible vertex and not having visited sink yet, that is the end and the max flow has been found.
 
     }
 
