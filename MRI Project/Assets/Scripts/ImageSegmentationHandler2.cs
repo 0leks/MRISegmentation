@@ -31,6 +31,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
     private Texture2D[] segmentedTextures;
 
+    private List<Point> partOfObject;
+    private List<Point> partOfBackground;
+
     // Use this for initialization
     void Start()
     {
@@ -41,6 +44,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         originalScanTextures = new Texture2D[m_numScans];
         originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
         segmentedTextures = new Texture2D[m_numScans];
+        partOfObject = new List<Point>();
+        partOfBackground = new List<Point>();
 
         for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++)
         {
@@ -143,21 +148,39 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
     void Update()
     {
-
-        if (Input.GetMouseButtonDown(0))
+        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && displayMode2D)
         { // if left button pressed...
             int x = (int)((guiWidth - Input.mousePosition.x) * m_scanWidth / guiWidth);
             int y = (int)((Screen.height - Input.mousePosition.y + 3) * m_scanHeight / guiHeight);
-            Debug.LogErrorFormat("Clicked on {0}, {1}", x, y);
             if (x >= 0 && x < m_scanWidth && y >= 0 && y < m_scanHeight)
             {
-                Debug.LogError("beginning segmenting");
-                RunSegmentation(x, y, selectedScan);
-                Debug.LogError("finished segmenting");
-
-                SwitchToDisplaySegment();
-                m_legendScript.LoadLegendFrom("segment");
+                if (Input.GetMouseButtonDown(0) )
+                {
+                    Debug.LogErrorFormat("Added point to Object {0}, {1}", x, y);
+                    partOfObject.Add(new Point(x, y, selectedScan, 0));
+                }
+                else
+                {
+                    Debug.LogErrorFormat("Adding point to Background {0}, {1}", x, y);
+                    partOfBackground.Add(new Point(x, y, selectedScan, 0));
+                }
             }
+        }
+        if (Input.GetKeyDown("f"))
+        {
+            Debug.LogError("beginning flood fill segmenting");
+            RunSegmentation(selectedScan);
+            Debug.LogError("finished flood fill segmenting");
+            SwitchToDisplaySegment();
+            m_legendScript.LoadLegendFrom("segment");
+        }
+        if (Input.GetKeyDown("s"))
+        {
+            Debug.LogError("beginning max flow segmenting");
+            RunMaxFlowSegmentation(selectedScan);
+            Debug.LogError("finished max flow segmenting");
+            SwitchToDisplaySegment();
+            m_legendScript.LoadLegendFrom("segment");
         }
         if (Input.GetKeyDown("space"))
         {
@@ -174,6 +197,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         if (Input.GetKeyDown("r"))
         {
             segmentedTextures = new Texture2D[m_numScans];
+            partOfObject.Clear();
         }
     }
 
@@ -191,14 +215,82 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         m_sliderCanvas.SetActive(true);
     }
 
+    public struct Vertex
+    {
+        public Vertex[] neighbors;
+        public int[] flows;
+
+        public Vertex(int numNeighbors)
+        {
+            neighbors = new Vertex[numNeighbors];
+            flows = new int[numNeighbors];
+        }
+    }
+
+    public void RunMaxFlowSegmentation(int scanIndex)
+    {
+        // create array of 512 by 512 vertices, one for each pixel on the image
+        Vertex[,] vertices = new Vertex[m_scanWidth, m_scanHeight];
+        Vertex sink = new Vertex(0);
+        Vertex source = new Vertex(m_scanWidth * m_scanHeight);
+        for( int x = 0; x < m_scanWidth; x++ )
+        {
+            for( int y = 0; y < m_scanHeight; y++ )
+            {
+                if( x == 0 || x == m_scanWidth - 1 || y == 0 || y == m_scanHeight - 1)
+                {
+                    if( (x==0 && y==0) || (x==0 && y==m_scanHeight-1) || (x==m_scanWidth-1 && y==0) || (x==m_scanWidth-1 && y==m_scanHeight-1))
+                    {
+                        vertices[x, y] = new Vertex(3); // the corners have two pixel neighbors and the sink
+                    }
+                    else
+                    {
+                        vertices[x, y] = new Vertex(4); // the edges have 3 pixel neighbors and the sink
+                    }
+                }
+                else
+                {
+                    vertices[x, y] = new Vertex(5); // everything else has 4 pixel neighbors and the sink
+                }
+            }
+        }
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                source.neighbors[x * m_scanHeight + y] = vertices[x, y]; // the source is connected to each pixel
+                int n_i = 0;
+                vertices[x, y].neighbors[n_i++] = sink; // each vertex is connected to the sink
+                if (x != 0 ) { // Add the four neighbors of each pixel but check edge cases.
+                    vertices[x, y].neighbors[n_i++] = vertices[x - 1, y];
+                }
+                if (x != m_scanWidth - 1) {
+                    vertices[x, y].neighbors[n_i++] = vertices[x + 1, y];
+                }
+                if (y != 0) {
+                    vertices[x, y].neighbors[n_i++] = vertices[x, y - 1];
+                }
+                if (y != m_scanHeight - 1) {
+                    vertices[x, y].neighbors[n_i++] = vertices[x, y + 1];
+                }
+            }
+        }
+
+
+    }
+
     int count = 0;
-    public void RunSegmentation(int mousex, int mousey, int scanIndex)
+    public void RunSegmentation(int scanIndex)
     {
         float threshold = 0.005f;
         bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
         Stack<Point> searchArea = new Stack<Point>();
-        Point seed = new Point(mousex, mousey, scanIndex, originalScans[scanIndex, mousex, mousey]);
-        searchArea.Push(seed);
+        foreach( Point obj in partOfObject)
+        {
+            Point seed = new Point(obj.x, obj.y, obj.z, originalScans[obj.z, obj.x, obj.y]);
+            searchArea.Push(seed);
+        }
+        partOfObject.Clear();
 
         while (searchArea.Count > 0)
         {
