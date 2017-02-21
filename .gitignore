@@ -2,6 +2,7 @@
 *.png.meta
 *Asset.asset
 *Asset.asset.meta
+*debugLog.txt
 
 # =============== #
 # Unity generated #
