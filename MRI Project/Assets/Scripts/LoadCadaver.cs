@@ -13,10 +13,12 @@ using System.IO;
 public class LoadCadaver : MonoBehaviour
 {   
     private List<Color> imageColors;
-    private static string folderPath = "scans/png-";
+    //private static string folderPath = "scans/png-";
 
 
     private LoadLegend legendLoader;
+    [SerializeField]
+    private ImageSegmentationHandler2 segmentationHandler;
 
     // Use this for initialization
     void Start()
@@ -25,21 +27,22 @@ public class LoadCadaver : MonoBehaviour
         legendLoader = GetComponent<LoadLegend>();
         imageColors = new List<Color>();
 
-        int startIndex = legendLoader.startIndex;
-        int endIndex = legendLoader.endIndex;
-        int indexIncrement = legendLoader.indexIncrement;
+        int startIndex = 0;//legendLoader.startIndex;
+        int endIndex = segmentationHandler.GetNumImages() - 1;//legendLoader.endIndex;
+        int indexIncrement = 1;// legendLoader.indexIncrement;
 
         //Precalc the tex dimensions by loading the first image.
-        Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
+        string folderPath = "scans/" + segmentationHandler.folderName + "/" + segmentationHandler.filePrefix;
+        Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(3, '0')) as Texture2D;
         int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
         int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
-        int numImages = (endIndex - startIndex + 1) / indexIncrement;
+        int numImages = segmentationHandler.GetNumImages();
 
         //need to correspond with legend's z-axis
-        for (int i = startIndex; i <= endIndex; i+=indexIncrement)
+        for (int i = 0; i <= numImages - 1; i+=indexIncrement)
         {
             Texture2D anImage = new Texture2D(width, height);
-            Texture2D temp = Resources.Load(folderPath + i.ToString().PadLeft(4, '0')) as Texture2D;
+            Texture2D temp = Resources.Load(folderPath + i.ToString().PadLeft(3, '0')) as Texture2D;
             anImage.SetPixels(temp.GetPixels());
             addImageColorToList(anImage);
         }

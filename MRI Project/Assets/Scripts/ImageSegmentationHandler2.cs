@@ -12,7 +12,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
     public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public int m_numScans;
-    public float threshold;
+    public float m_threshold;
+    public bool m_3DFlow;
+
+    public string folderName;
+    public string filePrefix;
 
     public MeshRenderer m_Renderer;
 
@@ -54,10 +58,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
         for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++)
         {
-            int ones = scanIndex % 10;
-            int tens = ((scanIndex - ones) % 100) / 10;
-            int hundreds = ((scanIndex - ones - 10 * tens) % 1000) / 100;
-            string filePath = "Assets/Resources/scans/png-0" + hundreds + tens + ones + ".png";
+            //int ones = scanIndex % 10;
+            //int tens = ((scanIndex - ones) % 100) / 10;
+            //int hundreds = ((scanIndex - ones - 10 * tens) % 1000) / 100;
+            //string filePath = "Assets/Resources/scans/png-0" + hundreds + tens + ones + ".png";
+            string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + scanIndex.ToString().PadLeft(3, '0') + ".png";
             Texture2D scanTexture = LoadScan(filePath);
             if (m_scanWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
             {
@@ -81,6 +86,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         m_mainSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
     }
 
+    public int GetNumImages()
+    {
+        return m_numScans;
+    }
     /**
      * Populates the passed in texture with color values from the array of floats.
      */
@@ -208,6 +217,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
         if (Input.GetKeyDown("r"))
         {
+            Debug.LogError("Reset object and background point list");
             segmentedTextures = new Texture2D[m_numScans];
             partOfObject.Clear();
             partOfBackground.Clear();
@@ -270,7 +280,12 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             {
                 for( int z = 0; z < m_numScans; z++ )
                 {
-                    numNeighbors = 5;
+                    if(m_3DFlow) {
+                        numNeighbors = 7;
+                    }
+                    else {
+                        numNeighbors = 5;
+                    }
                     if ( x == 0 || x == m_scanWidth - 1 )
                     {
                         numNeighbors--;
@@ -279,26 +294,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                     {
                         numNeighbors--;
                     }
-                    //if (z == 0 || z == m_numScans - 1)
-                    //{
-                    //    numNeighbors--;
-                    //}
+                    if (m_3DFlow && (z == 0 || z == m_numScans - 1))
+                    {
+                        numNeighbors--;
+                    }
                     vertices[x, y, z] = new Vertex(numNeighbors);
-                    //if (x == 0 || x == m_scanWidth - 1 || y == 0 || y == m_scanHeight - 1)
-                    //{
-                    //    if ((x == 0 && y == 0) || (x == 0 && y == m_scanHeight - 1) || (x == m_scanWidth - 1 && y == 0) || (x == m_scanWidth - 1 && y == m_scanHeight - 1))
-                    //    {
-                    //        vertices[x, y] = new Vertex(3); // the corners have two pixel neighbors and the sink
-                    //    }
-                    //    else
-                    //    {
-                    //        vertices[x, y] = new Vertex(4); // the edges have 3 pixel neighbors and the sink
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    vertices[x, y] = new Vertex(5); // everything else has 4 pixel neighbors and the sink
-                    //}
                 }
             }
         }
@@ -339,18 +339,21 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x, y + 1, z];
                     }
-                    //if (z != 0)
-                    //{
-                    //    vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z - 1);
-                    //    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
-                    //    vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z - 1];
-                    //}
-                    //if (z != m_numScans - 1)
-                    //{
-                    //    vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z + 1);
-                    //    maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
-                    //    vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z + 1];
-                    //}
+                    if (m_3DFlow)
+                    {
+                        if (z != 0)
+                        {
+                            vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z - 1);
+                            maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                            vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z - 1];
+                        }
+                        if (z != m_numScans - 1)
+                        {
+                            vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z + 1);
+                            maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                            vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z + 1];
+                        }
+                    }
                 }
             }
         }
@@ -531,7 +534,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                 {
                     float color = originalScans[point.z, point.x, point.y];
                     float diff = Mathf.Abs(point.from - color);
-                    if (diff <= threshold)
+                    if (diff <= m_threshold)
                     {
                         visited[point.x, point.y, point.z] = true;
                         searchArea.Push(new Point(point.x - 1, point.y, point.z, color));

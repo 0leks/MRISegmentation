@@ -156,6 +156,9 @@
 		{
 
 			float4 voxel_col = getData(ray_pos);
+			voxel_col.x = ray_pos.x;
+			voxel_col.y = ray_pos.y;
+			voxel_col.z = ray_pos.z;
 
 	#ifdef FRONT_TO_BACK
 
