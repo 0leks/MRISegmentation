@@ -12,8 +12,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
     public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public int m_numScans;
-    public int m_scanWidth;
-    public int m_scanHeight;
+    public float threshold;
 
     public MeshRenderer m_Renderer;
 
@@ -25,6 +24,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour
 
     private int guiWidth;
     private int guiHeight;
+
+    private int m_scanWidth;
+    private int m_scanHeight;
 
     private Texture2D displayedTexture;
     private Texture2D[] originalScanTextures;
@@ -44,19 +46,25 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
         displayMode2D = true;
         originalScanTextures = new Texture2D[m_numScans];
-        originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
         segmentedTextures = new Texture2D[m_numScans];
         partOfObject = new List<Point>();
         partOfBackground = new List<Point>();
+        m_scanWidth = -1;
+        m_scanHeight = -1;
 
         for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++)
         {
             int ones = scanIndex % 10;
             int tens = ((scanIndex - ones) % 100) / 10;
             int hundreds = ((scanIndex - ones - 10 * tens) % 1000) / 100;
-            string filePath = "Assets/Scans/png-0" + hundreds + tens + ones + ".png";
+            string filePath = "Assets/Resources/scans/png-0" + hundreds + tens + ones + ".png";
             Texture2D scanTexture = LoadScan(filePath);
-
+            if (m_scanWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
+            {
+                m_scanWidth = scanTexture.width;
+                m_scanHeight = scanTexture.height;
+                originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
+            }
             for (int x = 0; x < m_scanWidth; x++)
             {
                 for (int y = 0; y < m_scanHeight; y++)
@@ -504,7 +512,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour
     int count = 0;
     public void RunSegmentation(int scanIndex)
     {
-        float threshold = 0.005f;
         bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
         Stack<Point> searchArea = new Stack<Point>();
         foreach( Point obj in partOfObject)

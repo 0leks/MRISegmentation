@@ -100,14 +100,17 @@ public class LoadLegend : MonoBehaviour
         //TODO
         //string folderPath = LegendSystemPath + startIndex.ToString().PadLeft(4, '0');
         //folderPath = "Legend/segment0010.png";
-        Debug.Log("Loading legend from " + folderPath);
-        Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
-        int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
-        int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
-        int numImages = (endIndex - startIndex + 1) / indexIncrement;
+        //Debug.Log("Loading legend from " + folderPath);
 
         Texture2D[] textures = m_SegmentationHandler.getSegments();
-        for (int i = startIndex; i <= endIndex; i += indexIncrement)
+        Debug.Log("Loading " + textures.Length + " layers of the legend");
+
+        Texture2D first = textures[0];//Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
+        int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
+        int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
+        int numImages = textures.Length;
+
+        for (int i = 0; i <= textures.Length - 1; i += indexIncrement)
         {
             Texture2D anImage = new Texture2D(width, height);
             Texture2D temp = textures[i];
