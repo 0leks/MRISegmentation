@@ -203,6 +203,18 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             SwitchToDisplaySegment();
             m_legendScript.LoadLegendFrom("segment");
         }
+
+        if (Input.GetKeyDown("t"))
+        {
+            Debug.LogError("beginning timed max flow segmenting");
+            file = new StreamWriter("debugLog" + Time.time + ".txt");
+            RunMaxFlowSegmentationTimed(selectedScan);
+            file.Close();
+            GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, 1);
+            Debug.LogError("finished timed max flow segmenting");
+            SwitchToDisplaySegment();
+            m_legendScript.LoadLegendFrom("segment");
+        }
         if (Input.GetKeyDown("space"))
         {
             if (!displayMode2D)
@@ -273,7 +285,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         Vertex source = new Vertex(m_scanWidth * m_scanHeight * m_numScans);
         int numNeighbors = 7;
         //float startTime = Time.time;
-        long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        long startTime = DateTime.Now.Ticks;
         for (int x = 0; x < m_scanWidth; x++)
         {
             for (int y = 0; y < m_scanHeight; y++)
@@ -357,7 +369,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
                 }
             }
         }
-        file.WriteLine("The maximum flow between any two pixels was: {0}", maximumFlow);
+        //file.WriteLine("The maximum flow between any two pixels was: {0}", maximumFlow);
 
         for (int x = 0; x < m_scanWidth; x++)
         {
@@ -375,13 +387,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
-            file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+           // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
         }
         foreach (Point obj in partOfBackground)
         {
             source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
             vertices[obj.x, obj.y, obj.z].flows[0] = 1.0f + maximumFlow;
-            file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
+            //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
         }
         long endTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         //float endTime = Time.time;
@@ -397,11 +409,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         long time1 = 0;
         long time2 = 0;
         int iterations = 0;
-        while (true)
+        while (true) // this is the loop that adds augmenting paths to the flow.
         {
             startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            searchArea.Clear();
-            sink.visited = false;
+            searchArea.Clear(); // reset the queue
+            sink.visited = false; // reset all of the visited values
             for (int x = 0; x < m_scanWidth; x++)
             {
                 for (int y = 0; y < m_scanHeight; y++)
@@ -416,13 +428,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             // First enqueue the source node
             searchArea.Enqueue(source);
             source.visited = true;
+
             Vertex v = null;
             Vertex n = null;
-            while (searchArea.Count > 0) // visit all possible from source
-            {
+            while (searchArea.Count > 0) // visit all possible from source 
+            {                            // This loop is Breadth first search until finding the sink, or visiting every possible node
                 v = searchArea.Dequeue();
-                if (v == sink)
-                {
+                if (v == sink) {
                     break;
                 }
                 for (int i = 0; i < v.neighbors.Length; i++)
@@ -484,7 +496,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour
             time2 += startTime - endTime;
         }
         startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-        file.WriteLine("max flow took {0} ms", (startTime - endTime));
+        //file.WriteLine("max flow took {0} ms", (startTime - endTime));
         file.WriteLine("time1 = {0} ms, time2 = {1} ms", time1, time2);
         file.WriteLine("Iterations of flow reduction = {0}", iterations);
         Debug.Log("Iterations of flow reduction = " + iterations);
@@ -510,7 +522,301 @@ public class ImageSegmentationHandler2 : MonoBehaviour
         }
         saveSegmentToFile(visited, originalScans, scanIndex, "Resources/segment/segment");
     }
-    
+
+    public void RunMaxFlowSegmentationTimed(int scanIndex)
+    {
+        partOfObject.Clear();
+        partOfObject.Add(new Point(155, 149, 0, 1));
+        partOfObject.Add(new Point(144, 160, 0, 1));
+        partOfObject.Add(new Point(132, 176, 0, 1));
+        partOfObject.Add(new Point(131, 197, 0, 1));
+        partOfObject.Add(new Point(115, 202, 0, 1));
+        partOfObject.Add(new Point(115, 179, 0, 1));
+        partOfObject.Add(new Point(125, 160, 0, 1));
+        partOfObject.Add(new Point(135, 145, 0, 1));
+        partOfObject.Add(new Point(151, 132, 0, 1));
+        partOfObject.Add(new Point(159, 139, 0, 1));
+        partOfBackground.Clear();
+        partOfBackground.Add(new Point(154, 171, 0, 1));
+        partOfBackground.Add(new Point(144, 197, 0, 1));
+        partOfBackground.Add(new Point(132, 217, 0, 1));
+        partOfBackground.Add(new Point(103, 213, 0, 1));
+        partOfBackground.Add(new Point(98, 188, 0, 1));
+        partOfBackground.Add(new Point(111, 161, 0, 1));
+        partOfBackground.Add(new Point(123, 141, 0, 1));
+        partOfBackground.Add(new Point(141, 124, 0, 1));
+        partOfBackground.Add(new Point(163, 124, 0, 1));
+        partOfBackground.Add(new Point(172, 146, 0, 1));
+
+        long numEdges = 0;
+        long time1 = DateTime.Now.Ticks;
+        bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
+        // create array of 512 by 512 vertices, one for each pixel on the image
+        Vertex[,,] vertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex sink = new Vertex(0);
+        Vertex source = new Vertex(m_scanWidth * m_scanHeight * m_numScans);
+        numEdges += m_scanWidth * m_scanHeight * m_numScans;
+        int numNeighbors;
+        //float startTime = Time.time;
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                for (int z = 0; z < m_numScans; z++)
+                {
+                    if (m_3DFlow)
+                    {
+                        numNeighbors = 7;
+                    }
+                    else
+                    {
+                        numNeighbors = 5;
+                    }
+                    if (x == 0 || x == m_scanWidth - 1)
+                    {
+                        numNeighbors--;
+                    }
+                    if (y == 0 || y == m_scanHeight - 1)
+                    {
+                        numNeighbors--;
+                    }
+                    if (m_3DFlow && (z == 0 || z == m_numScans - 1))
+                    {
+                        numNeighbors--;
+                    }
+                    vertices[x, y, z] = new Vertex(numNeighbors);
+                    numEdges += numNeighbors;
+                }
+            }
+        }
+        float maximumFlow = 0.0f;
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                for (int z = 0; z < m_numScans; z++)
+                {
+                    source.neighbors[(x * m_scanHeight + y) * m_numScans + z] = vertices[x, y, z]; // the source is connected to each pixel
+                    int n_i = 0;
+                    vertices[x, y, z].neighbors[n_i++] = sink; // each vertex is connected to the sink
+                    //file.WriteLine("Point {0},{1},{2} has intensity {3}", x, y, z, originalScans[scanIndex, x, y]);
+                    //file.WriteLine("Neighbors:");
+                    if (x != 0)
+                    { // Add the four neighbors of each pixel but check edge cases.
+                        vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x - 1, y, z);
+                        maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                        vertices[x, y, z].neighbors[n_i++] = vertices[x - 1, y, z];
+
+                    }
+                    if (x != m_scanWidth - 1)
+                    {
+                        vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x + 1, y, z);
+                        maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                        vertices[x, y, z].neighbors[n_i++] = vertices[x + 1, y, z];
+                    }
+                    if (y != 0)
+                    {
+                        vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y - 1, z);
+                        maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                        vertices[x, y, z].neighbors[n_i++] = vertices[x, y - 1, z];
+                    }
+                    if (y != m_scanHeight - 1)
+                    {
+                        vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y + 1, z);
+                        maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                        vertices[x, y, z].neighbors[n_i++] = vertices[x, y + 1, z];
+                    }
+                    if (m_3DFlow)
+                    {
+                        if (z != 0)
+                        {
+                            vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z - 1);
+                            maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                            vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z - 1];
+                        }
+                        if (z != m_numScans - 1)
+                        {
+                            vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z + 1);
+                            maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
+                            vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z + 1];
+                        }
+                    }
+                }
+            }
+        }
+        //file.WriteLine("The maximum flow between any two pixels was: {0}", maximumFlow);
+
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                for (int z = 0; z < m_numScans; z++)
+                {
+                    source.flows[(x * m_scanHeight + y) * m_numScans + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
+                    vertices[x, y, z].flows[0] = 0.0f; // need to figure out what to put here
+                }
+            }
+        }
+        foreach (Point obj in partOfObject)
+        {
+            source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
+            vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
+
+            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+        }
+        foreach (Point obj in partOfBackground)
+        {
+            source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
+            vertices[obj.x, obj.y, obj.z].flows[0] = 1.0f + maximumFlow;
+            //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
+        }
+        long time2 = DateTime.Now.Ticks;
+        //float endTime = Time.time;
+        //file.WriteLine("Initalization took {0} ms", (endTime - startTime));
+        //file.Flush();
+
+        // now that total flows have been set up, run breadth first search and each time reach sink, update flows and run again.
+        // Upon parsing every accesible vertex and not having visited sink yet, that is the end and the max flow has been found.
+
+        // For BFS use a queue
+        Queue<Vertex> searchArea = new Queue<Vertex>();
+        
+        int flowIterations = 0;
+        int bfsIterations = 0;
+        long maximumQueue = 0;
+        long resetTime = 0;
+        long bfsTime = 0;
+        long flowTime = 0;
+        long time3;
+        long time4;
+        long time5;
+        long time6;
+        while (true) // this is the loop that adds augmenting paths to the flow.
+        {
+            time3 = DateTime.Now.Ticks;
+            searchArea.Clear(); // reset the queue
+            sink.visited = false; // reset all of the visited values
+            for (int x = 0; x < m_scanWidth; x++)
+            {
+                for (int y = 0; y < m_scanHeight; y++)
+                {
+                    for (int z = 0; z < m_numScans; z++)
+                    {
+                        vertices[x, y, z].visited = false;
+                    }
+                }
+            }
+
+            // First enqueue the source node
+            searchArea.Enqueue(source);
+            source.visited = true;
+
+            Vertex v = null;
+            Vertex n = null;
+            time4 = DateTime.Now.Ticks;
+            resetTime += time4 - time3;
+            bfsIterations++;
+            while (searchArea.Count > 0) // visit all possible from source 
+            {                            // This loop is Breadth first search until finding the sink, or visiting every possible node
+                v = searchArea.Dequeue();
+                if (v == sink)
+                {
+                    break;
+                }
+                for (int i = 0; i < v.neighbors.Length; i++)
+                {
+                    n = v.neighbors[i];
+                    if (!n.visited && v.flows[i] > 0)
+                    {
+                        n.visited = true;
+                        n.from = v;
+                        searchArea.Enqueue(n);
+                    }
+                }
+                maximumQueue = Math.Max(maximumQueue, searchArea.Count);
+            }
+            time5 = DateTime.Now.Ticks;
+            bfsTime += time5 - time4;
+            // Now if reached the sink need to update flows based on the path taken, then run again
+            if (v == sink)
+            {
+                flowIterations++;
+                float minFlow = 10000.0f;
+                //file.Write("Found path from source to sink ");
+                while (v.from != null)
+                {
+                    for (int i = 0; i < v.from.neighbors.Length; i++)
+                    {
+                        if (v.from.neighbors[i] == v)
+                        {
+                            minFlow = Math.Min(v.from.flows[i], minFlow);
+                            //file.Write("{0} ", v.from.flows[i]);
+                            break;
+                        }
+                    }
+                    v = v.from;
+                }
+                v = sink;
+                //file.WriteLine();
+                //file.Write("Update flows: ");
+                while (v.from != null)
+                {
+                    for (int i = 0; i < v.from.neighbors.Length; i++)
+                    {
+                        if (v.from.neighbors[i] == v)
+                        {
+                            v.from.flows[i] -= minFlow;
+                            //file.Write("{0} ", v.from.flows[i]);
+                            break;
+                        }
+                    }
+                    v = v.from;
+                }
+                //file.WriteLine();
+                //file.Flush();
+            }
+            else // otherwise if didnt reach sink the max-flow has been found and move on to next step
+            {
+                break;
+            }
+            time6 = DateTime.Now.Ticks;
+            flowTime += time6 - time5;
+        }
+        long setupTime = time2 - time1;
+        file.WriteLine("Setup Time            = {0}", setupTime /TimeSpan.TicksPerMillisecond);
+        file.WriteLine("Reset Time            = {0}", resetTime / TimeSpan.TicksPerMillisecond);
+        file.WriteLine("BFS Time              = {0}", bfsTime / TimeSpan.TicksPerMillisecond);
+        file.WriteLine("Computing flow Time   = {0}", flowTime / TimeSpan.TicksPerMillisecond);
+        file.WriteLine("Total number of vertexes in graph = {0}", m_numScans*m_scanHeight*m_scanWidth + 2);
+        file.WriteLine("Total number of edges in graph    = {0}", numEdges);
+        file.WriteLine("Maximum size of queue             = {0}", maximumQueue);
+        file.WriteLine("Iterations of bfs            = {0}", bfsIterations);
+        file.WriteLine("Iterations of flow reduction = {0}", flowIterations);
+
+
+        //file.WriteLine("Final results:");
+        for (int x = 0; x < m_scanWidth; x++)
+        {
+            for (int y = 0; y < m_scanHeight; y++)
+            {
+                for (int z = 0; z < m_numScans; z++)
+                {
+                    if (vertices[x, y, z].visited)
+                    {
+                        //file.Write("#");
+                        visited[x, y, z] = true;
+                    }
+                    else
+                    {
+                        //file.Write("-");
+                    }
+                }
+            }
+            //file.WriteLine("");
+        }
+        saveSegmentToFile(visited, originalScans, scanIndex, "Resources/segment/segment");
+    }
+
 
     int count = 0;
     public void RunSegmentation(int scanIndex)
