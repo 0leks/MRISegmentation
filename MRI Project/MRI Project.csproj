@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -128,9 +134,7 @@
     <None Include="Assets\Resources\Legend Assets\placeholder.txt" />
     <None Include="Assets\Resources\Legend\placeholder.txt" />
     <None Include="Assets\Resources\LegendShader.shader" />
-    <None Include="Assets\Resources\scans\colon\placeholder.txt" />
     <None Include="Assets\Resources\scans\heart256\placeholder.txt" />
-    <None Include="Assets\Resources\scans\tooth\placeholder.txt" />
     <None Include="Assets\Resources\segment\placeholder.txt" />
     <None Include="Assets\textHistogram.txt" />
   </ItemGroup>
