@@ -1,0 +1,155 @@
+Running Timed Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 4, 4, 1
+Setup Time            = 116
+Reset Time            = 1
+BFS Time              = 3
+Computing flow Time   = 0
+Total number of vertexes in graph = 16386
+Total number of edges in graph    = 65044
+Maximum size of queue             = 174
+Iterations of bfs            = 1
+Iterations of flow reduction = 1
+Leftover flow from source = 20
+Initial flow from source = 20
+512	1	116	1	3	0	16386	65044	174	1
+                                                                        ###                                                     
+                                                                      # ###  #                                                  
+                                                                     ##      ##                                                 
+                                                                    ##     ####                                                 
+                                                                    ##   ######                                                 
+                                                                        ######                                                  
+                                                                       #####                                                    
+                                                                       ####                                                     
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                            ##                                                                  
+                                                        ##                                                                      
+                                                          ###                                                                   
+                                                         ##                                                                     
+                                                         ###                                                                    
+                                                     ## ###                                                                     
+                                                      #####                                                                     
+                                                       ###                                                                      
+                                                    ## ##                                                                       
+                                                       #                                                                        
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                           #                                    
+                                                                                         # #                                    
+                                                                                      #  #                                      
+                                                                                    ###                                         
+                                                                                    ##                                          
+                                                                                    ##                                          
+                                                                                      #                                         
+                                                                                      #                                         
+                                                                             # #                                                
+                                                                            ## ##                                               
+                                                                 #             ##                                               
+                                                                 #   #         #                                                
+                                                                 #   #                                                          
+                                                                     #                                                       #  
+                                                                                                                            ### 
+                                                                                                                            ### 
+                                                                                                                           #### 
+                                                                                                                           ###  
+                                                                                                                          ####  
+                                                                                             #       #                    ##### 
+                                                                                          #  #       # #                 #######
+                                                                                        # #            #                 #######
+                                                                                        #                                #######
+                                                                                                                        ##  ####
+                                                   #                                                                    ####### 
+                                                   #                                                                      ####  
+                                                   #                                                                            
+                                                   #                                                                            
+                                                                             #                                                  
+                                                                             #                                                  
+                                                                                                                                
+                                                                         #                                                      
+                                                                         #                                                      
+                                                                                                                                
+                                                ##                                              #                       #       
+                                                ###                                             # #                    ###      
+                                                ###                ##                                                 #####     
+                                           ##   ###                                                          ###     ##         
+                                           ##   ###                                                      #   ###     ##   ##    
+                                                ###                                                    # #       ##  ##    ##   
+                                                ###                                                    #         ##   ##  # ##  
+                                          ##     ##                                                                    ####  ## 
+                                          ##     ##                                                             ##      ###   ##
+                                          ##     ##                                                                      ##   ##
+                                         ####    ##                                                                      ##     
+                                         ###     ##                                                                      ##     
+                                         ####    ##             ##                                                       ##     
+                                         ####    ##                                                                      ####   
+                                          ###  ####                 #    #                                              #####   
+                                           ##   ##                  #    #                           #                #####  ## 
+                                                #                                                    #                ####  ##  
+                                                                                                        #            ##    ##   
+                                                                                                        # #          ## ## #    
+                                                                                                          #         ###   ##    
+                                                                                                                     ### ##     
+                                                                                                                      ####      
+                                                  #                                                                     #       
+                                  ##             ###                                                                            
+                                 ####            ##                                                                             
+                                 ####                                                                                           
+                                  ##            ##                                                                              
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                 #                                                              
+                                                                ###                                                             
+                                                                ##                                                              
+                                                                                                                                
+                                                                   ##                                                           
+                                                                 ###                                                            
+                                                               # # #                                                            
+                                                               #                   ##                                           
+                                                               #               #######                                          
+                                                                              #######                                           
+                                                                                  ##                                            
+                                                                              ####                      ####                    
+                                                                               ##                        ##                     
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                ##                              
+                                                                                                #                               
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+                                                                                                                                
+Running Second Round of Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 4, 4, 1
+Setup Time            = 116
+Reset Time            = 1964
+BFS Time              = 365
+Computing flow Time   = 0
+Total number of vertexes in graph = 16386
+Total number of edges in graph    = 65044
+Maximum size of queue             = 173
+Iterations of bfs            = 153
+Iterations of flow reduction = 152

@@ -1,0 +1,59 @@
+Running Timed Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 16, 16, 1
+Setup Time            = 106
+Reset Time            = 0
+BFS Time              = 2
+Computing flow Time   = 0
+Total number of vertexes in graph = 1026
+Total number of edges in graph    = 3988
+Maximum size of queue             = 19
+Iterations of bfs            = 1
+Iterations of flow reduction = 0
+Leftover flow from source = 20
+Initial flow from source = 20
+512	1	106	0	2	0	1026	3988	19	1
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                       ##       
+                     ##  ##     
+                    #     #     
+                  ##  ####      
+                 #   #          
+                #   #           
+                ####            
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+Running Second Round of Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 16, 16, 1
+Setup Time            = 106
+Reset Time            = 1184
+BFS Time              = 331
+Computing flow Time   = 0
+Total number of vertexes in graph = 1026
+Total number of edges in graph    = 3988
+Maximum size of queue             = 497
+Iterations of bfs            = 101
+Iterations of flow reduction = 101
