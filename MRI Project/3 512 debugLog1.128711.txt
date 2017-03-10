@@ -1,0 +1,15 @@
+Running Timed Max-flow Segmentation
+numScans = 3, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 1, 1, 1
+Setup Time            = 1660
+Reset Time            = 18995
+BFS Time              = 5272
+Computing flow Time   = 4
+Total number of vertexes in graph = 786434
+Total number of edges in graph    = 3139604
+Maximum size of queue             = 677
+Iterations of bfs            = 705
+Iterations of flow reduction = 704
+Leftover flow from source = 20
+Initial flow from source = 20
+512	3	1660	18995	5272	4	786434	3139604	677	705

@@ -14,12 +14,17 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public float m_threshold;
     public bool m_3DFlow;
 
+    public AudioSource m_ErrorAudio;
+
     public int m_xfreq, m_yfreq, m_zfreq;
 
     public string folderName;
     public string filePrefix;
 
     public MeshRenderer m_Renderer;
+    public GameObject renderCube;
+    public GameObject seedObject;
+    public GameObject seedBackground;
 
     public bool m_viewCopiedTextures;
 
@@ -47,6 +52,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     private List<Point> partOfObject;
     private List<Point> partOfBackground;
 
+    private List<GameObject> objectSeeds;
+    private List<GameObject> backgroundSeeds;
+
     StreamWriter file;
 
     // Use this for initialization
@@ -58,6 +66,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         segmentedTextures = new Texture2D[m_numScans];
         partOfObject = new List<Point>();
         partOfBackground = new List<Point>();
+        objectSeeds = new List<GameObject>();
+        backgroundSeeds = new List<GameObject>();
         m_scanWidth = -1;
         m_scanHeight = -1;
 
@@ -152,6 +162,43 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
     }
 
+    public void AddSeed(float x, float y, float z, bool objectSeed, Vector3 originalSpot)
+    {
+        if( x > -0.5 && x < 0.5 && y > -0.5 && y < 0.5 && z > -0.5 && z < 0.5 )
+        {
+            int xCoord = (int)((0.5f - x) * m_scanWidth);
+            int zCoord = (int)((y + 0.5f) * m_numScans);
+            int yCoord = (int)((0.5f - z) * m_scanHeight);
+            zCoord = 0;
+            Debug.Log("Point on Cube: " + x + "," + y + "," + z);
+            Debug.Log("Pixel on scans: " + xCoord + "," + yCoord + "," + zCoord);
+            Point point = new Point(xCoord, yCoord, zCoord, 0);
+            if (objectSeed)
+            {
+                GameObject seed = Instantiate<GameObject>(seedObject);
+                seed.transform.position = originalSpot;
+                seed.transform.localScale = 0.02f * renderCube.transform.localScale;
+                seed.transform.parent = renderCube.transform;
+                partOfObject.Add(point);
+                objectSeeds.Add(seed);
+            }
+            else
+            {
+                GameObject seed = Instantiate<GameObject>(seedBackground);
+                seed.transform.position = originalSpot;
+                seed.transform.localScale = 0.02f * renderCube.transform.localScale;
+                seed.transform.parent = renderCube.transform;
+                partOfBackground.Add(point);
+                backgroundSeeds.Add(seed);
+            }
+        }
+        else
+        {
+            m_ErrorAudio.Play();
+        }
+    }
+
+
     void Update() {
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && displayMode2D) { // if left button pressed...
             int x = (int)((guiWidth - Input.mousePosition.x) * m_scanWidth / guiWidth);
@@ -179,6 +226,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             file = new StreamWriter("debugLog.txt");
             RunMaxFlowSegmentation();
             file.Close();
+            GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, 1);
             Debug.LogError("finished max flow segmenting");
             SwitchToDisplaySegment();
             m_legendScript.LoadLegendFrom("segment");
@@ -208,17 +256,27 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             segmentedTextures = new Texture2D[m_numScans];
             partOfObject.Clear();
             partOfBackground.Clear();
+            foreach( GameObject obj in objectSeeds)
+            {
+                Destroy(obj);
+            }
+            objectSeeds.Clear();
+            foreach (GameObject obj in backgroundSeeds)
+            {
+                Destroy(obj);
+            }
+            backgroundSeeds.Clear();
         }
     }
 
     void SwitchToDisplaySegment() {
-        m_Renderer.enabled = true;
+        //m_Renderer.enabled = true;
         displayMode2D = false;
         m_sliderCanvas.SetActive(false);
     }
 
     void SwitchToDisplayScans() {
-        m_Renderer.enabled = false;
+        //m_Renderer.enabled = false;
         displayMode2D = true;
         m_sliderCanvas.SetActive(true);
     }
@@ -531,7 +589,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             numEdges += numNeighbors;
             //Debug.Log(x + ", " + y + ",  " + z);
             //Debug.Log(scanWidth + ", " + scanHeight + ",  " + numScans);
-            vertices[x, y, z] = new Vertex(numNeighbors, originalScans[z, x, y]);
+            vertices[x, y, z] = new Vertex(numNeighbors, originalScans[obj.z, obj.x, obj.y]);
             vertices[x, y, z].neighbors[numNeighbors - 1] = sink;
         }
         //float startTime = Time.time;
@@ -1247,16 +1305,22 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                                 ReattachVertexes(current, down, fullRezVertices, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq + m_yfreq - 1, y * m_yfreq + m_yfreq, z * m_zfreq, z * m_zfreq + m_zfreq);
                             }
                         }
-                        if (z < numScans - 1) {
-                            if (edgeVertexes[x, y, z + 1]) {
-                                Vertex up = verticesAfter[x, y, z + 1];
-                                Vertex current = verticesAfter[x, y, z];
-                                ReattachVertexes(current, up, fullRezVertices, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq - 1, z * m_zfreq + m_zfreq, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq, z * m_zfreq + m_zfreq + 1);
-                            }
-                            else {
-                                Vertex up = verticesAfter[x, y, z + 1];
-                                Vertex current = verticesAfter[x, y, z];
-                                ReattachVertexes(current, up, fullRezVertices, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq - 1, z * m_zfreq + m_zfreq);
+                        if (m_3DFlow)
+                        {
+                            if (z < numScans - 1)
+                            {
+                                if (edgeVertexes[x, y, z + 1])
+                                {
+                                    Vertex up = verticesAfter[x, y, z + 1];
+                                    Vertex current = verticesAfter[x, y, z];
+                                    ReattachVertexes(current, up, fullRezVertices, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq - 1, z * m_zfreq + m_zfreq, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq, z * m_zfreq + m_zfreq + 1);
+                                }
+                                else
+                                {
+                                    Vertex up = verticesAfter[x, y, z + 1];
+                                    Vertex current = verticesAfter[x, y, z];
+                                    ReattachVertexes(current, up, fullRezVertices, x * m_xfreq, x * m_xfreq + m_xfreq, y * m_yfreq, y * m_yfreq + m_yfreq, z * m_zfreq + m_zfreq - 1, z * m_zfreq + m_zfreq);
+                                }
                             }
                         }
                     }
@@ -1513,6 +1577,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         file.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}", m_scanWidth, m_numScans, setupTime / TimeSpan.TicksPerMillisecond, resetTime / TimeSpan.TicksPerMillisecond,
             bfsTime / TimeSpan.TicksPerMillisecond, flowTime / TimeSpan.TicksPerMillisecond, numVertexes, numEdges, maximumQueue, bfsIterations, flowIterations);
 
+        vertices[0, 0, 0].visited = true;
         //file.WriteLine("Final results:");
         for (int x = 0; x < m_scanWidth; x++) {
             for (int y = 0; y < m_scanHeight; y++) {
@@ -1528,8 +1593,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
             //file.WriteLine("");
         }
-        saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
-        return;
+        //saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
+        //return;
 
         Vertex[,,] verticesAfter = MaxFlowSetupBetterSamplingRound2(sink, source, m_xfreq, m_yfreq, m_zfreq);
         Vertex[,,] vertices2 = ResetGraph(vertices, verticesAfter, scanWidth, scanHeight, numScans, source, sink, SOURCESINKFLOW);
@@ -1544,8 +1609,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         while (true) // this is the loop that adds augmenting paths to the flow.
         {
             if (limit-- < 0) {
-                Debug.LogError("Reached limit of " + 100 + " iterations");
-                break;
+                //Debug.LogError("Reached limit of " + 100 + " iterations");
+                //break;
             }
             time3 = DateTime.Now.Ticks;
             searchArea.Clear(); // reset the queue

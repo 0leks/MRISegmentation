@@ -159,6 +159,7 @@
 			//voxel_col.x = ray_pos.x;
 			//voxel_col.y = ray_pos.y;
 			//voxel_col.z = ray_pos.z;
+			voxel_col.a = voxel_col.x;
 
 	#ifdef FRONT_TO_BACK
 
