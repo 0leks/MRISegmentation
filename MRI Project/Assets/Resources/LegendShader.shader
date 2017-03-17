@@ -2,6 +2,8 @@
 
 	Properties{
 		// the data cube, just so it can load different image data
+		_UseAlpha("UseAlpha", Vector) = (0,0,0,1)
+
 		[NoScaleOffset] Cadaver_Data("Data Texture", 3D) = "" {}
 		[NoScaleOffset] Legend_Data("Legend Texture", 3D) = ""{}
 		// data slicing and thresholding
@@ -36,6 +38,7 @@
 		float _SliceAxis2Min, _SliceAxis2Max;
 		float _SliceAxis3Min, _SliceAxis3Max;
 		float _Normalization;
+		float4 _UseAlpha;
 
 		// calculates intersection between a ray and a box
 		// http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm
@@ -159,7 +162,7 @@
 			//voxel_col.x = ray_pos.x;
 			//voxel_col.y = ray_pos.y;
 			//voxel_col.z = ray_pos.z;
-			voxel_col.a = voxel_col.x;
+			voxel_col.a = _UseAlpha.x * voxel_col.x + _UseAlpha.a*voxel_col.a;
 
 	#ifdef FRONT_TO_BACK
 

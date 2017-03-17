@@ -15,7 +15,6 @@ public class LoadCadaver : MonoBehaviour
     private List<Color> imageColors;
     //private static string folderPath = "scans/png-";
 
-
     private LoadLegend legendLoader;
     [SerializeField]
     private ImageSegmentationHandler2 segmentationHandler;
@@ -24,51 +23,51 @@ public class LoadCadaver : MonoBehaviour
     void Start()
     {
         //Get a ref to the legend loader script.
-        legendLoader = GetComponent<LoadLegend>();
-        imageColors = new List<Color>();
+            legendLoader = GetComponent<LoadLegend>();
+            imageColors = new List<Color>();
 
-        int startIndex = 0;//legendLoader.startIndex;
-        int endIndex = segmentationHandler.GetNumImages() - 1;//legendLoader.endIndex;
-        int indexIncrement = 1;// legendLoader.indexIncrement;
+            int startIndex = segmentationHandler.GetOffset();//legendLoader.startIndex;
+            int endIndex = segmentationHandler.GetNumImages() - 1 + segmentationHandler.GetOffset();//legendLoader.endIndex;
+            int indexIncrement = 1;// legendLoader.indexIncrement;
 
-        //Precalc the tex dimensions by loading the first image.
-        string folderPath = "scans/" + segmentationHandler.folderName + "/" + segmentationHandler.filePrefix;
-        Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(3, '0')) as Texture2D;
-        int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
-        int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
-        int numImages = segmentationHandler.GetNumImages();
+            //Precalc the tex dimensions by loading the first image.
+            string folderPath = "scans/" + segmentationHandler.folderName + "/" + segmentationHandler.filePrefix;
+            Texture2D first = Resources.Load(folderPath + startIndex.ToString().PadLeft(3, '0')) as Texture2D;
+            int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
+            int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
+            int numImages = segmentationHandler.GetNumImages();
 
-        //need to correspond with legend's z-axis
-        for (int i = 0; i <= numImages - 1; i+=indexIncrement)
-        {
-            Texture2D anImage = new Texture2D(width, height);
-            Texture2D temp = Resources.Load(folderPath + i.ToString().PadLeft(3, '0')) as Texture2D;
-            anImage.SetPixels(temp.GetPixels());
-            addImageColorToList(anImage);
-        }
-        int numSlices = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(numImages) / System.Math.Log(2)));
+            //need to correspond with legend's z-axis
+            for (int i = startIndex; i <= endIndex; i += indexIncrement)
+            {
+                Texture2D anImage = new Texture2D(width, height);
+                Texture2D temp = Resources.Load(folderPath + i.ToString().PadLeft(3, '0')) as Texture2D;
+                anImage.SetPixels(temp.GetPixels());
+                addImageColorToList(anImage);
+            }
+            int numSlices = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(numImages) / System.Math.Log(2)));
 
-        //Allocate texture memory.
-        Texture3D volumeData = new Texture3D(width, height, numSlices, TextureFormat.ARGB32, false);
+            //Allocate texture memory.
+            Texture3D volumeData = new Texture3D(width, height, numSlices, TextureFormat.ARGB32, false);
 
-        //Pad the color array with empty data to fill in for missing images.
-        Texture2D emptyTex = new Texture2D(width, height);
-        
-        for(int j = numImages; j < numSlices; j++)
-        {
-            addImageColorToList(emptyTex);
-        }
+            //Pad the color array with empty data to fill in for missing images.
+            Texture2D emptyTex = new Texture2D(width, height);
 
-        //Copy data to texture memory.
-        Color[] allColors = imageColors.ToArray();
-        volumeData.SetPixels(allColors);
-        volumeData.Apply();
+            for (int j = numImages; j < numSlices; j++)
+            {
+                addImageColorToList(emptyTex);
+            }
 
-        // assign it to the material of the parent object
-        GetComponent<Renderer>().material.SetTexture("Cadaver_Data", volumeData);
-        // save it as an asset for re-use
+            //Copy data to texture memory.
+            Color[] allColors = imageColors.ToArray();
+            volumeData.SetPixels(allColors);
+            volumeData.Apply();
+
+            // assign it to the material of the parent object
+            GetComponent<Renderer>().material.SetTexture("Cadaver_Data", volumeData);
+            // save it as an asset for re-use
 #if UNITY_EDITOR
-        writeCadaverAssetToFile(volumeData);
+            writeCadaverAssetToFile(volumeData);
 #endif
     }
 

@@ -13,6 +13,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public int m_numScans;
     public float m_threshold;
     public bool m_3DFlow;
+    public int m_textureoffset;
 
     public AudioSource m_ErrorAudio;
 
@@ -20,6 +21,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     public string folderName;
     public string filePrefix;
+    public string segmentName;
 
     public MeshRenderer m_Renderer;
     public GameObject renderCube;
@@ -27,6 +29,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public GameObject seedBackground;
 
     public bool m_viewCopiedTextures;
+    public bool loadSegmentOnStart;
+    public bool m_useAlpha;
 
     private bool displayMode2D;
 
@@ -57,10 +61,23 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     StreamWriter file;
 
+    public int GetOffset()
+    {
+        return m_textureoffset;
+    }
+
     // Use this for initialization
     void Start() {
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
+        if( m_useAlpha )
+        {
+            m_Renderer.material.SetVector("_UseAlpha", new Vector4(1, 0, 0, 0));
+        }
+        else
+        {
+            m_Renderer.material.SetVector("_UseAlpha", new Vector4(0, 0, 0, 1));
+        }
         displayMode2D = true;
         originalScanTextures = new Texture2D[m_numScans];
         segmentedTextures = new Texture2D[m_numScans];
@@ -76,7 +93,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             //int tens = ((scanIndex - ones) % 100) / 10;
             //int hundreds = ((scanIndex - ones - 10 * tens) % 1000) / 100;
             //string filePath = "Assets/Resources/scans/png-0" + hundreds + tens + ones + ".png";
-            string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + scanIndex.ToString().PadLeft(3, '0') + ".png";
+            string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + (scanIndex + GetOffset()).ToString().PadLeft(3, '0') + ".png";
             Texture2D scanTexture = LoadScan(filePath);
             if (m_scanWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
             {
@@ -177,8 +194,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             {
                 GameObject seed = Instantiate<GameObject>(seedObject);
                 seed.transform.position = originalSpot;
-                seed.transform.localScale = 0.02f * renderCube.transform.localScale;
                 seed.transform.parent = renderCube.transform;
+                seed.transform.localScale = 0.02f * new Vector3(1, 1, 1); //  renderCube.transform.localScale;
                 partOfObject.Add(point);
                 objectSeeds.Add(seed);
             }
@@ -186,8 +203,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             {
                 GameObject seed = Instantiate<GameObject>(seedBackground);
                 seed.transform.position = originalSpot;
-                seed.transform.localScale = 0.02f * renderCube.transform.localScale;
                 seed.transform.parent = renderCube.transform;
+                seed.transform.localScale = 0.02f * new Vector3(1, 1, 1);// * renderCube.transform.localScale;
                 partOfBackground.Add(point);
                 backgroundSeeds.Add(seed);
             }
@@ -206,6 +223,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             if (x >= 0 && x < m_scanWidth && y >= 0 && y < m_scanHeight) {
                 if (Input.GetMouseButtonDown(0)) {
                     Debug.LogErrorFormat("Added point to Object {0}, {1}", x, y);
+                    //AddSeed
                     partOfObject.Add(new Point(x, y, selectedScan, 0));
                 }
                 else {
@@ -234,7 +252,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         if (Input.GetKeyDown("t")) {
             Debug.LogError("beginning timed max flow segmenting");
-            file = new StreamWriter(m_numScans + " " + m_scanWidth + " debugLog" + Time.time + ".txt");
+            string filename = m_numScans + " " + m_scanWidth + " debugLog" + Time.time + ".txt";
+            file = new StreamWriter(filename);
+            Debug.LogError(" filename = " + filename);
             RunMaxFlowSegmentationTimed(selectedScan);
             file.Close();
             GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, 1);
@@ -1401,30 +1421,243 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         return fullRezVertices;
     }
 
+    public int VertexCompareLamda(Vertex one, Vertex two )
+    {
+        if( one.value < two.value )
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+    public Vertex[,,] ResetGraphHistogramWay(Vertex[,,] verticesBefore, Vertex[,,] verticesAfter, int scanWidth, int scanHeight, int numScans, Vertex source, Vertex sink, float sourceSinkFlow)
+    {
+        bool[,,] edgeVertexes = new bool[scanWidth, scanHeight, numScans];
+        Vertex[,,] fullRezVertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        for (int x = 0; x < scanWidth; x++)
+        {
+            for (int y = 0; y < scanHeight; y++)
+            {
+                for (int z = 0; z < numScans; z++)
+                {
+                    if (verticesBefore[x, y, z].visited)
+                    { // Any visited vertex adjacent to an unvisited vertex is part of the edge that needs to be magnified
+                        if (x != 0)
+                        {
+                            if (!verticesBefore[x - 1, y, z].visited)
+                            {
+                                edgeVertexes[x, y, z] = true;
+                            }
+                        }
+                        if (x != scanWidth - 1)
+                        {
+                            if (!verticesBefore[x + 1, y, z].visited)
+                            {
+                                edgeVertexes[x, y, z] = true;
+                            }
+                        }
+                        if (y != 0)
+                        {
+                            if (!verticesBefore[x, y - 1, z].visited)
+                            {
+                                edgeVertexes[x, y, z] = true;
+                            }
+                        }
+                        if (y != scanHeight - 1)
+                        {
+                            if (!verticesBefore[x, y + 1, z].visited)
+                            {
+                                edgeVertexes[x, y, z] = true;
+                            }
+                        }
+                        if (m_3DFlow)
+                        {
+                            if (z != 0)
+                            {
+                                if (!verticesBefore[x, y, z - 1].visited)
+                                {
+                                    edgeVertexes[x, y, z] = true;
+                                }
+                            }
+                            if (z != numScans - 1)
+                            {
+                                if (!verticesBefore[x, y, z + 1].visited)
+                                {
+                                    edgeVertexes[x, y, z] = true;
+                                }
+                            }
+                        }
+                    }
+                    //edgeVertexes[x, y, z] = false;
+                    //for (int i = 0; i < vertices[x, y, z].flows.Length; i++) {
+                    //    if (vertices[x, y, z].flows[i] == 0) {
+                    //        edgeVertexes[x, y, z] = true;
+                    //        break;
+                    //    }
+                    //}
+                }
+            }
+        }
+        for (int x = 0; x < scanWidth; x++)
+        {
+            for (int y = 0; y < scanHeight; y++)
+            {
+                if (edgeVertexes[x, y, 0])
+                {
+                    file.Write("#");
+                }
+                else
+                {
+                    file.Write(" ");
+                }
+            }
+            file.WriteLine();
+        }
+        int numNeighbors;
+        int finalX, finalY, finalZ;
+        for (int x = 0; x < scanWidth; x++)
+        {
+            for (int y = 0; y < scanHeight; y++)
+            {
+                for (int z = 0; z < numScans; z++)
+                {
+                    if (edgeVertexes[x, y, z])
+                    {
+                        List<Vertex> newvertices = new List<Vertex>();
+                        for (int xOffset = 0; xOffset < m_xfreq; xOffset++)
+                        {
+                            for (int yOffset = 0; yOffset < m_yfreq; yOffset++)
+                            {
+                                for (int zOffset = 0; zOffset < m_zfreq; zOffset++)
+                                {
+                                    finalX = x * m_xfreq + xOffset;
+                                    finalY = y * m_yfreq + yOffset;
+                                    finalZ = z * m_zfreq + zOffset;
+                                    if (m_3DFlow)
+                                    {
+                                        numNeighbors = 6;
+                                    }
+                                    else
+                                    {
+                                        numNeighbors = 4;
+                                    }
+                                    if (finalX == 0 || finalX == m_scanWidth - 1)
+                                    {
+                                        numNeighbors--;
+                                    }
+                                    if (finalY == 0 || finalY == m_scanHeight - 1)
+                                    {
+                                        numNeighbors--;
+                                    }
+                                    if (m_3DFlow && (finalZ == 0 || finalZ == m_numScans - 1))
+                                    {
+                                        numNeighbors--;
+                                    }
+                                    fullRezVertices[finalX, finalY, finalZ] = new Vertex(numNeighbors, originalScans[finalZ, finalX, finalY]);
+                                    newvertices.Add(fullRezVertices[finalX, finalY, finalZ]);
+                                }
+
+                            }
+                        }
+
+                        newvertices.Sort((i, j) => VertexCompareLamda(i, j));
+                        file.Write("Sorted Values: ");
+                        float maxDelta = -1;
+                        float delta = 0;
+                        int indexStop = -1;
+                        for (int i = 1; i < newvertices.Count; i++ ) {
+                            //Debug.LogError("vertex " + i + " value: " + newvertices[i].value);
+                            delta = newvertices[i].value - newvertices[i - 1].value;
+                            if( delta > maxDelta ) {
+                                maxDelta = delta;
+                                indexStop = i;
+                            }
+                            file.Write("(" + newvertices[i].value + "," + delta + ")");
+                        }
+                        file.WriteLine(" Cut off at index " + indexStop);
+                        for (int i = indexStop; i < newvertices.Count; i++ ) {
+                            newvertices[i].visited = true;
+                        }
+
+                    }
+                }
+            }
+        }
+        return fullRezVertices;
+        //foreach (Point obj in partOfObject)
+        //{
+        //    if (edgeVertexes[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq])
+        //    {
+        //        Debug.LogError("Encountered edge object");
+        //        Vertex oldVertex = verticesAfter[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq];
+        //        Vertex newVertex = fullRezVertices[obj.x, obj.y, obj.z];
+        //        for (int i = 0; i < source.neighbors.Length; i++)
+        //        {
+        //            if (source.neighbors[i] == oldVertex)
+        //            {
+        //                source.neighbors[i] = newVertex;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //}
+        //foreach (Point obj in partOfBackground)
+        //{
+        //    if (edgeVertexes[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq])
+        //    {
+        //        Debug.LogError("Encountered edge background");
+        //        Vertex v = fullRezVertices[obj.x, obj.y, obj.z];
+        //        Vertex[] newNeighbors = new Vertex[v.neighbors.Length + 1];
+        //        float[] newFlows = new float[v.flows.Length + 1];
+        //        for (int i = 0; i < v.neighbors.Length; i++)
+        //        {
+        //            newNeighbors[i] = v.neighbors[i];
+        //            newFlows[i] = v.flows[i];
+        //        }
+        //        newNeighbors[newNeighbors.Length - 1] = sink;
+        //        newFlows[newNeighbors.Length - 1] = sourceSinkFlow;
+        //        v.neighbors = newNeighbors;
+        //        v.flows = newFlows;
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //}
+        return fullRezVertices;
+    }
+
     public void RunMaxFlowSegmentationTimed(int scanIndex) {
-        partOfObject.Clear();
-        int M = 2;
-        partOfObject.Add(new Point(155 * M, 149 * M, 0, 1));
-        partOfObject.Add(new Point(144 * M, 160 * M, 0, 1));
-        partOfObject.Add(new Point(132 * M, 176 * M, 0, 1));
-        partOfObject.Add(new Point(131 * M, 197 * M, 0, 1));
-        partOfObject.Add(new Point(115 * M, 202 * M, 0, 1));
-        partOfObject.Add(new Point(115 * M, 179 * M, 0, 1));
-        partOfObject.Add(new Point(125 * M, 160 * M, 0, 1));
-        partOfObject.Add(new Point(135 * M, 145 * M, 0, 1));
-        partOfObject.Add(new Point(151 * M, 132 * M, 0, 1));
-        partOfObject.Add(new Point(159 * M, 139 * M, 0, 1));
-        partOfBackground.Clear();
-        partOfBackground.Add(new Point(154 * M, 171 * M, 0, 1));
-        partOfBackground.Add(new Point(144 * M, 197 * M, 0, 1));
-        partOfBackground.Add(new Point(132 * M, 217 * M, 0, 1));
-        partOfBackground.Add(new Point(103 * M, 213 * M, 0, 1));
-        partOfBackground.Add(new Point(98 * M, 188 * M, 0, 1));
-        partOfBackground.Add(new Point(111 * M, 161 * M, 0, 1));
-        partOfBackground.Add(new Point(123 * M, 141 * M, 0, 1));
-        partOfBackground.Add(new Point(141 * M, 124 * M, 0, 1));
-        partOfBackground.Add(new Point(163 * M, 124 * M, 0, 1));
-        partOfBackground.Add(new Point(172 * M, 146 * M, 0, 1));
+        //partOfObject.Clear();
+        //int M = 2;
+        //partOfObject.Add(new Point(155 * M, 149 * M, 0, 1));
+        //partOfObject.Add(new Point(144 * M, 160 * M, 0, 1));
+        //partOfObject.Add(new Point(132 * M, 176 * M, 0, 1));
+        //partOfObject.Add(new Point(131 * M, 197 * M, 0, 1));
+        //partOfObject.Add(new Point(115 * M, 202 * M, 0, 1));
+        //partOfObject.Add(new Point(115 * M, 179 * M, 0, 1));
+        //partOfObject.Add(new Point(125 * M, 160 * M, 0, 1));
+        //partOfObject.Add(new Point(135 * M, 145 * M, 0, 1));
+        //partOfObject.Add(new Point(151 * M, 132 * M, 0, 1));
+        //partOfObject.Add(new Point(159 * M, 139 * M, 0, 1));
+        //partOfBackground.Clear();
+        //partOfBackground.Add(new Point(154 * M, 171 * M, 0, 1));
+        //partOfBackground.Add(new Point(144 * M, 197 * M, 0, 1));
+        //partOfBackground.Add(new Point(132 * M, 217 * M, 0, 1));
+        //partOfBackground.Add(new Point(103 * M, 213 * M, 0, 1));
+        //partOfBackground.Add(new Point(98 * M, 188 * M, 0, 1));
+        //partOfBackground.Add(new Point(111 * M, 161 * M, 0, 1));
+        //partOfBackground.Add(new Point(123 * M, 141 * M, 0, 1));
+        //partOfBackground.Add(new Point(141 * M, 124 * M, 0, 1));
+        //partOfBackground.Add(new Point(163 * M, 124 * M, 0, 1));
+        //partOfBackground.Add(new Point(172 * M, 146 * M, 0, 1));
 
         long numEdges = 0;
         long time1 = DateTime.Now.Ticks;
@@ -1597,7 +1830,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         //return;
 
         Vertex[,,] verticesAfter = MaxFlowSetupBetterSamplingRound2(sink, source, m_xfreq, m_yfreq, m_zfreq);
-        Vertex[,,] vertices2 = ResetGraph(vertices, verticesAfter, scanWidth, scanHeight, numScans, source, sink, SOURCESINKFLOW);
+        Vertex[,,] vertices2 = ResetGraphHistogramWay(vertices, verticesAfter, scanWidth, scanHeight, numScans, source, sink, SOURCESINKFLOW);
 
         flowIterations = 0;
         bfsIterations = 0;
@@ -1606,7 +1839,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         bfsTime = 0;
         flowTime = 0;
         int limit = 100;
-        while (true) // this is the loop that adds augmenting paths to the flow.
+        while (false) // this is the loop that adds augmenting paths to the flow.
         {
             if (limit-- < 0) {
                 //Debug.LogError("Reached limit of " + 100 + " iterations");
@@ -1713,7 +1946,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         file.WriteLine("Iterations of bfs            = {0}", bfsIterations);
         file.WriteLine("Iterations of flow reduction = {0}", flowIterations);
 
-        saveSegmentToFile(visited, originalScans, "Resources/segment/segmentLowRez");
+        //saveSegmentToFile(visited, originalScans, "Resources/segment/segmentLowRez");
+        saveSegmentToFile(visited, originalScans, "Resources/segment/" + segmentName);
         //for (int x = 0; x < m_scanWidth; x++) {
         //    for (int y = 0; y < m_scanHeight; y++) {
         //        for (int z = 0; z < m_numScans; z++) {
@@ -1778,7 +2012,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                 }
             }
         }
-        saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
+        //saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
+        saveSegmentToFile(visited, originalScans, "Resources/segment/" + segmentName);
 
     }
 
