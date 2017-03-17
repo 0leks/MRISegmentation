@@ -17,14 +17,19 @@ Given a set of MRI scans, create and application that allows a user to easily vi
   * Use the index finger trigger to grab and move the volume, this maintains orientation.
   * Use the other trigger to affect the rotation of the volume
   * Pressing both index triggers at once allows you to change the size of the volume
+  * *B* adds the selected point to the object
+  * *A* adds the selected point to the background
   
 ## Goals:
 * ~~3D visualization of the segment ( going to meet with Sid on Friday 2/3 as he already has a rendering algorithm for segmented data )~~
 * ~~Implement a min-cut max-flow algorithm instead of flood fill ( flood fill is the most primitive solution and doesn't work a lot of the time )~~
 * Improve the algorithm to be able to handle larger images in a reasonable amount of time
-* Implement 3D manipulation of the segmentation which the oculus touch controllers.
+  * There is now an option to reduce the scale of the data by averaging several pixels together in a grid.
+  * Currently working on
+    * using this technique in the first pass of the algorithm
+    * then increasing the resolution of the pixels along the edge of segment and recomputing the max flow
+* ~~Implement 3D manipulation of the segmentation which the oculus touch controllers.~~
   * ~~A way to move the segment around, with grab and drag functionality~~
   * ~~A way to rotate the segment, grab with a different button and rotate controller to rotate the segment~~
-  * A way to modify the result of the segmentation by 
-    * placing a barrier
-    * marking areas as part of the segment or as not part of the segment
+  * ~~A way to modify the result of the segmentation by~~
+    * ~~marking areas as part of the segment or as not part of the segment~~
