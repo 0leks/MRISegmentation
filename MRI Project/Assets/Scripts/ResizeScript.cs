@@ -16,6 +16,9 @@ public class ResizeScript : MonoBehaviour {
     public OVRInput.Controller LController;
     public OVRInput.Controller RController;
 
+    public GameObject LSphere;
+    public GameObject RSphere;
+
     public GameObject cube;   // the object which is used to render segments
 
     private bool grabState; //  keeps track of whether object is currently grabbed
@@ -54,6 +57,8 @@ public class ResizeScript : MonoBehaviour {
             float ratio = cube.transform.localScale.x * currentDistance / initialDistance;
             initialDistance = currentDistance;
             cube.transform.localScale = new Vector3(ratio, ratio, ratio);
+            LSphere.transform.localScale = 0.1f * cube.transform.localScale;
+            RSphere.transform.localScale = 0.1f * cube.transform.localScale;
         }
 	}
 }

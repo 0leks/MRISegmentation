@@ -1,0 +1,59 @@
+Running Timed Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 16, 16, 1
+Setup Time            = 334
+Reset Time            = 1
+BFS Time              = 3
+Computing flow Time   = 0
+Total number of vertexes in graph = 1026
+Total number of edges in graph    = 3988
+Maximum size of queue             = 19
+Iterations of bfs            = 1
+Iterations of flow reduction = 0
+Leftover flow from source = 20
+Initial flow from source = 20
+512	1	334	1	3	0	1026	3988	19	1
+#                               
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                       ##       
+                     ##  ##     
+                    #     #     
+                  ##  ####      
+                 #   #          
+                #   #           
+                ####            
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+Running Second Round of Max-flow Segmentation
+numScans = 1, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 16, 16, 1
+Setup Time            = 334
+Reset Time            = 12791
+BFS Time              = 2578
+Computing flow Time   = 9
+Total number of vertexes in graph = 1026
+Total number of edges in graph    = 3988
+Maximum size of queue             = 497
+Iterations of bfs            = 340
+Iterations of flow reduction = 339

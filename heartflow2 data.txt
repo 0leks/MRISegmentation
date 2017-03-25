@@ -1,0 +1,1276 @@
+Running Timed Max-flow Segmentation
+numScans = 20, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 2, 2, 1
+Setup Time            = 5331
+Reset Time            = 4649
+BFS Time              = 1459
+Computing flow Time   = 1
+Total number of vertexes in graph = 1310722
+Total number of edges in graph    = 7712783
+Maximum size of queue             = 3126
+Iterations of bfs            = 111
+Iterations of flow reduction = 110
+Leftover flow from source = 5.999825
+Initial flow from source = 10
+512	20	5331	4649	1459	1	1310722	7712783	3126	111
+#                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                      ###                                                                       
+                                                                                                                                                                                     #  #                                                                       
+                                                                                                                                                                                   ##   #                                                                       
+                                                                                                                                                                              #####     #                                                                       
+                                                                                                                                                                          ####         #                                                                        
+                                                                                                                                                                          #           #                                                                         
+                                                                                                                                                                          #           #                                                                         
+                                                                                                                                                                         #           #                                                                          
+                                                                                                                                                                         #          #                                                                           
+                                                                                                                                                                         ##        #                                                                            
+                                                                                                                                                                           ########                                                                             
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                           ####                                                                                                 
+                                                                                                                                                          #   #                                                                                                 
+                                                                                                                                                         #     #                                                                                                
+                                                                                                                                                         #     #                                                                                                
+                                                                                                                                                         #     #                                                                                                
+                                                                                                                                                          #####                                                                                                 
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                
+Sorted Values: (0,0)(0,0)(0,0) Cut off at index 1
+Sorted Values: (0.2980392,0.1058824)(0.3764706,0.07843137)(0.4196078,0.04313725) Cut off at index 1
+Sorted Values: (0.1764706,0.04705882)(0.3372549,0.1607843)(0.3647059,0.02745098) Cut off at index 2
+Sorted Values: (0.3372549,0.003921568)(0.4235294,0.0862745)(0.4313726,0.007843137) Cut off at index 2
+Sorted Values: (0.1607843,0.03921569)(0.2901961,0.1294118)(0.3411765,0.05098039) Cut off at index 2
+Sorted Values: (0.3019608,0.07058825)(0.3098039,0.007843137)(0.3960784,0.0862745) Cut off at index 3
+Sorted Values: (0.4313726,0.06274509)(0.4588235,0.02745098)(0.4705882,0.01176471) Cut off at index 1
+Sorted Values: (0.4156863,0.05882353)(0.4666667,0.05098039)(0.4862745,0.01960784) Cut off at index 1
+Sorted Values: (0.3333333,0.01960784)(0.4039216,0.07058823)(0.4196078,0.01568627) Cut off at index 2
+Sorted Values: (0.3215686,0.02745098)(0.3647059,0.04313725)(0.4117647,0.04705882) Cut off at index 3
+Sorted Values: (0.2509804,0.06666668)(0.2705882,0.01960784)(0.3176471,0.04705882) Cut off at index 1
+Sorted Values: (0.3921569,0.03529412)(0.4235294,0.03137255)(0.4352941,0.01176471) Cut off at index 1
+Sorted Values: (0.3058824,0.07843138)(0.3215686,0.01568627)(0.3607843,0.03921568) Cut off at index 1
+Sorted Values: (0.4823529,0.05098039)(0.5372549,0.05490199)(0.5450981,0.007843137) Cut off at index 2
+Sorted Values: (0.4627451,0.0745098)(0.5215687,0.05882356)(0.5411765,0.01960784) Cut off at index 1
+Sorted Values: (0.3843137,0.09019607)(0.4705882,0.0862745)(0.4862745,0.01568627) Cut off at index 1
+Sorted Values: (0.2588235,0.1019608)(0.3960784,0.1372549)(0.4117647,0.01568627) Cut off at index 2
+Sorted Values: (0.4980392,0.01960784)(0.5019608,0.003921598)(0.5176471,0.01568627) Cut off at index 1
+Sorted Values: (0.5058824,0.01176473)(0.5058824,0)(0.5215687,0.01568627) Cut off at index 3
+Sorted Values: (0.454902,0.01960784)(0.4666667,0.01176471)(0.4705882,0.003921568) Cut off at index 1
+Sorted Values: (0.3215686,0.007843137)(0.3803922,0.05882353)(0.3882353,0.007843137) Cut off at index 2
+Sorted Values: (0.3254902,0.007843137)(0.3843137,0.05882353)(0.3882353,0.003921568) Cut off at index 2
+Sorted Values: (0.3137255,0.08627452)(0.3254902,0.01176471)(0.3803922,0.05490196) Cut off at index 1
+Sorted Values: (0.3137255,0.007843137)(0.3333333,0.01960784)(0.345098,0.01176471) Cut off at index 2
+Sorted Values: (0.4078431,0.003921568)(0.4078431,0)(0.4156863,0.007843137) Cut off at index 3
+Sorted Values: (0.3411765,0.007843137)(0.3647059,0.02352941)(0.3803922,0.01568627) Cut off at index 2
+Sorted Values: (0.1921569,0.07450981)(0.4039216,0.2117647)(0.4313726,0.02745098) Cut off at index 2
+Sorted Values: (0.2588235,0.06666668)(0.4470588,0.1882353)(0.4588235,0.01176471) Cut off at index 2
+Sorted Values: (0.2745098,0.06274511)(0.4666667,0.1921569)(0.4745098,0.007843137) Cut off at index 2
+Sorted Values: (0.2392157,0.07058823)(0.4196078,0.1803922)(0.4509804,0.03137255) Cut off at index 2
+Sorted Values: (0.1607843,0.07450981)(0.3803922,0.2196078)(0.4117647,0.03137255) Cut off at index 2
+Sorted Values: (0.3647059,0.08235294)(0.4431373,0.07843137)(0.4666667,0.02352941) Cut off at index 1
+Sorted Values: (0.3764706,0.05882353)(0.4666667,0.09019607)(0.4784314,0.01176471) Cut off at index 2
+Sorted Values: (0.3490196,0.03529412)(0.4745098,0.1254902)(0.4784314,0.003921568) Cut off at index 2
+Sorted Values: (0.345098,0.05098039)(0.4666667,0.1215686)(0.4823529,0.01568627) Cut off at index 2
+Sorted Values: (0.2588235,0.04313727)(0.4392157,0.1803921)(0.454902,0.01568627) Cut off at index 2
+Sorted Values: (0.4313726,0.03529412)(0.4745098,0.04313725)(0.4784314,0.003921568) Cut off at index 2
+Sorted Values: (0.4588235,0.03921568)(0.4784314,0.01960784)(0.5058824,0.02745101) Cut off at index 1
+Sorted Values: (0.4392157,0.04705882)(0.4784314,0.03921568)(0.4941176,0.01568627) Cut off at index 1
+Sorted Values: (0.4117647,0.03137255)(0.5019608,0.0901961)(0.5176471,0.01568627) Cut off at index 2
+Sorted Values: (0.3215686,0.03137255)(0.4705882,0.1490196)(0.4823529,0.01176471) Cut off at index 2
+Sorted Values: (0.5019608,0.03137258)(0.5019608,0)(0.5333334,0.03137255) Cut off at index 1
+Sorted Values: (0.5254902,0.03529415)(0.5333334,0.007843137)(0.5607843,0.02745098) Cut off at index 1
+Sorted Values: (0.5137255,0.03137258)(0.5254902,0.01176471)(0.5568628,0.03137255) Cut off at index 1
+Sorted Values: (0.4627451,0.02745098)(0.5333334,0.07058826)(0.5411765,0.007843137) Cut off at index 2
+Sorted Values: (0.3529412,0.01176471)(0.4901961,0.1372549)(0.5058824,0.0156863) Cut off at index 2
+Sorted Values: (0.5450981,0.02352941)(0.5529412,0.007843137)(0.5529412,0) Cut off at index 1
+Sorted Values: (0.5607843,0.01176471)(0.5803922,0.01960784)(0.5843138,0.003921568) Cut off at index 2
+Sorted Values: (0.5372549,0.003921568)(0.5686275,0.03137255)(0.5764706,0.007843137) Cut off at index 2
+Sorted Values: (0.5215687,0.03137258)(0.5607843,0.03921568)(0.5647059,0.003921568) Cut off at index 2
+Sorted Values: (0.4117647,0.03529412)(0.5176471,0.1058824)(0.5176471,0) Cut off at index 2
+Sorted Values: (0.4156863,0.04313725)(0.4509804,0.03529412)(0.4901961,0.03921568) Cut off at index 1
+Sorted Values: (0.3333333,0.01568627)(0.3960784,0.06274509)(0.4117647,0.01568627) Cut off at index 2
+Sorted Values: (0.3019608,0.03921568)(0.3411765,0.03921568)(0.3803922,0.03921568) Cut off at index 1
+Sorted Values: (0.3607843,0.01176471)(0.4,0.03921568)(0.4,0) Cut off at index 2
+Sorted Values: (0.1294118,0.04705883)(0.1921569,0.06274509)(0.254902,0.06274511) Cut off at index 3
+Sorted Values: (0.3176471,0.003921568)(0.3647059,0.04705882)(0.3686275,0.003921568) Cut off at index 2
+Sorted Values: (0.3843137,0.03921568)(0.3843137,0)(0.3921569,0.007843137) Cut off at index 1
+Sorted Values: (0.2941177,0.07450981)(0.3137255,0.01960784)(0.3372549,0.02352941) Cut off at index 1
+Sorted Values: (0.2941177,0.02745098)(0.3254902,0.03137255)(0.372549,0.04705882) Cut off at index 3
+Sorted Values: (0.4039216,0.02745098)(0.4156863,0.01176471)(0.4196078,0.003921568) Cut off at index 1
+Sorted Values: (0.3607843,0.09019607)(0.3607843,0)(0.4039216,0.04313725) Cut off at index 1
+Sorted Values: (0.3607843,0.1098039)(0.3686275,0.007843137)(0.4392157,0.07058823) Cut off at index 1
+Sorted Values: (0.372549,0.145098)(0.3882353,0.01568627)(0.4862745,0.09803921) Cut off at index 1
+Sorted Values: (0.3882353,0.1921569)(0.4117647,0.02352941)(0.5215687,0.1098039) Cut off at index 1
+Sorted Values: (0.3607843,0.2039216)(0.4039216,0.04313725)(0.5058824,0.1019608) Cut off at index 1
+Sorted Values: (0.3019608,0.1882353)(0.4078431,0.1058823)(0.4901961,0.08235294) Cut off at index 1
+Sorted Values: (0.2078431,0.1647059)(0.372549,0.1647059)(0.4509804,0.07843137) Cut off at index 1
+Sorted Values: (0.1019608,0.1019608)(0.3137255,0.2117647)(0.3882353,0.0745098) Cut off at index 2
+Sorted Values: (0.454902,0.003921568)(0.4666667,0.01176471)(0.4901961,0.02352941) Cut off at index 3
+Sorted Values: (0.4627451,0.03137255)(0.4784314,0.01568627)(0.5176471,0.03921571) Cut off at index 3
+Sorted Values: (0.5137255,0.05882356)(0.5176471,0.003921568)(0.572549,0.05490196) Cut off at index 1
+Sorted Values: (0.5176471,0.05490199)(0.5529412,0.03529412)(0.5764706,0.02352941) Cut off at index 1
+Sorted Values: (0.5294118,0.05098042)(0.5647059,0.03529412)(0.5764706,0.01176471) Cut off at index 1
+Sorted Values: (0.5176471,0.05882356)(0.5607843,0.04313725)(0.5843138,0.02352941) Cut off at index 1
+Sorted Values: (0.4627451,0.05882353)(0.5450981,0.08235297)(0.5568628,0.01176471) Cut off at index 2
+Sorted Values: (0.3568628,0.06274509)(0.4823529,0.1254902)(0.4862745,0.003921568) Cut off at index 2
+Sorted Values: (0.2745098,0.07843138)(0.4235294,0.1490196)(0.4470588,0.02352941) Cut off at index 2
+Sorted Values: (0.4980392,0.01176471)(0.5254902,0.02745101)(0.5372549,0.01176471) Cut off at index 2
+Sorted Values: (0.5215687,0.01960784)(0.5450981,0.02352941)(0.5490196,0.003921568) Cut off at index 2
+Sorted Values: (0.5607843,0.007843137)(0.5764706,0.01568627)(0.5921569,0.01568627) Cut off at index 2
+Sorted Values: (0.5333334,0.02745098)(0.5372549,0.003921568)(0.572549,0.03529412) Cut off at index 3
+Sorted Values: (0.5294118,0.02352941)(0.5450981,0.01568627)(0.5686275,0.02352941) Cut off at index 1
+Sorted Values: (0.5529412,0.01568627)(0.5607843,0.007843137)(0.5803922,0.01960784) Cut off at index 3
+Sorted Values: (0.5019608,0.01176473)(0.5372549,0.03529412)(0.5411765,0.003921568) Cut off at index 2
+Sorted Values: (0.4235294,0.01568627)(0.4941176,0.07058823)(0.5058824,0.01176473) Cut off at index 2
+Sorted Values: (0.3058824,0.003921568)(0.4392157,0.1333333)(0.454902,0.01568627) Cut off at index 2
+Sorted Values: (0.4823529,0.003921568)(0.5019608,0.01960787)(0.5215687,0.01960784) Cut off at index 2
+Sorted Values: (0.4705882,0.02352941)(0.4941176,0.02352941)(0.5254902,0.03137258) Cut off at index 3
+Sorted Values: (0.4156863,0.01176471)(0.5019608,0.08627453)(0.5058824,0.003921568) Cut off at index 2
+Sorted Values: (0.3019608,0.003921568)(0.4392157,0.1372549)(0.4588235,0.01960784) Cut off at index 2
+Sorted Values: (0.4627451,0.01176471)(0.4666667,0.003921568)(0.4784314,0.01176471) Cut off at index 1
+Sorted Values: (0.427451,0)(0.4666667,0.03921568)(0.4666667,0) Cut off at index 2
+Sorted Values: (0.3921569,0.01568627)(0.4745098,0.08235294)(0.4901961,0.01568627) Cut off at index 2
+Sorted Values: (0.2941177,0.03921568)(0.4352941,0.1411765)(0.4588235,0.02352941) Cut off at index 2
+Sorted Values: (0.4901961,0.007843137)(0.4941176,0.003921568)(0.4980392,0.003921568) Cut off at index 1
+Sorted Values: (0.4352941,0.003921568)(0.4745098,0.03921568)(0.4784314,0.003921568) Cut off at index 2
+Sorted Values: (0.3529412,0.02352941)(0.454902,0.1019608)(0.4627451,0.007843137) Cut off at index 2
+Sorted Values: (0.2078431,0.05490196)(0.3921569,0.1843137)(0.4039216,0.01176471) Cut off at index 2
+Sorted Values: (0.5019608,0.0156863)(0.509804,0.007843137)(0.5254902,0.01568627) Cut off at index 1
+Sorted Values: (0.4627451,0.01568627)(0.4823529,0.01960784)(0.5058824,0.02352944) Cut off at index 3
+Sorted Values: (0.3019608,0.03921568)(0.4156863,0.1137255)(0.4352941,0.01960784) Cut off at index 2
+Sorted Values: (0.5372549,0.003921568)(0.5411765,0.003921568)(0.5490196,0.007843137) Cut off at index 3
+Sorted Values: (0.4470588,0.04313725)(0.4784314,0.03137255)(0.509804,0.03137258) Cut off at index 1
+Sorted Values: (0.227451,0.06274509)(0.3333333,0.1058824)(0.3882353,0.05490196) Cut off at index 2
+Sorted Values: (0.4862745,0.03529412)(0.5058824,0.01960787)(0.5137255,0.007843137) Cut off at index 1
+Sorted Values: (0.345098,0.0745098)(0.3607843,0.01568627)(0.427451,0.06666666) Cut off at index 1
+Sorted Values: (0.3686275,0.07843137)(0.3843137,0.01568627)(0.4509804,0.06666666) Cut off at index 1
+Sorted Values: (0.1215686,0.02352941)(0.1882353,0.06666667)(0.2470588,0.05882353) Cut off at index 2
+Sorted Values: (0.3411765,0)(0.4039216,0.06274509)(0.4078431,0.003921568) Cut off at index 2
+Sorted Values: (0.1686275,0.007843137)(0.282353,0.1137255)(0.2901961,0.007843137) Cut off at index 2
+Sorted Values: (0.3960784,0.05490196)(0.4,0.003921568)(0.4313726,0.03137255) Cut off at index 1
+Sorted Values: (0.3372549,0.05098039)(0.3686275,0.03137255)(0.3921569,0.02352941) Cut off at index 1
+Sorted Values: (0.2745098,0.04705884)(0.3333333,0.05882353)(0.3490196,0.01568627) Cut off at index 2
+Sorted Values: (0.3098039,0.01568627)(0.3843137,0.0745098)(0.3921569,0.007843137) Cut off at index 2
+Sorted Values: (0.3098039,0.05098039)(0.372549,0.06274509)(0.4078431,0.03529412) Cut off at index 2
+Sorted Values: (0.3372549,0.09019609)(0.3764706,0.03921568)(0.4392157,0.06274509) Cut off at index 1
+Sorted Values: (0.372549,0.1411765)(0.3882353,0.01568627)(0.4509804,0.06274509) Cut off at index 1
+Sorted Values: (0.4156863,0.1490196)(0.4156863,0)(0.4666667,0.05098039) Cut off at index 1
+Sorted Values: (0.4352941,0.145098)(0.454902,0.01960784)(0.4901961,0.03529412) Cut off at index 1
+Sorted Values: (0.4509804,0.1333333)(0.4705882,0.01960784)(0.5058824,0.03529415) Cut off at index 1
+Sorted Values: (0.4352941,0.09019607)(0.4627451,0.02745098)(0.4901961,0.02745098) Cut off at index 1
+Sorted Values: (0.4156863,0.06666666)(0.4705882,0.05490196)(0.4980392,0.02745098) Cut off at index 1
+Sorted Values: (0.3568628,0.0862745)(0.4392157,0.08235294)(0.4745098,0.03529412) Cut off at index 1
+Sorted Values: (0.2980392,0.1294118)(0.4,0.1019608)(0.4470588,0.04705882) Cut off at index 1
+Sorted Values: (0.4352941,0.03137255)(0.4901961,0.05490196)(0.4941176,0.003921568) Cut off at index 2
+Sorted Values: (0.3921569,0.02745098)(0.4862745,0.09411764)(0.4941176,0.007843137) Cut off at index 2
+Sorted Values: (0.2901961,0.04705884)(0.4156863,0.1254902)(0.4235294,0.007843137) Cut off at index 2
+Sorted Values: (0.4745098,0.01960784)(0.4901961,0.01568627)(0.4941176,0.003921568) Cut off at index 1
+Sorted Values: (0.454902,0.03529412)(0.4901961,0.03529412)(0.4941176,0.003921568) Cut off at index 1
+Sorted Values: (0.3764706,0.04313725)(0.4392157,0.06274509)(0.4666667,0.02745098) Cut off at index 2
+Sorted Values: (0.4862745,0.007843137)(0.5019608,0.0156863)(0.5019608,0) Cut off at index 2
+Sorted Values: (0.454902,0.007843137)(0.4941176,0.03921568)(0.4980392,0.003921568) Cut off at index 2
+Sorted Values: (0.3686275,0.01960784)(0.454902,0.0862745)(0.4705882,0.01568627) Cut off at index 2
+Sorted Values: (0.4509804,0)(0.4588235,0.007843137)(0.4745098,0.01568627) Cut off at index 3
+Sorted Values: (0.4392157,0.01176471)(0.4588235,0.01960784)(0.4745098,0.01568627) Cut off at index 2
+Sorted Values: (0.3176471,0.05098039)(0.4078431,0.09019607)(0.4313726,0.02352941) Cut off at index 2
+Sorted Values: (0.4431373,0.03137255)(0.4588235,0.01568627)(0.4588235,0) Cut off at index 1
+Sorted Values: (0.3843137,0.0862745)(0.4156863,0.03137255)(0.4509804,0.03529412) Cut off at index 1
+Sorted Values: (0.3686275,0.02745098)(0.4196078,0.05098039)(0.4392157,0.01960784) Cut off at index 2
+Sorted Values: (0.4588235,0.04313725)(0.4745098,0.01568627)(0.4862745,0.01176471) Cut off at index 1
+Sorted Values: (0.3019608,0.06274511)(0.3921569,0.09019607)(0.4078431,0.01568627) Cut off at index 2
+Sorted Values: (0.4470588,0.03921568)(0.4470588,0)(0.4745098,0.02745098) Cut off at index 1
+Sorted Values: (0.2705882,0.1019608)(0.3137255,0.04313725)(0.372549,0.05882353) Cut off at index 1
+Sorted Values: (0.2352941,0.06274509)(0.2980392,0.06274511)(0.3411765,0.04313725) Cut off at index 2
+Sorted Values: (0.1921569,0.03529412)(0.3058824,0.1137255)(0.3568628,0.05098039) Cut off at index 2
+Sorted Values: (0.4235294,0.01960784)(0.4313726,0.007843137)(0.4313726,0) Cut off at index 1
+Sorted Values: (0.3921569,0.03137255)(0.4235294,0.03137255)(0.427451,0.003921568) Cut off at index 1
+Sorted Values: (0.3882353,0.03921568)(0.4235294,0.03529412)(0.4431373,0.01960784) Cut off at index 1
+Sorted Values: (0.3294118,0.04313725)(0.3843137,0.05490196)(0.4078431,0.02352941) Cut off at index 2
+Sorted Values: (0.1803922,0.01176471)(0.2941177,0.1137255)(0.2941177,0) Cut off at index 2
+Sorted Values: (0.3333333,0.1803922)(0.3803922,0.04705882)(0.4588235,0.07843137) Cut off at index 1
+Sorted Values: (0.3882353,0.145098)(0.4431373,0.05490196)(0.5019608,0.05882356) Cut off at index 1
+Sorted Values: (0.4392157,0.1098039)(0.4784314,0.03921568)(0.5137255,0.03529415) Cut off at index 1
+Sorted Values: (0.4784314,0.06666666)(0.4980392,0.01960784)(0.5019608,0.003921598) Cut off at index 1
+Sorted Values: (0.4784314,0.06274509)(0.5058824,0.02745101)(0.5176471,0.01176471) Cut off at index 1
+Sorted Values: (0.4901961,0.09411764)(0.5058824,0.0156863)(0.5372549,0.03137255) Cut off at index 1
+Sorted Values: (0.4627451,0.1098039)(0.4666667,0.003921568)(0.5058824,0.03921571) Cut off at index 1
+Sorted Values: (0.4156863,0.09803921)(0.4235294,0.007843137)(0.4588235,0.03529412) Cut off at index 1
+Sorted Values: (0.3686275,0.07058823)(0.4313726,0.06274509)(0.4509804,0.01960784) Cut off at index 1
+Sorted Values: (0.3137255,0.07058825)(0.4196078,0.1058823)(0.4431373,0.02352941) Cut off at index 2
+Sorted Values: (0.2784314,0.07450981)(0.4078431,0.1294118)(0.4431373,0.03529412) Cut off at index 2
+Sorted Values: (0.145098,0.04313726)(0.3333333,0.1882353)(0.3686275,0.03529412) Cut off at index 2
+Sorted Values: (0.3568628,0.01568627)(0.4117647,0.05490196)(0.4156863,0.003921568) Cut off at index 2
+Sorted Values: (0.3803922,0.01960784)(0.4313726,0.05098039)(0.4392157,0.007843137) Cut off at index 2
+Sorted Values: (0.4117647,0.01960784)(0.4509804,0.03921568)(0.4627451,0.01176471) Cut off at index 2
+Sorted Values: (0.4352941,0.003921568)(0.4352941,0)(0.4627451,0.02745098) Cut off at index 3
+Sorted Values: (0.4705882,0)(0.4745098,0.003921568)(0.4823529,0.007843137) Cut off at index 3
+Sorted Values: (0.4588235,0.02745098)(0.4705882,0.01176471)(0.4784314,0.007843137) Cut off at index 1
+Sorted Values: (0.3803922,0.02745098)(0.4431373,0.06274509)(0.4470588,0.003921568) Cut off at index 2
+Sorted Values: (0.3176471,0.003921568)(0.4352941,0.1176471)(0.4588235,0.02352941) Cut off at index 2
+Sorted Values: (0.1607843,0.007843137)(0.3960784,0.2352941)(0.3960784,0) Cut off at index 2
+Sorted Values: (0.4705882,0)(0.4901961,0.01960784)(0.4980392,0.007843137) Cut off at index 2
+Sorted Values: (0.4352941,0.01960784)(0.4627451,0.02745098)(0.4862745,0.02352941) Cut off at index 2
+Sorted Values: (0.3294118,0.007843137)(0.4235294,0.09411764)(0.4352941,0.01176471) Cut off at index 2
+Sorted Values: (0.1411765,0.01960785)(0.3490196,0.2078431)(0.3803922,0.03137255) Cut off at index 2
+Sorted Values: (0.4588235,0.003921568)(0.4588235,0)(0.4784314,0.01960784) Cut off at index 3
+Sorted Values: (0.4313726,0.007843137)(0.4627451,0.03137255)(0.4862745,0.02352941) Cut off at index 2
+Sorted Values: (0.3254902,0.003921568)(0.4392157,0.1137255)(0.4431373,0.003921568) Cut off at index 2
+Sorted Values: (0.1137255,0.01960784)(0.3411765,0.227451)(0.345098,0.003921568) Cut off at index 2
+Sorted Values: (0.4705882,0)(0.4705882,0)(0.4823529,0.01176471) Cut off at index 3
+Sorted Values: (0.4235294,0.007843137)(0.4627451,0.03921568)(0.4627451,0) Cut off at index 2
+Sorted Values: (0.2980392,0.04705882)(0.3960784,0.09803921)(0.4235294,0.02745098) Cut off at index 2
+Sorted Values: (0.04705882,0.04705882)(0.2392157,0.1921569)(0.3058824,0.06666668) Cut off at index 2
+Sorted Values: (0.4470588,0.03137255)(0.4666667,0.01960784)(0.4784314,0.01176471) Cut off at index 1
+Sorted Values: (0.3686275,0.0862745)(0.3921569,0.02352941)(0.4392157,0.04705882) Cut off at index 1
+Sorted Values: (0.4470588,0.02745098)(0.4509804,0.003921568)(0.4627451,0.01176471) Cut off at index 1
+Sorted Values: (0.3647059,0.1019608)(0.372549,0.007843137)(0.4392157,0.06666666) Cut off at index 1
+Sorted Values: (0.4156863,0.01960784)(0.4235294,0.007843137)(0.427451,0.003921568) Cut off at index 1
+Sorted Values: (0.3568628,0.0745098)(0.3568628,0)(0.4117647,0.05490196) Cut off at index 1
+Sorted Values: (0.3254902,0.06666666)(0.3490196,0.02352941)(0.3882353,0.03921568) Cut off at index 1
+Sorted Values: (0.4039216,0.02745098)(0.4862745,0.08235294)(0.4941176,0.007843137) Cut off at index 2
+Sorted Values: (0.2313726,0.06274509)(0.3568628,0.1254902)(0.3764706,0.01960784) Cut off at index 2
+Sorted Values: (0.3411765,0.003921568)(0.4,0.05882353)(0.4039216,0.003921568) Cut off at index 2
+Sorted Values: (0.3254902,0.03137255)(0.3764706,0.05098039)(0.3921569,0.01568627) Cut off at index 2
+Sorted Values: (0.2745098,0.03529413)(0.3607843,0.0862745)(0.372549,0.01176471) Cut off at index 2
+Sorted Values: (0.3647059,0.05882353)(0.4156863,0.05098039)(0.4235294,0.007843137) Cut off at index 1
+Sorted Values: (0.2980392,0.08235295)(0.3764706,0.07843137)(0.4039216,0.02745098) Cut off at index 1
+Sorted Values: (0.2705882,0.1019608)(0.3411765,0.07058823)(0.3803922,0.03921568) Cut off at index 1
+Sorted Values: (0.2156863,0.1019608)(0.2901961,0.07450981)(0.3372549,0.04705882) Cut off at index 1
+Sorted Values: (0.1647059,0.0509804)(0.282353,0.1176471)(0.2901961,0.007843137) Cut off at index 2
+Sorted Values: (0.4392157,0.1215686)(0.4823529,0.04313725)(0.5019608,0.01960787) Cut off at index 1
+Sorted Values: (0.4823529,0.1019608)(0.509804,0.02745101)(0.5137255,0.003921568) Cut off at index 1
+Sorted Values: (0.4901961,0.09019607)(0.5058824,0.0156863)(0.5176471,0.01176471) Cut off at index 1
+Sorted Values: (0.4901961,0.06274509)(0.5058824,0.0156863)(0.5176471,0.01176471) Cut off at index 1
+Sorted Values: (0.4509804,0.03921568)(0.4823529,0.03137255)(0.4901961,0.007843137) Cut off at index 1
+Sorted Values: (0.4627451,0.03921568)(0.4901961,0.02745098)(0.4901961,0) Cut off at index 1
+Sorted Values: (0.4627451,0.04705882)(0.4745098,0.01176471)(0.4823529,0.007843137) Cut off at index 1
+Sorted Values: (0.4470588,0.05098039)(0.4588235,0.01176471)(0.4627451,0.003921568) Cut off at index 1
+Sorted Values: (0.3921569,0.05098039)(0.427451,0.03529412)(0.4313726,0.003921568) Cut off at index 1
+Sorted Values: (0.3098039,0.03921568)(0.3803922,0.07058823)(0.3882353,0.007843137) Cut off at index 2
+Sorted Values: (0.1921569,0.03921568)(0.2784314,0.08627452)(0.3058824,0.02745098) Cut off at index 2
+Sorted Values: (0,0)(0.2235294,0.2235294)(0.2392157,0.01568627) Cut off at index 2
+Sorted Values: (0.09803922,0.03137255)(0.3019608,0.2039216)(0.3372549,0.03529412) Cut off at index 2
+Sorted Values: (0.2705882,0.05490197)(0.3686275,0.09803921)(0.4,0.03137255) Cut off at index 2
+Sorted Values: (0.3686275,0.04705882)(0.4392157,0.07058823)(0.4588235,0.01960784) Cut off at index 2
+Sorted Values: (0.4509804,0.02745098)(0.5058824,0.05490199)(0.5215687,0.01568627) Cut off at index 2
+Sorted Values: (0.4941176,0.02745098)(0.5333334,0.03921571)(0.5411765,0.007843137) Cut off at index 2
+Sorted Values: (0.509804,0.01176473)(0.5294118,0.01960784)(0.5333334,0.003921568) Cut off at index 2
+Sorted Values: (0.3764706,0.03921568)(0.4039216,0.02745098)(0.4235294,0.01960784) Cut off at index 1
+Sorted Values: (0.2392157,0.02745098)(0.3372549,0.09803922)(0.3764706,0.03921568) Cut off at index 2
+Sorted Values: (0.4470588,0.02745098)(0.4627451,0.01568627)(0.4823529,0.01960784) Cut off at index 1
+Sorted Values: (0.2627451,0.003921568)(0.4039216,0.1411765)(0.4078431,0.003921568) Cut off at index 2
+Sorted Values: (0.4117647,0.04313725)(0.4235294,0.01176471)(0.4705882,0.04705882) Cut off at index 3
+Sorted Values: (0.227451,0.06274509)(0.3294118,0.1019608)(0.3803922,0.05098039) Cut off at index 2
+Sorted Values: (0.3215686,0.03137255)(0.372549,0.05098039)(0.3803922,0.007843137) Cut off at index 2
+Sorted Values: (0.427451,0.04313725)(0.4352941,0.007843137)(0.4627451,0.02745098) Cut off at index 1
+Sorted Values: (0.3568628,0.05882353)(0.3882353,0.03137255)(0.4117647,0.02352941) Cut off at index 1
+Sorted Values: (0.3882353,0.0745098)(0.3921569,0.003921568)(0.4313726,0.03921568) Cut off at index 1
+Sorted Values: (0.3058824,0.07843138)(0.3529412,0.04705882)(0.4039216,0.05098039) Cut off at index 1
+Sorted Values: (0.3882353,0.02745098)(0.4156863,0.02745098)(0.4431373,0.02745098) Cut off at index 1
+Sorted Values: (0.1921569,0.05490196)(0.3019608,0.1098039)(0.3411765,0.03921568) Cut off at index 2
+Sorted Values: (0.3254902,0.04313725)(0.4039216,0.07843137)(0.4156863,0.01176471) Cut off at index 2
+Sorted Values: (0.3647059,0.01960784)(0.4117647,0.04705882)(0.4352941,0.02352941) Cut off at index 2
+Sorted Values: (0.227451,0.07843137)(0.3254902,0.09803922)(0.3803922,0.05490196) Cut off at index 2
+Sorted Values: (0.3294118,0.003921568)(0.3921569,0.06274509)(0.3960784,0.003921568) Cut off at index 2
+Sorted Values: (0.4431373,0.03137255)(0.4509804,0.007843137)(0.4666667,0.01568627) Cut off at index 1
+Sorted Values: (0.427451,0.04313725)(0.4313726,0.003921568)(0.4627451,0.03137255) Cut off at index 1
+Sorted Values: (0.4078431,0.06274509)(0.4117647,0.003921568)(0.4627451,0.05098039) Cut off at index 1
+Sorted Values: (0.3764706,0.06666666)(0.3921569,0.01568627)(0.4509804,0.05882353) Cut off at index 1
+Sorted Values: (0.3568628,0.06274509)(0.3607843,0.003921568)(0.4156863,0.05490196) Cut off at index 1
+Sorted Values: (0.2745098,0.04705884)(0.2941177,0.01960784)(0.3372549,0.04313725) Cut off at index 1
+Sorted Values: (0.2980392,0.145098)(0.3960784,0.09803921)(0.4666667,0.07058823) Cut off at index 1
+Sorted Values: (0.3921569,0.1176471)(0.4588235,0.06666666)(0.4980392,0.03921568) Cut off at index 1
+Sorted Values: (0.4666667,0.1098039)(0.4941176,0.02745098)(0.5215687,0.02745101) Cut off at index 1
+Sorted Values: (0.4823529,0.0745098)(0.509804,0.02745101)(0.5254902,0.01568627) Cut off at index 1
+Sorted Values: (0.4784314,0.06274509)(0.4823529,0.003921568)(0.4823529,0) Cut off at index 1
+Sorted Values: (0.4784314,0.06666666)(0.4784314,0)(0.4784314,0) Cut off at index 1
+Sorted Values: (0.4784314,0.05490196)(0.4862745,0.007843137)(0.4941176,0.007843137) Cut off at index 1
+Sorted Values: (0.4666667,0.04705882)(0.4862745,0.01960784)(0.5058824,0.01960787) Cut off at index 1
+Sorted Values: (0.4666667,0.0745098)(0.4705882,0.003921568)(0.5137255,0.04313728) Cut off at index 1
+Sorted Values: (0.4,0.1058823)(0.4156863,0.01568627)(0.4666667,0.05098039) Cut off at index 1
+Sorted Values: (0.2941177,0.145098)(0.3215686,0.02745098)(0.3882353,0.06666666) Cut off at index 1
+Sorted Values: (0.1882353,0.1490196)(0.2470588,0.05882353)(0.3215686,0.07450981) Cut off at index 1
+Sorted Values: (0.05490196,0.05490196)(0.1411765,0.08627452)(0.2196078,0.07843137) Cut off at index 2
+Sorted Values: (0.1764706,0.09803922)(0.3333333,0.1568628)(0.3607843,0.02745098) Cut off at index 2
+Sorted Values: (0.3058824,0.06666668)(0.3960784,0.09019607)(0.4039216,0.007843137) Cut off at index 2
+Sorted Values: (0.427451,0.03921568)(0.4470588,0.01960784)(0.4588235,0.01176471) Cut off at index 1
+Sorted Values: (0.2941177,0.02352941)(0.3568628,0.06274509)(0.3686275,0.01176471) Cut off at index 2
+Sorted Values: (0.1058824,0.01568627)(0.2588235,0.1529412)(0.2705882,0.01176471) Cut off at index 2
+Sorted Values: (0,0)(0.2039216,0.2039216)(0.2235294,0.01960784) Cut off at index 2
+Sorted Values: (0.1254902,0.01960785)(0.3568628,0.2313726)(0.3843137,0.02745098) Cut off at index 2
+Sorted Values: (0.3019608,0.01960784)(0.4235294,0.1215686)(0.4470588,0.02352941) Cut off at index 2
+Sorted Values: (0.3960784,0.01568627)(0.4705882,0.0745098)(0.4745098,0.003921568) Cut off at index 2
+Sorted Values: (0.3372549,0.02352941)(0.3764706,0.03921568)(0.3882353,0.01176471) Cut off at index 2
+Sorted Values: (0.1647059,0.02745098)(0.2980392,0.1333333)(0.3333333,0.03529412) Cut off at index 2
+Sorted Values: (0.3607843,0.003921568)(0.4039216,0.04313725)(0.4156863,0.01176471) Cut off at index 2
+Sorted Values: (0.1686275,0.01568627)(0.3411765,0.172549)(0.3490196,0.007843137) Cut off at index 2
+Sorted Values: (0.3411765,0.04705882)(0.3686275,0.02745098)(0.4078431,0.03921568) Cut off at index 1
+Sorted Values: (0.09803922,0.08627451)(0.2039216,0.1058824)(0.2901961,0.08627452) Cut off at index 2
+Sorted Values: (0.3647059,0.01568627)(0.3921569,0.02745098)(0.3960784,0.003921568) Cut off at index 2
+Sorted Values: (0.3960784,0.05490196)(0.4039216,0.007843137)(0.4196078,0.01568627) Cut off at index 1
+Sorted Values: (0.3803922,0.05098039)(0.4078431,0.02745098)(0.4235294,0.01568627) Cut off at index 1
+Sorted Values: (0.2941177,0.03137255)(0.345098,0.05098039)(0.3803922,0.03529412) Cut off at index 2
+Sorted Values: (0.3882353,0.02745098)(0.4196078,0.03137255)(0.427451,0.007843137) Cut off at index 2
+Sorted Values: (0.2156863,0.05098039)(0.3215686,0.1058824)(0.3333333,0.01176471) Cut off at index 2
+Sorted Values: (0.4078431,0)(0.4509804,0.04313725)(0.4627451,0.01176471) Cut off at index 2
+Sorted Values: (0.2745098,0.02745099)(0.372549,0.09803921)(0.3803922,0.007843137) Cut off at index 2
+Sorted Values: (0.4039216,0.04705882)(0.4235294,0.01960784)(0.4313726,0.007843137) Cut off at index 1
+Sorted Values: (0.3686275,0.01960784)(0.4470588,0.07843137)(0.4627451,0.01568627) Cut off at index 2
+Sorted Values: (0.2666667,0.007843137)(0.4117647,0.145098)(0.4431373,0.03137255) Cut off at index 2
+Sorted Values: (0.1058824,0.04313725)(0.2509804,0.1450981)(0.3098039,0.05882353) Cut off at index 2
+Sorted Values: (0.4666667,0.02352941)(0.4823529,0.01568627)(0.4941176,0.01176471) Cut off at index 1
+Sorted Values: (0.4627451,0.03529412)(0.4666667,0.003921568)(0.4862745,0.01960784) Cut off at index 1
+Sorted Values: (0.4392157,0.05490196)(0.4588235,0.01960784)(0.4784314,0.01960784) Cut off at index 1
+Sorted Values: (0.427451,0.07058823)(0.4627451,0.03529412)(0.4901961,0.02745098) Cut off at index 1
+Sorted Values: (0.3803922,0.08235294)(0.427451,0.04705882)(0.4705882,0.04313725) Cut off at index 1
+Sorted Values: (0.3254902,0.09803922)(0.3803922,0.05490196)(0.4313726,0.05098039) Cut off at index 1
+Sorted Values: (0.2784314,0.145098)(0.2980392,0.01960784)(0.372549,0.0745098) Cut off at index 1
+Sorted Values: (0.2941177,0.1372549)(0.4078431,0.1137255)(0.4392157,0.03137255) Cut off at index 1
+Sorted Values: (0.3607843,0.1176471)(0.4235294,0.06274509)(0.4588235,0.03529412) Cut off at index 1
+Sorted Values: (0.4588235,0.1176471)(0.4627451,0.003921568)(0.5019608,0.03921571) Cut off at index 1
+Sorted Values: (0.4470588,0.08235294)(0.4509804,0.003921568)(0.4627451,0.01176471) Cut off at index 1
+Sorted Values: (0.4235294,0.06666666)(0.4392157,0.01568627)(0.4431373,0.003921568) Cut off at index 1
+Sorted Values: (0.4235294,0.07058823)(0.4470588,0.02352941)(0.4666667,0.01960784) Cut off at index 1
+Sorted Values: (0.4156863,0.07843137)(0.4431373,0.02745098)(0.4784314,0.03529412) Cut off at index 1
+Sorted Values: (0.3843137,0.1254902)(0.3882353,0.003921568)(0.4509804,0.06274509) Cut off at index 1
+Sorted Values: (0.3372549,0.1686275)(0.3529412,0.01568627)(0.4235294,0.07058823) Cut off at index 1
+Sorted Values: (0.2784314,0.2039216)(0.3019608,0.02352941)(0.4039216,0.1019608) Cut off at index 1
+Sorted Values: (0.172549,0.172549)(0.1921569,0.01960784)(0.3372549,0.145098) Cut off at index 1
+Sorted Values: (0.3529412,0.09019607)(0.4039216,0.05098039)(0.4313726,0.02745098) Cut off at index 1
+Sorted Values: (0.4509804,0.05490196)(0.4784314,0.02745098)(0.4823529,0.003921568) Cut off at index 1
+Sorted Values: (0.4901961,0.01960784)(0.4980392,0.007843137)(0.509804,0.01176473) Cut off at index 1
+Sorted Values: (0.2941177,0.04313725)(0.3921569,0.09803921)(0.4156863,0.02352941) Cut off at index 2
+Sorted Values: (0.3960784,0.03921568)(0.4235294,0.02745098)(0.4392157,0.01568627) Cut off at index 1
+Sorted Values: (0,0)(0.1607843,0.1607843)(0.1882353,0.02745098) Cut off at index 2
+Sorted Values: (0.1333333,0.003921568)(0.3882353,0.2549019)(0.4,0.01176471) Cut off at index 2
+Sorted Values: (0.3529412,0.01176471)(0.4784314,0.1254902)(0.4901961,0.01176471) Cut off at index 2
+Sorted Values: (0.454902,0.02352941)(0.4980392,0.04313725)(0.5294118,0.03137258) Cut off at index 2
+Sorted Values: (0.4078431,0.04313725)(0.4705882,0.06274509)(0.4901961,0.01960784) Cut off at index 2
+Sorted Values: (0.3294118,0.02745098)(0.3843137,0.05490196)(0.4156863,0.03137255) Cut off at index 2
+Sorted Values: (0.3764706,0.03137255)(0.3803922,0.003921568)(0.3882353,0.007843137) Cut off at index 1
+Sorted Values: (0.3686275,0.04313725)(0.3921569,0.02352941)(0.4235294,0.03137255) Cut off at index 1
+Sorted Values: (0.145098,0.07450981)(0.2470588,0.1019608)(0.3176471,0.07058825) Cut off at index 2
+Sorted Values: (0.3137255,0.01568627)(0.3843137,0.07058823)(0.4039216,0.01960784) Cut off at index 2
+Sorted Values: (0.345098,0.01960784)(0.3960784,0.05098039)(0.4,0.003921568) Cut off at index 2
+Sorted Values: (0.2117647,0.03529412)(0.3490196,0.1372549)(0.3686275,0.01960784) Cut off at index 2
+Sorted Values: (0.2784314,0.02352941)(0.3411765,0.06274509)(0.345098,0.003921568) Cut off at index 2
+Sorted Values: (0.4235294,0.01176471)(0.4431373,0.01960784)(0.4431373,0) Cut off at index 2
+Sorted Values: (0.3254902,0.02352941)(0.3764706,0.05098039)(0.3882353,0.01176471) Cut off at index 2
+Sorted Values: (0.1882353,0.05490196)(0.2980392,0.1098039)(0.3215686,0.02352941) Cut off at index 2
+Sorted Values: (0.4117647,0.06666666)(0.4235294,0.01176471)(0.4352941,0.01176471) Cut off at index 1
+Sorted Values: (0.4823529,0.04313725)(0.4941176,0.01176471)(0.5215687,0.02745101) Cut off at index 1
+Sorted Values: (0.4784314,0.06274509)(0.4941176,0.01568627)(0.5294118,0.03529415) Cut off at index 1
+Sorted Values: (0.4705882,0.09019607)(0.4862745,0.01568627)(0.5176471,0.03137258) Cut off at index 1
+Sorted Values: (0.4705882,0.09803921)(0.4705882,0)(0.4980392,0.02745098) Cut off at index 1
+Sorted Values: (0.4431373,0.1098039)(0.4431373,0)(0.4823529,0.03921568) Cut off at index 1
+Sorted Values: (0.3960784,0.1294118)(0.4078431,0.01176471)(0.4666667,0.05882353) Cut off at index 1
+Sorted Values: (0.3372549,0.1490196)(0.3607843,0.02352941)(0.4509804,0.09019607) Cut off at index 1
+Sorted Values: (0.2588235,0.1607843)(0.3098039,0.05098039)(0.4235294,0.1137255) Cut off at index 1
+Sorted Values: (0.1960784,0.1215686)(0.2980392,0.1019608)(0.4117647,0.1137255) Cut off at index 1
+Sorted Values: (0.1019608,0.09803922)(0.2117647,0.1098039)(0.3058824,0.09411766) Cut off at index 2
+Sorted Values: (0.3411765,0.1647059)(0.4,0.05882353)(0.4666667,0.06666666) Cut off at index 1
+Sorted Values: (0.4196078,0.1411765)(0.4313726,0.01176471)(0.4901961,0.05882353) Cut off at index 1
+Sorted Values: (0.4078431,0.1098039)(0.4196078,0.01176471)(0.4627451,0.04313725) Cut off at index 1
+Sorted Values: (0.372549,0.09019607)(0.3921569,0.01960784)(0.4352941,0.04313725) Cut off at index 1
+Sorted Values: (0.3686275,0.09411764)(0.3960784,0.02745098)(0.4392157,0.04313725) Cut off at index 1
+Sorted Values: (0.3764706,0.1137255)(0.3882353,0.01176471)(0.427451,0.03921568) Cut off at index 1
+Sorted Values: (0.3529412,0.145098)(0.372549,0.01960784)(0.427451,0.05490196) Cut off at index 1
+Sorted Values: (0.3215686,0.1803922)(0.345098,0.02352941)(0.4235294,0.07843137) Cut off at index 1
+Sorted Values: (0.2078431,0.2078431)(0.2627451,0.05490197)(0.3568628,0.09411764) Cut off at index 1
+Sorted Values: (0.2392157,0.08235294)(0.3803922,0.1411765)(0.4078431,0.02745098) Cut off at index 2
+Sorted Values: (0.3921569,0.07843137)(0.454902,0.06274509)(0.4862745,0.03137255) Cut off at index 1
+Sorted Values: (0.4588235,0.07058823)(0.4666667,0.007843137)(0.4941176,0.02745098) Cut off at index 1
+Sorted Values: (0.4784314,0.04313725)(0.4823529,0.003921568)(0.4980392,0.01568627) Cut off at index 1
+Sorted Values: (0.4117647,0.01960784)(0.4470588,0.03529412)(0.4588235,0.01176471) Cut off at index 2
+Sorted Values: (0.3529412,0.02352941)(0.4235294,0.07058823)(0.4313726,0.007843137) Cut off at index 2
+Sorted Values: (0.4588235,0.01960784)(0.4745098,0.01568627)(0.4862745,0.01176471) Cut off at index 1
+Sorted Values: (0.3294118,0.05490196)(0.4,0.07058823)(0.454902,0.05490196) Cut off at index 2
+Sorted Values: (0.4588235,0.007843137)(0.5215687,0.06274512)(0.5294118,0.007843137) Cut off at index 2
+Sorted Values: (0.4431373,0.1215686)(0.454902,0.01176471)(0.5215687,0.06666669) Cut off at index 1
+Sorted Values: (0.3960784,0.03137255)(0.4313726,0.03529412)(0.4588235,0.02745098) Cut off at index 2
+Sorted Values: (0.4313726,0)(0.4352941,0.003921568)(0.4431373,0.007843137) Cut off at index 3
+Sorted Values: (0.2784314,0.0392157)(0.2941177,0.01568627)(0.3490196,0.05490196) Cut off at index 3
+Sorted Values: (0.4431373,0.003921568)(0.4470588,0.003921568)(0.4509804,0.003921568) Cut off at index 1
+Sorted Values: (0.4039216,0.007843137)(0.4392157,0.03529412)(0.4431373,0.003921568) Cut off at index 2
+Sorted Values: (0.2235294,0.02745098)(0.3529412,0.1294118)(0.3529412,0) Cut off at index 2
+Sorted Values: (0.4431373,0.003921568)(0.4627451,0.01960784)(0.4823529,0.01960784) Cut off at index 2
+Sorted Values: (0.3215686,0.003921568)(0.4117647,0.09019607)(0.4196078,0.007843137) Cut off at index 2
+Sorted Values: (0.4470588,0.007843137)(0.4980392,0.05098039)(0.5019608,0.003921598) Cut off at index 2
+Sorted Values: (0.3490196,0.02352941)(0.4117647,0.06274509)(0.4156863,0.003921568) Cut off at index 2
+Sorted Values: (0.2313726,0.01176471)(0.3686275,0.1372549)(0.3803922,0.01176471) Cut off at index 2
+Sorted Values: (0.4156863,0.01568627)(0.4627451,0.04705882)(0.4705882,0.007843137) Cut off at index 2
+Sorted Values: (0.4352941,0.03921568)(0.4509804,0.01568627)(0.4666667,0.01568627) Cut off at index 1
+Sorted Values: (0.4588235,0.03137255)(0.4705882,0.01176471)(0.4784314,0.007843137) Cut off at index 1
+Sorted Values: (0.4784314,0.02745098)(0.4862745,0.007843137)(0.5058824,0.01960787) Cut off at index 1
+Sorted Values: (0.4901961,0.02352941)(0.5019608,0.01176473)(0.5058824,0.003921568) Cut off at index 1
+Sorted Values: (0.4901961,0.003921568)(0.5058824,0.0156863)(0.5137255,0.007843137) Cut off at index 2
+Sorted Values: (0.5019608,0.003921598)(0.5137255,0.01176471)(0.5215687,0.007843137) Cut off at index 2
+Sorted Values: (0.5176471,0.007843137)(0.5176471,0)(0.5411765,0.02352941) Cut off at index 3
+Sorted Values: (0.5058824,0.0156863)(0.509804,0.003921568)(0.5137255,0.003921568) Cut off at index 1
+Sorted Values: (0.4745098,0.003921568)(0.4941176,0.01960784)(0.5058824,0.01176473) Cut off at index 2
+Sorted Values: (0.4392157,0.02745098)(0.4666667,0.02745098)(0.4745098,0.007843137) Cut off at index 1
+Sorted Values: (0.427451,0.03921568)(0.4509804,0.02352941)(0.4627451,0.01176471) Cut off at index 1
+Sorted Values: (0.372549,0.06666666)(0.3764706,0.003921568)(0.3960784,0.01960784) Cut off at index 1
+Sorted Values: (0.2627451,0.0509804)(0.3058824,0.04313725)(0.3254902,0.01960784) Cut off at index 1
+Sorted Values: (0.3843137,0.01960784)(0.4666667,0.08235294)(0.4705882,0.003921568) Cut off at index 2
+Sorted Values: (0.3764706,0.01176471)(0.4509804,0.0745098)(0.4509804,0) Cut off at index 2
+Sorted Values: (0.4039216,0.01960784)(0.4509804,0.04705882)(0.454902,0.003921568) Cut off at index 2
+Sorted Values: (0.4235294,0.03137255)(0.4705882,0.04705882)(0.4745098,0.003921568) Cut off at index 2
+Sorted Values: (0.4509804,0.01568627)(0.509804,0.05882356)(0.5254902,0.01568627) Cut off at index 2
+Sorted Values: (0.4705882,0.03921568)(0.5294118,0.05882356)(0.5333334,0.003921568) Cut off at index 2
+Sorted Values: (0.4745098,0.05490196)(0.5333334,0.05882356)(0.5450981,0.01176471) Cut off at index 2
+Sorted Values: (0.5019608,0.07450983)(0.5372549,0.03529412)(0.5607843,0.02352941) Cut off at index 1
+Sorted Values: (0.4352941,0.08235294)(0.4784314,0.04313725)(0.4941176,0.01568627) Cut off at index 1
+Sorted Values: (0.3960784,0.1019608)(0.4235294,0.02745098)(0.4509804,0.02745098) Cut off at index 1
+Sorted Values: (0.3254902,0.09019609)(0.3764706,0.05098039)(0.4078431,0.03137255) Cut off at index 1
+Sorted Values: (0.2862745,0.1058824)(0.3098039,0.02352941)(0.372549,0.06274509) Cut off at index 1
+Sorted Values: (0.2,0.1058824)(0.2117647,0.01176471)(0.3137255,0.1019608) Cut off at index 1
+Sorted Values: (0.3333333,0.04313725)(0.4352941,0.1019608)(0.4588235,0.02352941) Cut off at index 2
+Sorted Values: (0.345098,0.03529412)(0.4588235,0.1137255)(0.4627451,0.003921568) Cut off at index 2
+Sorted Values: (0.3490196,0.05490196)(0.4588235,0.1098039)(0.4627451,0.003921568) Cut off at index 2
+Sorted Values: (0.3411765,0.07058823)(0.4313726,0.09019607)(0.454902,0.02352941) Cut off at index 2
+Sorted Values: (0.3607843,0.1215686)(0.4156863,0.05490196)(0.4862745,0.07058823) Cut off at index 1
+Sorted Values: (0.3254902,0.1529412)(0.372549,0.04705882)(0.4666667,0.09411764) Cut off at index 1
+Sorted Values: (0.2862745,0.1529412)(0.3490196,0.06274509)(0.4627451,0.1137255) Cut off at index 1
+Sorted Values: (0.2745098,0.1882353)(0.3215686,0.04705882)(0.4627451,0.1411765) Cut off at index 1
+Sorted Values: (0.2352941,0.1529412)(0.2980392,0.06274511)(0.4235294,0.1254902) Cut off at index 1
+Sorted Values: (0.1843137,0.1254902)(0.2235294,0.03921568)(0.3490196,0.1254902) Cut off at index 1
+Sorted Values: (0.1411765,0.1098039)(0.172549,0.03137255)(0.3019608,0.1294118) Cut off at index 3
+Sorted Values: (0.3921569,0.07843137)(0.4392157,0.04705882)(0.454902,0.01568627) Cut off at index 1
+Sorted Values: (0.4705882,0.03921568)(0.5019608,0.03137258)(0.509804,0.007843137) Cut off at index 1
+Sorted Values: (0.5215687,0.02352944)(0.5254902,0.003921568)(0.5254902,0) Cut off at index 1
+Sorted Values: (0.4823529,0.003921568)(0.4901961,0.007843137)(0.4980392,0.007843137) Cut off at index 2
+Sorted Values: (0.4509804,0.02745098)(0.4509804,0)(0.4588235,0.007843137) Cut off at index 1
+Sorted Values: (0.4352941,0.01960784)(0.4431373,0.007843137)(0.454902,0.01176471) Cut off at index 1
+Sorted Values: (0.4627451,0.003921568)(0.4666667,0.003921568)(0.4784314,0.01176471) Cut off at index 3
+Sorted Values: (0.4745098,0.01176471)(0.4784314,0.003921568)(0.4862745,0.007843137) Cut off at index 1
+Sorted Values: (0.4784314,0.01960784)(0.4784314,0)(0.4862745,0.007843137) Cut off at index 1
+Sorted Values: (0.4392157,0.02745098)(0.4627451,0.02352941)(0.4666667,0.003921568) Cut off at index 1
+Sorted Values: (0.2980392,0.01960784)(0.3882353,0.09019607)(0.4,0.01176471) Cut off at index 2
+Sorted Values: (0.4431373,0.01176471)(0.4666667,0.02352941)(0.4823529,0.01568627) Cut off at index 2
+Sorted Values: (0.4705882,0.007843137)(0.4823529,0.01176471)(0.4941176,0.01176471) Cut off at index 2
+Sorted Values: (0.4117647,0.003921568)(0.454902,0.04313725)(0.4627451,0.007843137) Cut off at index 2
+Sorted Values: (0.345098,0.05098039)(0.4039216,0.05882353)(0.4235294,0.01960784) Cut off at index 2
+Sorted Values: (0.4745098,0.007843137)(0.4980392,0.02352941)(0.5058824,0.007843167) Cut off at index 2
+Sorted Values: (0.4039216,0.09019607)(0.4196078,0.01568627)(0.4784314,0.05882353) Cut off at index 1
+Sorted Values: (0.3843137,0.04705882)(0.4196078,0.03529412)(0.4784314,0.05882353) Cut off at index 3
+Sorted Values: (0.2627451,0.0509804)(0.3882353,0.1254902)(0.4039216,0.01568627) Cut off at index 2
+Sorted Values: (0.4470588,0.03529412)(0.4941176,0.04705882)(0.5019608,0.007843167) Cut off at index 2
+Sorted Values: (0.3176471,0.02352941)(0.427451,0.1098039)(0.4509804,0.02352941) Cut off at index 2
+Sorted Values: (0.4627451,0.01176471)(0.4823529,0.01960784)(0.4901961,0.007843137) Cut off at index 2
+Sorted Values: (0.2941177,0.007843137)(0.3764706,0.08235294)(0.3921569,0.01568627) Cut off at index 2
+Sorted Values: (0.3372549,0.01960784)(0.4588235,0.1215686)(0.4666667,0.007843137) Cut off at index 2
+Sorted Values: (0.4431373,0.01960784)(0.4784314,0.03529412)(0.4823529,0.003921568) Cut off at index 2
+Sorted Values: (0.4784314,0.007843137)(0.4823529,0.003921568)(0.4941176,0.01176471) Cut off at index 3
+Sorted Values: (0.4117647,0.01176471)(0.4352941,0.02352941)(0.4431373,0.007843137) Cut off at index 2
+Sorted Values: (0.254902,0.007843152)(0.3490196,0.09411764)(0.3529412,0.003921568) Cut off at index 2
+Sorted Values: (0.2627451,0.06274511)(0.3921569,0.1294118)(0.4235294,0.03137255) Cut off at index 2
+Sorted Values: (0.3843137,0.07058823)(0.4509804,0.06666666)(0.4666667,0.01568627) Cut off at index 1
+Sorted Values: (0.3176471,0.01568627)(0.4117647,0.09411764)(0.4235294,0.01176471) Cut off at index 2
+Sorted Values: (0.1333333,0.07058824)(0.345098,0.2117647)(0.3686275,0.02352941) Cut off at index 2
+Sorted Values: (0.227451,0.07058823)(0.3960784,0.1686275)(0.4235294,0.02745098) Cut off at index 2
+Sorted Values: (0.3176471,0.07450981)(0.4313726,0.1137255)(0.4745098,0.04313725) Cut off at index 2
+Sorted Values: (0.3960784,0.07058823)(0.4941176,0.09803921)(0.5176471,0.02352944) Cut off at index 2
+Sorted Values: (0.4470588,0.05490196)(0.5215687,0.07450983)(0.5254902,0.003921568) Cut off at index 2
+Sorted Values: (0.4823529,0.05490196)(0.5176471,0.03529415)(0.5294118,0.01176471) Cut off at index 1
+Sorted Values: (0.4666667,0.04705882)(0.509804,0.04313728)(0.5137255,0.003921568) Cut off at index 1
+Sorted Values: (0.4509804,0.05490196)(0.4901961,0.03921568)(0.5019608,0.01176473) Cut off at index 1
+Sorted Values: (0.4392157,0.06666666)(0.4588235,0.01960784)(0.4823529,0.02352941) Cut off at index 1
+Sorted Values: (0.4313726,0.09411764)(0.4392157,0.007843137)(0.4705882,0.03137255) Cut off at index 1
+Sorted Values: (0.4235294,0.1019608)(0.4352941,0.01176471)(0.4705882,0.03529412) Cut off at index 1
+Sorted Values: (0.4,0.1058823)(0.4117647,0.01176471)(0.4627451,0.05098039) Cut off at index 1
+Sorted Values: (0.3490196,0.09019607)(0.372549,0.02352941)(0.4196078,0.04705882) Cut off at index 1
+Sorted Values: (0.2705882,0.09411766)(0.3333333,0.06274509)(0.3882353,0.05490196) Cut off at index 1
+Sorted Values: (0.1882353,0.08235294)(0.2784314,0.09019609)(0.3333333,0.05490196) Cut off at index 2
+Sorted Values: (0.2666667,0.08235295)(0.4039216,0.1372549)(0.4313726,0.02745098) Cut off at index 2
+Sorted Values: (0.3764706,0.0745098)(0.4509804,0.0745098)(0.4627451,0.01176471) Cut off at index 1
+Sorted Values: (0.4431373,0.07843137)(0.454902,0.01176471)(0.4666667,0.01176471) Cut off at index 1
+Sorted Values: (0.4509804,0.06274509)(0.454902,0.003921568)(0.4745098,0.01960784) Cut off at index 1
+Sorted Values: (0.454902,0.03921568)(0.4627451,0.007843137)(0.4862745,0.02352941) Cut off at index 1
+Sorted Values: (0.4784314,0.02745098)(0.4823529,0.003921568)(0.4941176,0.01176471) Cut off at index 1
+Sorted Values: (0.4823529,0.02352941)(0.4862745,0.003921568)(0.5019608,0.0156863) Cut off at index 1
+Sorted Values: (0.4823529,0.01568627)(0.4862745,0.003921568)(0.5176471,0.03137258) Cut off at index 3
+Sorted Values: (0.4784314,0.01960784)(0.4901961,0.01176471)(0.5137255,0.02352944) Cut off at index 3
+Sorted Values: (0.4078431,0.06666666)(0.427451,0.01960784)(0.4509804,0.02352941) Cut off at index 1
+Sorted Values: (0.4901961,0.02352941)(0.5019608,0.01176473)(0.5176471,0.01568627) Cut off at index 1
+Sorted Values: (0.3176471,0.003921568)(0.3843137,0.06666666)(0.3921569,0.007843137) Cut off at index 2
+Sorted Values: (0.4588235,0.01176471)(0.4784314,0.01960784)(0.4823529,0.003921568) Cut off at index 2
+Sorted Values: (0.3686275,0.05098039)(0.372549,0.003921568)(0.4156863,0.04313725) Cut off at index 1
+Sorted Values: (0.4352941,0.0745098)(0.4666667,0.03137255)(0.509804,0.04313728) Cut off at index 1
+Sorted Values: (0.3686275,0.0745098)(0.4078431,0.03921568)(0.4666667,0.05882353) Cut off at index 1
+Sorted Values: (0.5529412,0.03137255)(0.5529412,0)(0.5647059,0.01176471) Cut off at index 1
+Sorted Values: (0.2,0.03137255)(0.3960784,0.1960784)(0.4078431,0.01176471) Cut off at index 2
+Sorted Values: (0.4078431,0)(0.4901961,0.08235294)(0.509804,0.01960787) Cut off at index 2
+Sorted Values: (0.509804,0.003921568)(0.5490196,0.03921568)(0.5529412,0.003921568) Cut off at index 2
+Sorted Values: (0.2156863,0)(0.4039216,0.1882353)(0.4078431,0.003921568) Cut off at index 2
+Sorted Values: (0.3803922,0.01960784)(0.4235294,0.04313725)(0.4470588,0.02352941) Cut off at index 2
+Sorted Values: (0.4313726,0.003921568)(0.4588235,0.02745098)(0.4627451,0.003921568) Cut off at index 2
+Sorted Values: (0.2117647,0.04705882)(0.4,0.1882353)(0.4196078,0.01960784) Cut off at index 2
+Sorted Values: (0.3411765,0.03529412)(0.4313726,0.09019607)(0.4470588,0.01568627) Cut off at index 2
+Sorted Values: (0.4078431,0.03137255)(0.4117647,0.003921568)(0.4235294,0.01176471) Cut off at index 1
+Sorted Values: (0.3529412,0.02745098)(0.4117647,0.05882353)(0.4235294,0.01176471) Cut off at index 2
+Sorted Values: (0.254902,0.07450981)(0.4,0.145098)(0.4352941,0.03529412) Cut off at index 2
+Sorted Values: (0.3490196,0.06666666)(0.4235294,0.0745098)(0.4313726,0.007843137) Cut off at index 2
+Sorted Values: (0.4117647,0.07058823)(0.4235294,0.01176471)(0.4352941,0.01176471) Cut off at index 1
+Sorted Values: (0.4352941,0.06666666)(0.4431373,0.007843137)(0.4627451,0.01960784) Cut off at index 1
+Sorted Values: (0.4588235,0.05098039)(0.4784314,0.01960784)(0.4823529,0.003921568) Cut off at index 1
+Sorted Values: (0.4901961,0.02352941)(0.5019608,0.01176473)(0.5058824,0.003921568) Cut off at index 1
+Sorted Values: (0.4980392,0)(0.5019608,0.003921598)(0.5176471,0.01568627) Cut off at index 3
+Sorted Values: (0.5019608,0.01960787)(0.5058824,0.003921568)(0.5176471,0.01176471) Cut off at index 1
+Sorted Values: (0.5058824,0.003921568)(0.5058824,0)(0.5137255,0.007843137) Cut off at index 3
+Sorted Values: (0.4823529,0.01176471)(0.4862745,0.003921568)(0.4862745,0) Cut off at index 1
+Sorted Values: (0.4901961,0.02352941)(0.4901961,0)(0.5019608,0.01176473) Cut off at index 1
+Sorted Values: (0.4666667,0.02352941)(0.4823529,0.01568627)(0.4823529,0) Cut off at index 1
+Sorted Values: (0.454902,0.02745098)(0.4705882,0.01568627)(0.4823529,0.01176471) Cut off at index 1
+Sorted Values: (0.3764706,0.02745098)(0.4235294,0.04705882)(0.4313726,0.007843137) Cut off at index 2
+Sorted Values: (0.2509804,0.01176472)(0.345098,0.09411764)(0.345098,0) Cut off at index 2
+Sorted Values: (0,0)(0.1647059,0.1647059)(0.2666667,0.1019608) Cut off at index 2
+Sorted Values: (0.07058824,0.07058824)(0.2666667,0.1960784)(0.3411765,0.0745098) Cut off at index 2
+Sorted Values: (0.172549,0.1215686)(0.3294118,0.1568628)(0.3803922,0.05098039) Cut off at index 2
+Sorted Values: (0.2470588,0.1058823)(0.372549,0.1254902)(0.4039216,0.03137255) Cut off at index 2
+Sorted Values: (0.2901961,0.09411766)(0.3803922,0.09019607)(0.4078431,0.02745098) Cut off at index 1
+Sorted Values: (0.3294118,0.09019609)(0.3921569,0.06274509)(0.427451,0.03529412) Cut off at index 1
+Sorted Values: (0.3921569,0.1058823)(0.4039216,0.01176471)(0.454902,0.05098039) Cut off at index 1
+Sorted Values: (0.4235294,0.1176471)(0.4431373,0.01960784)(0.4862745,0.04313725) Cut off at index 1
+Sorted Values: (0.4352941,0.1176471)(0.4588235,0.02352941)(0.4980392,0.03921568) Cut off at index 1
+Sorted Values: (0.4117647,0.1215686)(0.4431373,0.03137255)(0.4862745,0.04313725) Cut off at index 1
+Sorted Values: (0.3607843,0.1254902)(0.3882353,0.02745098)(0.4313726,0.04313725) Cut off at index 1
+Sorted Values: (0.3411765,0.1176471)(0.3764706,0.03529412)(0.4352941,0.05882353) Cut off at index 1
+Sorted Values: (0.3098039,0.1137255)(0.3529412,0.04313725)(0.4117647,0.05882353) Cut off at index 1
+Sorted Values: (0.254902,0.1019608)(0.3137255,0.05882353)(0.3764706,0.06274509) Cut off at index 1
+Sorted Values: (0.03921569,0.03921569)(0.2588235,0.2196079)(0.3215686,0.06274509) Cut off at index 2
+Sorted Values: (0.2509804,0.1137255)(0.3960784,0.145098)(0.4431373,0.04705882) Cut off at index 2
+Sorted Values: (0.3843137,0.1019608)(0.4392157,0.05490196)(0.4823529,0.04313725) Cut off at index 1
+Sorted Values: (0.454902,0.09803921)(0.454902,0)(0.5058824,0.05098042) Cut off at index 1
+Sorted Values: (0.4784314,0.05098039)(0.509804,0.03137258)(0.5176471,0.007843137) Cut off at index 1
+Sorted Values: (0.5019608,0.06274512)(0.5058824,0.003921568)(0.5137255,0.007843137) Cut off at index 1
+Sorted Values: (0.4980392,0.05490196)(0.5176471,0.01960787)(0.5176471,0) Cut off at index 1
+Sorted Values: (0.4823529,0.05882353)(0.4980392,0.01568627)(0.4980392,0) Cut off at index 1
+Sorted Values: (0.3803922,0.05490196)(0.4509804,0.07058823)(0.4745098,0.02352941) Cut off at index 2
+Sorted Values: (0.427451,0)(0.454902,0.02745098)(0.4705882,0.01568627) Cut off at index 2
+Sorted Values: (0.5019608,0)(0.5058824,0.003921568)(0.509804,0.003921568) Cut off at index 2
+Sorted Values: (0.2941177,0.07843138)(0.2980392,0.003921568)(0.3490196,0.05098039) Cut off at index 1
+Sorted Values: (0.4627451,0.007843137)(0.4627451,0)(0.4666667,0.003921568) Cut off at index 1
+Sorted Values: (0.3764706,0.03137255)(0.4039216,0.02745098)(0.4156863,0.01176471) Cut off at index 1
+Sorted Values: (0.3372549,0.03921568)(0.3921569,0.05490196)(0.4666667,0.0745098) Cut off at index 3
+Sorted Values: (0.4784314,0.01960784)(0.4862745,0.007843137)(0.5294118,0.04313728) Cut off at index 3
+Sorted Values: (0.4078431,0.04313725)(0.4980392,0.09019607)(0.5137255,0.0156863) Cut off at index 2
+Sorted Values: (0.4980392,0.01568627)(0.5137255,0.0156863)(0.5372549,0.02352941) Cut off at index 3
+Sorted Values: (0.4196078,0.05490196)(0.4941176,0.0745098)(0.5254902,0.03137258) Cut off at index 2
+Sorted Values: (0.4705882,0.03921568)(0.4862745,0.01568627)(0.5058824,0.01960787) Cut off at index 1
+Sorted Values: (0.2980392,0.05882354)(0.4156863,0.1176471)(0.4431373,0.02745098) Cut off at index 2
+Sorted Values: (0.3882353,0.02352941)(0.4627451,0.0745098)(0.4705882,0.007843137) Cut off at index 2
+Sorted Values: (0.4666667,0.02352941)(0.4941176,0.02745098)(0.5019608,0.007843167) Cut off at index 2
+Sorted Values: (0.1843137,0.07058824)(0.3764706,0.1921569)(0.4039216,0.02745098) Cut off at index 2
+Sorted Values: (0.3176471,0.07058825)(0.4431373,0.1254902)(0.4627451,0.01960784) Cut off at index 2
+Sorted Values: (0.4078431,0.0745098)(0.4705882,0.06274509)(0.4901961,0.01960784) Cut off at index 1
+Sorted Values: (0.427451,0.03529412)(0.4745098,0.04705882)(0.4823529,0.007843137) Cut off at index 2
+Sorted Values: (0.4588235,0.02352941)(0.4823529,0.02352941)(0.4901961,0.007843137) Cut off at index 1
+Sorted Values: (0.4627451,0.01568627)(0.4823529,0.01960784)(0.4901961,0.007843137) Cut off at index 2
+Sorted Values: (0.4666667,0.01568627)(0.4666667,0)(0.4901961,0.02352941) Cut off at index 3
+Sorted Values: (0.4627451,0.01960784)(0.4745098,0.01176471)(0.4784314,0.003921568) Cut off at index 1
+Sorted Values: (0.4784314,0.02745098)(0.4862745,0.007843137)(0.4862745,0) Cut off at index 1
+Sorted Values: (0.4588235,0.03137255)(0.4705882,0.01176471)(0.4705882,0) Cut off at index 1
+Sorted Values: (0.4588235,0.05490196)(0.4588235,0)(0.4666667,0.007843137) Cut off at index 1
+Sorted Values: (0.4235294,0.05490196)(0.4235294,0)(0.4352941,0.01176471) Cut off at index 1
+Sorted Values: (0.3568628,0.05882353)(0.3803922,0.02352941)(0.4078431,0.02745098) Cut off at index 1
+Sorted Values: (0.3137255,0.08627452)(0.3686275,0.05490196)(0.4078431,0.03921568) Cut off at index 1
+Sorted Values: (0.2941177,0.1254902)(0.4313726,0.1372549)(0.4666667,0.03529412) Cut off at index 2
+Sorted Values: (0.3843137,0.1176471)(0.4705882,0.0862745)(0.4980392,0.02745098) Cut off at index 1
+Sorted Values: (0.4313726,0.1176471)(0.4666667,0.03529412)(0.4941176,0.02745098) Cut off at index 1
+Sorted Values: (0.4588235,0.1058823)(0.4627451,0.003921568)(0.4862745,0.02352941) Cut off at index 1
+Sorted Values: (0.1490196,0.03921569)(0.3529412,0.2039216)(0.3529412,0) Cut off at index 2
+Sorted Values: (0.3490196,0.03529412)(0.454902,0.1058823)(0.4666667,0.01176471) Cut off at index 2
+Sorted Values: (0.4392157,0.01176471)(0.4901961,0.05098039)(0.5019608,0.01176473) Cut off at index 2
+Sorted Values: (0.4862745,0.003921568)(0.4980392,0.01176471)(0.5215687,0.02352944) Cut off at index 3
+Sorted Values: (0.3921569,0.02352941)(0.4509804,0.05882353)(0.4784314,0.02745098) Cut off at index 2
+Sorted Values: (0.3882353,0.0745098)(0.3921569,0.003921568)(0.4470588,0.05490196) Cut off at index 1
+Sorted Values: (0.4941176,0.02352941)(0.4941176,0)(0.5058824,0.01176473) Cut off at index 1
+Sorted Values: (0.3490196,0.06666666)(0.4039216,0.05490196)(0.4235294,0.01960784) Cut off at index 1
+Sorted Values: (0.4,0.01568627)(0.4313726,0.03137255)(0.4509804,0.01960784) Cut off at index 2
+Sorted Values: (0.4352941,0.01960784)(0.4784314,0.04313725)(0.5058824,0.02745101) Cut off at index 2
+Sorted Values: (0.4392157,0.05490196)(0.4627451,0.02352941)(0.5058824,0.04313728) Cut off at index 1
+Sorted Values: (0.3019608,0.08627452)(0.3921569,0.09019607)(0.4156863,0.02352941) Cut off at index 2
+Sorted Values: (0.4117647,0.0862745)(0.4156863,0.003921568)(0.4392157,0.02352941) Cut off at index 1
+Sorted Values: (0.4470588,0.01960784)(0.4627451,0.01568627)(0.4901961,0.02745098) Cut off at index 3
+Sorted Values: (0.2392157,0.1058823)(0.3490196,0.1098039)(0.3921569,0.04313725) Cut off at index 2
+Sorted Values: (0.3490196,0.0862745)(0.4039216,0.05490196)(0.4313726,0.02745098) Cut off at index 1
+Sorted Values: (0.4039216,0.07058823)(0.4313726,0.02745098)(0.4431373,0.01176471) Cut off at index 1
+Sorted Values: (0.4392157,0.05490196)(0.4431373,0.003921568)(0.4431373,0) Cut off at index 1
+Sorted Values: (0.4588235,0.03529412)(0.4666667,0.007843137)(0.4705882,0.003921568) Cut off at index 1
+Sorted Values: (0.4784314,0.02745098)(0.4862745,0.007843137)(0.4901961,0.003921568) Cut off at index 1
+Sorted Values: (0.4588235,0.04313725)(0.4627451,0.003921568)(0.4627451,0) Cut off at index 1
+Sorted Values: (0.4588235,0.05098039)(0.4627451,0.003921568)(0.4666667,0.003921568) Cut off at index 1
+Sorted Values: (0.4117647,0.05882353)(0.4235294,0.01176471)(0.427451,0.003921568) Cut off at index 1
+Sorted Values: (0.372549,0.05098039)(0.3921569,0.01960784)(0.4,0.007843137) Cut off at index 1
+Sorted Values: (0.3843137,0.07843137)(0.4,0.01568627)(0.4392157,0.03921568) Cut off at index 1
+Sorted Values: (0.4588235,0.07058823)(0.5254902,0.06666669)(0.5647059,0.03921568) Cut off at index 1
+Sorted Values: (0.4156863,0.09411764)(0.4980392,0.08235294)(0.5333334,0.03529415) Cut off at index 1
+Sorted Values: (0.3686275,0.1176471)(0.4784314,0.1098039)(0.5215687,0.04313728) Cut off at index 1
+Sorted Values: (0.2862745,0.1333333)(0.4078431,0.1215686)(0.4666667,0.05882353) Cut off at index 1
+Sorted Values: (0.2,0.1960784)(0.3254902,0.1254902)(0.4392157,0.1137255) Cut off at index 1
+Sorted Values: (0.4784314,0.007843137)(0.5333334,0.05490199)(0.5490196,0.01568627) Cut off at index 2
+Sorted Values: (0.427451,0.01568627)(0.509804,0.08235297)(0.5333334,0.02352941) Cut off at index 2
+Sorted Values: (0.3882353,0.01568627)(0.4823529,0.09411764)(0.509804,0.02745101) Cut off at index 2
+Sorted Values: (0.3411765,0.007843137)(0.4666667,0.1254902)(0.4705882,0.003921568) Cut off at index 2
+Sorted Values: (0.2941177,0.01960784)(0.4509804,0.1568627)(0.4627451,0.01176471) Cut off at index 2
+Sorted Values: (0.2313726,0.05882353)(0.4156863,0.1843137)(0.4235294,0.007843137) Cut off at index 2
+Sorted Values: (0.1568628,0.1019608)(0.3490196,0.1921569)(0.4,0.05098039) Cut off at index 2
+Sorted Values: (0.4509804,0.0862745)(0.5058824,0.05490199)(0.5294118,0.02352941) Cut off at index 1
+Sorted Values: (0.3843137,0.04705882)(0.4745098,0.09019607)(0.4901961,0.01568627) Cut off at index 2
+Sorted Values: (0.3607843,0.04313725)(0.4705882,0.1098039)(0.4745098,0.003921568) Cut off at index 2
+Sorted Values: (0.3372549,0.03921568)(0.4588235,0.1215686)(0.4705882,0.01176471) Cut off at index 2
+Sorted Values: (0.2901961,0.02745098)(0.4352941,0.145098)(0.4431373,0.007843137) Cut off at index 2
+Sorted Values: (0.2509804,0.01176472)(0.4392157,0.1882353)(0.4431373,0.003921568) Cut off at index 2
+Sorted Values: (0.1843137,0.003921568)(0.427451,0.2431373)(0.4313726,0.003921568) Cut off at index 2
+Sorted Values: (0.2352941,0.2039216)(0.2862745,0.0509804)(0.4352941,0.1490196) Cut off at index 1
+Sorted Values: (0.2705882,0.1764706)(0.3686275,0.09803921)(0.4509804,0.08235294) Cut off at index 1
+Sorted Values: (0.2509804,0.1333334)(0.3764706,0.1254902)(0.4431373,0.06666666) Cut off at index 1
+Sorted Values: (0.2235294,0.09411764)(0.372549,0.1490196)(0.4235294,0.05098039) Cut off at index 2
+Sorted Values: (0.2156863,0.07058823)(0.4039216,0.1882353)(0.4235294,0.01960784) Cut off at index 2
+Sorted Values: (0.1960784,0.07843138)(0.4,0.2039216)(0.4392157,0.03921568) Cut off at index 2
+Sorted Values: (0.1372549,0.07450981)(0.3607843,0.2235294)(0.4117647,0.05098039) Cut off at index 2
+Sorted Values: (0.2078431,0.08627451)(0.3411765,0.1333333)(0.3647059,0.02352941) Cut off at index 2
+Sorted Values: (0.3372549,0.0745098)(0.4235294,0.0862745)(0.4392157,0.01568627) Cut off at index 2
+Sorted Values: (0.4392157,0.06274509)(0.4862745,0.04705882)(0.4980392,0.01176471) Cut off at index 1
+Sorted Values: (0.4823529,0.02745098)(0.4862745,0.003921568)(0.4980392,0.01176471) Cut off at index 1
+Sorted Values: (0.4901961,0.003921568)(0.4980392,0.007843137)(0.4980392,0) Cut off at index 2
+Sorted Values: (0.4980392,0.01568627)(0.4980392,0)(0.5058824,0.007843167) Cut off at index 1
+Sorted Values: (0.2431373,0.04705882)(0.3647059,0.1215686)(0.3647059,0) Cut off at index 2
+Sorted Values: (0.4117647,0.02352941)(0.4666667,0.05490196)(0.4784314,0.01176471) Cut off at index 2
+Sorted Values: (0.3215686,0.05882353)(0.3607843,0.03921568)(0.4078431,0.04705882) Cut off at index 1
+Sorted Values: (0.4392157,0.04313725)(0.4470588,0.007843137)(0.4705882,0.02352941) Cut off at index 1
+Sorted Values: (0.2862745,0.03137255)(0.3568628,0.07058823)(0.3843137,0.02745098) Cut off at index 2
+Sorted Values: (0.4039216,0.007843137)(0.4196078,0.01568627)(0.4392157,0.01960784) Cut off at index 3
+Sorted Values: (0.3019608,0.01176471)(0.4,0.09803921)(0.4039216,0.003921568) Cut off at index 2
+Sorted Values: (0.4431373,0.01568627)(0.4509804,0.007843137)(0.4823529,0.03137255) Cut off at index 3
+Sorted Values: (0.2705882,0.02745099)(0.4078431,0.1372549)(0.4078431,0) Cut off at index 2
+Sorted Values: (0.4509804,0.02352941)(0.4862745,0.03529412)(0.4980392,0.01176471) Cut off at index 2
+Sorted Values: (0.1882353,0.09411765)(0.3686275,0.1803922)(0.4039216,0.03529412) Cut off at index 2
+Sorted Values: (0.3843137,0.07843137)(0.4627451,0.07843137)(0.4705882,0.007843137) Cut off at index 1
+Sorted Values: (0.4431373,0.02745098)(0.4666667,0.02352941)(0.4705882,0.003921568) Cut off at index 1
+Sorted Values: (0.3411765,0.1254902)(0.4039216,0.06274509)(0.4666667,0.06274509) Cut off at index 1
+Sorted Values: (0.427451,0.0862745)(0.4509804,0.02352941)(0.4666667,0.01568627) Cut off at index 1
+Sorted Values: (0.4823529,0.07843137)(0.4823529,0)(0.4980392,0.01568627) Cut off at index 1
+Sorted Values: (0.5019608,0.03137258)(0.5019608,0)(0.5058824,0.003921568) Cut off at index 1
+Sorted Values: (0.4705882,0.03529412)(0.4705882,0)(0.4784314,0.007843137) Cut off at index 1
+Sorted Values: (0.4588235,0.02745098)(0.4627451,0.003921568)(0.4784314,0.01568627) Cut off at index 1
+Sorted Values: (0.4470588,0.03529412)(0.4588235,0.01176471)(0.4784314,0.01960784) Cut off at index 1
+Sorted Values: (0.427451,0.05098039)(0.4431373,0.01568627)(0.4509804,0.007843137) Cut off at index 1
+Sorted Values: (0.4156863,0.05098039)(0.4313726,0.01568627)(0.4313726,0) Cut off at index 1
+Sorted Values: (0.5294118,0.04313728)(0.5372549,0.007843137)(0.5411765,0.003921568) Cut off at index 1
+Sorted Values: (0.5058824,0.05098042)(0.5254902,0.01960784)(0.5411765,0.01568627) Cut off at index 1
+Sorted Values: (0.4862745,0.0862745)(0.5254902,0.03921571)(0.5686275,0.04313725) Cut off at index 1
+Sorted Values: (0.4235294,0.1490196)(0.4431373,0.01960784)(0.5294118,0.08627453) Cut off at index 1
+Sorted Values: (0.5294118,0.04705885)(0.5411765,0.01176471)(0.5529412,0.01176471) Cut off at index 1
+Sorted Values: (0.4980392,0.09411764)(0.5176471,0.01960787)(0.5294118,0.01176471) Cut off at index 1
+Sorted Values: (0.427451,0.1764706)(0.4392157,0.01176471)(0.5176471,0.0784314) Cut off at index 1
+Sorted Values: (0.4352941,0.04705882)(0.4705882,0.03529412)(0.4745098,0.003921568) Cut off at index 1
+Sorted Values: (0.4627451,0.01176471)(0.4745098,0.01176471)(0.4784314,0.003921568) Cut off at index 1
+Sorted Values: (0.4117647,0.04313725)(0.4392157,0.02745098)(0.4784314,0.03921568) Cut off at index 1
+Sorted Values: (0.3411765,0.1137255)(0.3607843,0.01960784)(0.4470588,0.0862745) Cut off at index 1
+Sorted Values: (0.2431373,0.1764706)(0.3137255,0.07058825)(0.4235294,0.1098039) Cut off at index 1
+Sorted Values: (0.4980392,0.07058823)(0.5215687,0.02352944)(0.5411765,0.01960784) Cut off at index 1
+Sorted Values: (0.4666667,0.007843137)(0.4784314,0.01176471)(0.4823529,0.003921568) Cut off at index 2
+Sorted Values: (0.4470588,0.01568627)(0.5176471,0.07058826)(0.5333334,0.01568627) Cut off at index 2
+Sorted Values: (0.4392157,0.02352941)(0.5411765,0.1019608)(0.5764706,0.03529412) Cut off at index 2
+Sorted Values: (0.3568628,0.01568627)(0.5215687,0.1647059)(0.5333334,0.01176471) Cut off at index 2
+Sorted Values: (0.3058824,0.1529412)(0.3843137,0.07843137)(0.454902,0.07058823) Cut off at index 1
+Sorted Values: (0.3568628,0.1098039)(0.4117647,0.05490196)(0.4627451,0.05098039) Cut off at index 1
+Sorted Values: (0.4117647,0.0862745)(0.4313726,0.01960784)(0.4745098,0.04313725) Cut off at index 1
+Sorted Values: (0.4509804,0.0745098)(0.4666667,0.01568627)(0.4823529,0.01568627) Cut off at index 1
+Sorted Values: (0.4392157,0.05098039)(0.4784314,0.03921568)(0.4784314,0) Cut off at index 1
+Sorted Values: (0.4313726,0.03529412)(0.4784314,0.04705882)(0.4862745,0.007843137) Cut off at index 2
+Sorted Values: (0.427451,0.04705882)(0.4823529,0.05490196)(0.4823529,0) Cut off at index 2
+Sorted Values: (0.4235294,0.06274509)(0.4784314,0.05490196)(0.5176471,0.03921571) Cut off at index 1
+Sorted Values: (0.3960784,0.1019608)(0.4666667,0.07058823)(0.5450981,0.0784314) Cut off at index 1
+Sorted Values: (0.2941177,0.1176471)(0.3803922,0.0862745)(0.4823529,0.1019608) Cut off at index 1
+Sorted Values: (0.2901961,0.1137255)(0.3372549,0.04705882)(0.3686275,0.03137255) Cut off at index 1
+Sorted Values: (0.3647059,0.07058823)(0.4196078,0.05490196)(0.427451,0.007843137) Cut off at index 1
+Sorted Values: (0.4313726,0.04705882)(0.4588235,0.02745098)(0.4627451,0.003921568) Cut off at index 1
+Sorted Values: (0.4784314,0.01568627)(0.4823529,0.003921568)(0.4862745,0.003921568) Cut off at index 1
+Sorted Values: (0.2627451,0.1254902)(0.3137255,0.05098039)(0.3647059,0.05098039) Cut off at index 1
+Sorted Values: (0.3411765,0.05098039)(0.3882353,0.04705882)(0.4117647,0.02352941) Cut off at index 1
+Sorted Values: (0.3882353,0.007843137)(0.4313726,0.04313725)(0.4431373,0.01176471) Cut off at index 2
+Sorted Values: (0.2627451,0.007843137)(0.2941177,0.03137255)(0.3333333,0.03921568) Cut off at index 3
+Sorted Values: (0.3607843,0.03137255)(0.3764706,0.01568627)(0.4039216,0.02745098) Cut off at index 1
+Sorted Values: (0.3490196,0.02745098)(0.4,0.05098039)(0.427451,0.02745098) Cut off at index 2
+Sorted Values: (0.3882353,0.01960784)(0.4196078,0.03137255)(0.4235294,0.003921568) Cut off at index 2
+Sorted Values: (0.3843137,0.01568627)(0.4352941,0.05098039)(0.4509804,0.01568627) Cut off at index 2
+Sorted Values: (0.3254902,0.08235295)(0.4039216,0.07843137)(0.4352941,0.03137255) Cut off at index 1
+Sorted Values: (0.427451,0.03137255)(0.4470588,0.01960784)(0.4509804,0.003921568) Cut off at index 1
+Sorted Values: (0.3294118,0.1176471)(0.3960784,0.06666666)(0.427451,0.03137255) Cut off at index 1
+Sorted Values: (0.4431373,0.08235294)(0.4784314,0.03529412)(0.4823529,0.003921568) Cut off at index 1
+Sorted Values: (0.4745098,0.03921568)(0.4901961,0.01568627)(0.5058824,0.0156863) Cut off at index 1
+Sorted Values: (0.4823529,0.02352941)(0.4862745,0.003921568)(0.4901961,0.003921568) Cut off at index 1
+Sorted Values: (0.4862745,0.007843137)(0.4901961,0.003921568)(0.5058824,0.0156863) Cut off at index 3
+Sorted Values: (0.4862745,0)(0.4901961,0.003921568)(0.5019608,0.01176473) Cut off at index 3
+Sorted Values: (0.4705882,0.01960784)(0.4745098,0.003921568)(0.4784314,0.003921568) Cut off at index 1
+Sorted Values: (0.454902,0.01568627)(0.4588235,0.003921568)(0.4627451,0.003921568) Cut off at index 1
+Sorted Values: (0.4705882,0.0745098)(0.5058824,0.03529415)(0.5333334,0.02745098) Cut off at index 1
+Sorted Values: (0.3921569,0.08235294)(0.4588235,0.06666666)(0.4980392,0.03921568) Cut off at index 1
+Sorted Values: (0.2705882,0.07450981)(0.4196078,0.1490196)(0.4784314,0.05882353) Cut off at index 2
+Sorted Values: (0.1647059,0.1137255)(0.3568628,0.1921569)(0.4627451,0.1058823) Cut off at index 2
+Sorted Values: (0.4627451,0.05882353)(0.5254902,0.06274512)(0.5254902,0) Cut off at index 2
+Sorted Values: (0.3333333,0.07058823)(0.4705882,0.1372549)(0.4784314,0.007843137) Cut off at index 2
+Sorted Values: (0.5176471,0)(0.5568628,0.03921568)(0.5607843,0.003921568) Cut off at index 2
+Sorted Values: (0.427451,0.01960784)(0.5058824,0.0784314)(0.5137255,0.007843137) Cut off at index 2
+Sorted Values: (0.4862745,0.01176471)(0.5058824,0.01960787)(0.5137255,0.007843137) Cut off at index 2
+Sorted Values: (0.427451,0.01960784)(0.4666667,0.03921568)(0.4823529,0.01568627) Cut off at index 2
+Sorted Values: (0.3568628,0.1294118)(0.3568628,0)(0.4196078,0.06274509) Cut off at index 1
+Sorted Values: (0.4705882,0.09411764)(0.4823529,0.01176471)(0.5215687,0.03921571) Cut off at index 1
+Sorted Values: (0.345098,0.1647059)(0.3764706,0.03137255)(0.4705882,0.09411764) Cut off at index 1
+Sorted Values: (0.509804,0)(0.5176471,0.007843137)(0.5215687,0.003921568) Cut off at index 2
+Sorted Values: (0.4,0)(0.4470588,0.04705882)(0.4745098,0.02745098) Cut off at index 2
+Sorted Values: (0.2470588,0.01568627)(0.3921569,0.145098)(0.3960784,0.003921568) Cut off at index 2
+Sorted Values: (0.3686275,0.08235294)(0.4392157,0.07058823)(0.4784314,0.03921568) Cut off at index 1
+Sorted Values: (0.4627451,0.06666666)(0.4980392,0.03529412)(0.509804,0.01176473) Cut off at index 1
+Sorted Values: (0.4901961,0.05490196)(0.4980392,0.007843137)(0.5058824,0.007843167) Cut off at index 1
+Sorted Values: (0.3960784,0.01960784)(0.4509804,0.05490196)(0.4705882,0.01960784) Cut off at index 2
+Sorted Values: (0.2901961,0.01960784)(0.4078431,0.1176471)(0.4313726,0.02352941) Cut off at index 2
+Sorted Values: (0.2235294,0.02745098)(0.372549,0.1490196)(0.4,0.02745098) Cut off at index 2
+Sorted Values: (0.1411765,0.05882353)(0.2941177,0.1529412)(0.3411765,0.04705882) Cut off at index 2
+Sorted Values: (0.09803922,0.09803922)(0.172549,0.07450981)(0.282353,0.1098039) Cut off at index 3
+Sorted Values: (0.06666667,0.06666667)(0.07843138,0.01176471)(0.2666667,0.1882353) Cut off at index 3
+Sorted Values: (0.08235294,0.08235294)(0.1294118,0.04705883)(0.3176471,0.1882353) Cut off at index 3
+Sorted Values: (0.145098,0.145098)(0.2156863,0.07058823)(0.3686275,0.1529412) Cut off at index 3
+Sorted Values: (0.1686275,0.1137255)(0.3019608,0.1333333)(0.3882353,0.0862745) Cut off at index 2
+Sorted Values: (0.2745098,0.08235295)(0.3803922,0.1058823)(0.427451,0.04705882) Cut off at index 2
+Sorted Values: (0.3803922,0.07843137)(0.4431373,0.06274509)(0.4509804,0.007843137) Cut off at index 1
+Sorted Values: (0.4196078,0.05098039)(0.4627451,0.04313725)(0.4745098,0.01176471) Cut off at index 1
+Sorted Values: (0.4509804,0.03529412)(0.4784314,0.02745098)(0.4862745,0.007843137) Cut off at index 1
+Sorted Values: (0.4784314,0.05098039)(0.4980392,0.01960784)(0.4980392,0) Cut off at index 1
+Sorted Values: (0.5058824,0.05882356)(0.5176471,0.01176471)(0.5215687,0.003921568) Cut off at index 1
+Sorted Values: (0.4941176,0.09803921)(0.5058824,0.01176473)(0.5450981,0.03921568) Cut off at index 1
+Sorted Values: (0.4352941,0.05490196)(0.454902,0.01960784)(0.4941176,0.03921568) Cut off at index 1
+Sorted Values: (0.3764706,0.05882353)(0.4156863,0.03921568)(0.4588235,0.04313725) Cut off at index 1
+Sorted Values: (0.3490196,0.04313725)(0.4078431,0.05882353)(0.4509804,0.04313725) Cut off at index 2
+Sorted Values: (0.3019608,0.01568627)(0.4156863,0.1137255)(0.4352941,0.01960784) Cut off at index 2
+Sorted Values: (0.2745098,0.02352941)(0.4,0.1254902)(0.4117647,0.01176471) Cut off at index 2
+Sorted Values: (0.2705882,0.06274511)(0.372549,0.1019608)(0.3843137,0.01176471) Cut off at index 2
+Sorted Values: (0.3176471,0.08627452)(0.3607843,0.04313725)(0.3882353,0.02745098) Cut off at index 1
+Sorted Values: (0.3607843,0.09803921)(0.3843137,0.02352941)(0.4156863,0.03137255) Cut off at index 1
+Sorted Values: (0.4156863,0.08235294)(0.4235294,0.007843137)(0.4431373,0.01960784) Cut off at index 1
+Sorted Values: (0.4666667,0.05882353)(0.4705882,0.003921568)(0.4823529,0.01176471) Cut off at index 1
+Sorted Values: (0.2745098,0.02745099)(0.3294118,0.05490196)(0.372549,0.04313725) Cut off at index 2
+Sorted Values: (0.3058824,0.01960784)(0.3882353,0.08235294)(0.4039216,0.01568627) Cut off at index 2
+Sorted Values: (0.3490196,0.03529412)(0.4078431,0.05882353)(0.4078431,0) Cut off at index 2
+Sorted Values: (0.3529412,0.03529412)(0.3921569,0.03921568)(0.3960784,0.003921568) Cut off at index 2
+Sorted Values: (0.2235294,0)(0.2392157,0.01568627)(0.282353,0.04313727) Cut off at index 3
+Sorted Values: (0.1960784,0.007843137)(0.2352941,0.03921568)(0.2509804,0.01568629) Cut off at index 2
+Sorted Values: (0.2588235,0.04313727)(0.2745098,0.01568627)(0.3098039,0.03529412) Cut off at index 1
+Sorted Values: (0.3019608,0.01960784)(0.345098,0.04313725)(0.3686275,0.02352941) Cut off at index 2
+Sorted Values: (0.3411765,0.01960784)(0.4039216,0.06274509)(0.4431373,0.03921568) Cut off at index 2
+Sorted Values: (0.3372549,0.08235294)(0.3803922,0.04313725)(0.4392157,0.05882353) Cut off at index 1
+Sorted Values: (0.3529412,0.09803921)(0.3960784,0.04313725)(0.4156863,0.01960784) Cut off at index 1
+Sorted Values: (0.4,0.04313725)(0.4313726,0.03137255)(0.4352941,0.003921568) Cut off at index 1
+Sorted Values: (0.08235294,0.08235294)(0.1333333,0.0509804)(0.3176471,0.1843137) Cut off at index 3
+Sorted Values: (0.227451,0.2196078)(0.2745098,0.04705884)(0.3882353,0.1137255) Cut off at index 1
+Sorted Values: (0.3176471,0.1764706)(0.3490196,0.03137255)(0.4235294,0.0745098) Cut off at index 1
+Sorted Values: (0.3686275,0.1372549)(0.3843137,0.01568627)(0.4431373,0.05882353) Cut off at index 1
+Sorted Values: (0.4039216,0.1137255)(0.4235294,0.01960784)(0.4705882,0.04705882) Cut off at index 1
+Sorted Values: (0.3882353,0.09411764)(0.4039216,0.01568627)(0.4431373,0.03921568) Cut off at index 1
+Sorted Values: (0.3882353,0.07058823)(0.4039216,0.01568627)(0.4392157,0.03529412) Cut off at index 1
+Sorted Values: (0.5058824,0.0156863)(0.5529412,0.04705882)(0.5568628,0.003921568) Cut off at index 2
+Sorted Values: (0.4392157,0.003921568)(0.5333334,0.09411767)(0.5529412,0.01960784) Cut off at index 2
+Sorted Values: (0.3098039,0.007843137)(0.5058824,0.1960784)(0.509804,0.003921568) Cut off at index 2
+Sorted Values: (0.1960784,0.04705882)(0.4431373,0.2470588)(0.4980392,0.05490196) Cut off at index 2
+Sorted Values: (0.4980392,0.01568627)(0.5294118,0.03137258)(0.5333334,0.003921568) Cut off at index 2
+Sorted Values: (0.3647059,0.02745098)(0.4784314,0.1137255)(0.4784314,0) Cut off at index 2
+Sorted Values: (0.4941176,0.01176471)(0.5137255,0.01960787)(0.5411765,0.02745098) Cut off at index 3
+Sorted Values: (0.4078431,0.007843137)(0.4431373,0.03529412)(0.4823529,0.03921568) Cut off at index 3
+Sorted Values: (0.4705882,0.02352941)(0.4941176,0.02352941)(0.5058824,0.01176473) Cut off at index 1
+Sorted Values: (0.4588235,0.007843137)(0.4705882,0.01176471)(0.4941176,0.02352941) Cut off at index 3
+Sorted Values: (0.3960784,0.01568627)(0.4352941,0.03921568)(0.4352941,0) Cut off at index 2
+Sorted Values: (0.2901961,0.02352941)(0.4156863,0.1254902)(0.4352941,0.01960784) Cut off at index 2
+Sorted Values: (0.4901961,0.02745098)(0.4980392,0.007843137)(0.5137255,0.0156863) Cut off at index 1
+Sorted Values: (0.3921569,0.09019607)(0.4156863,0.02352941)(0.4392157,0.02352941) Cut off at index 1
+Sorted Values: (0.4039216,0.05098039)(0.4313726,0.02745098)(0.4705882,0.03921568) Cut off at index 1
+Sorted Values: (0.3058824,0.1333333)(0.3411765,0.03529412)(0.4431373,0.1019608) Cut off at index 1
+Sorted Values: (0.4627451,0.02745098)(0.5019608,0.03921571)(0.5215687,0.01960784) Cut off at index 2
+Sorted Values: (0.4901961,0.007843137)(0.4941176,0.003921568)(0.4980392,0.003921568) Cut off at index 1
+Sorted Values: (0.4117647,0.0745098)(0.4705882,0.05882353)(0.4941176,0.02352941) Cut off at index 1
+Sorted Values: (0.4,0.1372549)(0.4117647,0.01176471)(0.4745098,0.06274509) Cut off at index 1
+Sorted Values: (0.4117647,0.1333333)(0.4156863,0.003921568)(0.4588235,0.04313725) Cut off at index 1
+Sorted Values: (0.4352941,0.1137255)(0.4431373,0.007843137)(0.4666667,0.02352941) Cut off at index 1
+Sorted Values: (0.2509804,0.007843152)(0.4039216,0.1529412)(0.4235294,0.01960784) Cut off at index 2
+Sorted Values: (0.3490196,0.02352941)(0.4588235,0.1098039)(0.4627451,0.003921568) Cut off at index 2
+Sorted Values: (0.3921569,0.003921568)(0.4431373,0.05098039)(0.4431373,0) Cut off at index 2
+Sorted Values: (0.1254902,0.08235295)(0.2980392,0.172549)(0.3411765,0.04313725) Cut off at index 2
+Sorted Values: (0.227451,0.09019607)(0.3568628,0.1294118)(0.4078431,0.05098039) Cut off at index 2
+Sorted Values: (0.3019608,0.08235295)(0.3960784,0.09411764)(0.4196078,0.02352941) Cut off at index 2
+Sorted Values: (0.3372549,0.05490196)(0.4235294,0.0862745)(0.4431373,0.01960784) Cut off at index 2
+Sorted Values: (0.3764706,0.04705882)(0.4509804,0.0745098)(0.4705882,0.01960784) Cut off at index 2
+Sorted Values: (0.4156863,0.04313725)(0.4352941,0.01960784)(0.4588235,0.02352941) Cut off at index 1
+Sorted Values: (0.4235294,0.04313725)(0.4313726,0.007843137)(0.4509804,0.01960784) Cut off at index 1
+Sorted Values: (0.2862745,0.01568627)(0.3294118,0.04313725)(0.3529412,0.02352941) Cut off at index 2
+Sorted Values: (0.3176471,0.02352941)(0.3215686,0.003921568)(0.3411765,0.01960784) Cut off at index 1
+Sorted Values: (0.2784314,0)(0.3058824,0.02745098)(0.3176471,0.01176471) Cut off at index 2
+Sorted Values: (0.2862745,0)(0.3333333,0.04705882)(0.3411765,0.007843137) Cut off at index 2
+Sorted Values: (0.2666667,0.02745099)(0.3490196,0.08235294)(0.372549,0.02352941) Cut off at index 2
+Sorted Values: (0.4039216,0.003921568)(0.4313726,0.02745098)(0.4431373,0.01176471) Cut off at index 2
+Sorted Values: (0.172549,0.1058824)(0.3058824,0.1333333)(0.3686275,0.06274509) Cut off at index 2
+Sorted Values: (0.3490196,0.1019608)(0.3803922,0.03137255)(0.4352941,0.05490196) Cut off at index 1
+Sorted Values: (0.4078431,0.05490196)(0.4117647,0.003921568)(0.4352941,0.02352941) Cut off at index 1
+Sorted Values: (0.2509804,0.1647059)(0.2901961,0.03921568)(0.3647059,0.0745098) Cut off at index 1
+Sorted Values: (0.3294118,0.09019609)(0.3568628,0.02745098)(0.3882353,0.03137255) Cut off at index 1
+Sorted Values: (0.3686275,0.03921568)(0.4078431,0.03921568)(0.4078431,0) Cut off at index 1
+Sorted Values: (0.3882353,0.03529412)(0.4,0.01176471)(0.4117647,0.01176471) Cut off at index 1
+Sorted Values: (0.4,0.02745098)(0.4039216,0.003921568)(0.4078431,0.003921568) Cut off at index 1
+Sorted Values: (0.4431373,0.05490196)(0.5058824,0.06274512)(0.5411765,0.03529412) Cut off at index 2
+Sorted Values: (0.3803922,0.1137255)(0.4823529,0.1019608)(0.5372549,0.05490199) Cut off at index 1
+Sorted Values: (0.5254902,0.02745101)(0.5450981,0.01960784)(0.5450981,0) Cut off at index 1
+Sorted Values: (0.4705882,0.09411764)(0.4901961,0.01960784)(0.5215687,0.03137258) Cut off at index 1
+Sorted Values: (0.4039216,0.1529412)(0.4235294,0.01960784)(0.4980392,0.0745098) Cut off at index 1
+Sorted Values: (0.5215687,0.04705885)(0.5333334,0.01176471)(0.5450981,0.01176471) Cut off at index 1
+Sorted Values: (0.4705882,0.05490196)(0.5019608,0.03137258)(0.509804,0.007843137) Cut off at index 1
+Sorted Values: (0.3921569,0.07058823)(0.4235294,0.03137255)(0.4392157,0.01568627) Cut off at index 1
+Sorted Values: (0.4117647,0.03137255)(0.4235294,0.01176471)(0.4431373,0.01960784) Cut off at index 1
+Sorted Values: (0.4235294,0.03921568)(0.4431373,0.01960784)(0.4470588,0.003921568) Cut off at index 1
+Sorted Values: (0.3490196,0.04705882)(0.4392157,0.09019607)(0.4431373,0.003921568) Cut off at index 2
+Sorted Values: (0.2666667,0.04313727)(0.427451,0.1607843)(0.4431373,0.01568627) Cut off at index 2
+Sorted Values: (0.4784314,0.003921568)(0.4901961,0.01176471)(0.5019608,0.01176473) Cut off at index 3
+Sorted Values: (0.427451,0.01960784)(0.4470588,0.01960784)(0.4509804,0.003921568) Cut off at index 1
+Sorted Values: (0.2901961,0.04313727)(0.3764706,0.0862745)(0.4,0.02352941) Cut off at index 2
+Sorted Values: (0.4509804,0.04705882)(0.4980392,0.04705882)(0.5137255,0.0156863) Cut off at index 1
+Sorted Values: (0.3882353,0.06666666)(0.4901961,0.1019608)(0.5176471,0.02745101) Cut off at index 2
+Sorted Values: (0.3019608,0.1137255)(0.3960784,0.09411764)(0.4470588,0.05098039) Cut off at index 1
+Sorted Values: (0.2392157,0.1254902)(0.372549,0.1333333)(0.4313726,0.05882353) Cut off at index 2
+Sorted Values: (0.2039216,0.1254902)(0.3686275,0.1647059)(0.4235294,0.05490196) Cut off at index 2
+Sorted Values: (0.372549,0.1882353)(0.3803922,0.007843137)(0.4862745,0.1058823) Cut off at index 1
+Sorted Values: (0.4117647,0.1294118)(0.4196078,0.007843137)(0.4784314,0.05882353) Cut off at index 1
+Sorted Values: (0.4313726,0.05490196)(0.4431373,0.01176471)(0.4705882,0.02745098) Cut off at index 1
+Sorted Values: (0.3176471,0.09019609)(0.4,0.08235294)(0.4509804,0.05098039) Cut off at index 1
+Sorted Values: (0.3686275,0.04705882)(0.4352941,0.06666666)(0.4509804,0.01568627) Cut off at index 2
+Sorted Values: (0.4235294,0.01568627)(0.4352941,0.01176471)(0.4666667,0.03137255) Cut off at index 3
+Sorted Values: (0.1294118,0.1019608)(0.2784314,0.1490196)(0.3411765,0.06274509) Cut off at index 2
+Sorted Values: (0.254902,0.04313727)(0.3921569,0.1372549)(0.4196078,0.02745098) Cut off at index 2
+Sorted Values: (0.3294118,0.01176471)(0.4352941,0.1058823)(0.4431373,0.007843137) Cut off at index 2
+Sorted Values: (0.3803922,0.01176471)(0.4588235,0.07843137)(0.4627451,0.003921568) Cut off at index 2
+Sorted Values: (0.1176471,0.06666666)(0.2705882,0.1529412)(0.3176471,0.04705882) Cut off at index 2
+Sorted Values: (0.2470588,0.04705882)(0.3686275,0.1215686)(0.3921569,0.02352941) Cut off at index 2
+Sorted Values: (0.3254902,0.02745098)(0.4117647,0.0862745)(0.4117647,0) Cut off at index 2
+Sorted Values: (0.3176471,0.01960784)(0.3607843,0.04313725)(0.3686275,0.007843137) Cut off at index 2
+Sorted Values: (0.2705882,0.003921568)(0.3058824,0.03529412)(0.3254902,0.01960784) Cut off at index 2
+Sorted Values: (0.2117647,0.01960784)(0.2313726,0.01960784)(0.2392157,0.007843137) Cut off at index 1
+Sorted Values: (0.1568628,0.07450981)(0.1882353,0.03137255)(0.2196078,0.03137255) Cut off at index 1
+Sorted Values: (0.3843137,0.03529412)(0.3882353,0.003921568)(0.4039216,0.01568627) Cut off at index 1
+Sorted Values: (0.3843137,0.04705882)(0.3921569,0.007843137)(0.4117647,0.01960784) Cut off at index 1
+Sorted Values: (0.3294118,0.09019609)(0.3607843,0.03137255)(0.3960784,0.03529412) Cut off at index 1
+Sorted Values: (0.3686275,0.03137255)(0.4039216,0.03529412)(0.4156863,0.01176471) Cut off at index 2
+Sorted Values: (0.1882353,0.1882353)(0.2156863,0.02745098)(0.3058824,0.09019609) Cut off at index 1
+Sorted Values: (0.2666667,0.1333333)(0.3215686,0.05490196)(0.3607843,0.03921568) Cut off at index 1
+Sorted Values: (0.3254902,0.09803922)(0.3647059,0.03921568)(0.3882353,0.02352941) Cut off at index 1
+Sorted Values: (0.4392157,0.0862745)(0.4862745,0.04705882)(0.5058824,0.01960787) Cut off at index 1
+Sorted Values: (0.3529412,0.1019608)(0.4627451,0.1098039)(0.5019608,0.03921571) Cut off at index 2
+Sorted Values: (0.4509804,0.007843137)(0.509804,0.05882356)(0.5215687,0.01176471) Cut off at index 2
+Sorted Values: (0.4196078,0.02745098)(0.5058824,0.08627453)(0.5215687,0.01568627) Cut off at index 2
+Sorted Values: (0.4,0.0745098)(0.4705882,0.07058823)(0.5019608,0.03137258) Cut off at index 1
+Sorted Values: (0.3372549,0.1254902)(0.4117647,0.0745098)(0.4627451,0.05098039) Cut off at index 1
+Sorted Values: (0.3215686,0.1686275)(0.3803922,0.05882353)(0.4745098,0.09411764) Cut off at index 1
+Sorted Values: (0.2784314,0.2117647)(0.3215686,0.04313725)(0.4666667,0.145098) Cut off at index 1
+Sorted Values: (0.2509804,0.2313726)(0.2666667,0.01568627)(0.4235294,0.1568627) Cut off at index 1
+Sorted Values: (0.1647059,0.1647059)(0.2156863,0.05098039)(0.3411765,0.1254902) Cut off at index 1
+Sorted Values: (0.4470588,0.01568627)(0.5529412,0.1058824)(0.5607843,0.007843137) Cut off at index 2
+Sorted Values: (0.4509804,0.007843137)(0.5568628,0.1058824)(0.5803922,0.02352941) Cut off at index 2
+Sorted Values: (0.4588235,0.007843137)(0.5411765,0.08235297)(0.5607843,0.01960784) Cut off at index 2
+Sorted Values: (0.4823529,0.03921568)(0.5176471,0.03529415)(0.5333334,0.01568627) Cut off at index 1
+Sorted Values: (0.5137255,0.04705885)(0.5490196,0.03529412)(0.5529412,0.003921568) Cut off at index 1
+Sorted Values: (0.5137255,0.07058826)(0.5372549,0.02352941)(0.5450981,0.007843137) Cut off at index 1
+Sorted Values: (0.509804,0.07058826)(0.5176471,0.007843137)(0.5215687,0.003921568) Cut off at index 1
+Sorted Values: (0.4392157,0.06666666)(0.4509804,0.01176471)(0.4705882,0.01960784) Cut off at index 1
+Sorted Values: (0.345098,0.03921568)(0.4039216,0.05882353)(0.4156863,0.01176471) Cut off at index 2
+Sorted Values: (0.345098,0.03921568)(0.4117647,0.06666666)(0.4313726,0.01960784) Cut off at index 2
+Sorted Values: (0.2627451,0.03529413)(0.4,0.1372549)(0.427451,0.02745098) Cut off at index 2
+Sorted Values: (0.1764706,0.04705882)(0.3411765,0.1647059)(0.3960784,0.05490196) Cut off at index 2
+Sorted Values: (0.3490196,0.1058824)(0.4784314,0.1294118)(0.5411765,0.06274512) Cut off at index 2
+Sorted Values: (0.4,0.06274509)(0.5176471,0.1176471)(0.5647059,0.04705882) Cut off at index 2
+Sorted Values: (0.4470588,0.03921568)(0.5294118,0.08235297)(0.5529412,0.02352941) Cut off at index 2
+Sorted Values: (0.4745098,0.03529412)(0.5176471,0.04313728)(0.5294118,0.01176471) Cut off at index 2
+Sorted Values: (0.5058824,0.02352944)(0.5176471,0.01176471)(0.5333334,0.01568627) Cut off at index 1
+Sorted Values: (0.4666667,0.05490196)(0.4705882,0.003921568)(0.4784314,0.007843137) Cut off at index 1
+Sorted Values: (0.3764706,0.05490196)(0.427451,0.05098039)(0.4470588,0.01960784) Cut off at index 1
+Sorted Values: (0.2666667,0.09411766)(0.3529412,0.0862745)(0.3960784,0.04313725) Cut off at index 1
+Sorted Values: (0.1137255,0.1137255)(0.3098039,0.1960784)(0.4039216,0.09411764) Cut off at index 2
+Sorted Values: (0.2509804,0.1411765)(0.372549,0.1215686)(0.4509804,0.07843137) Cut off at index 1
+Sorted Values: (0.3294118,0.09411766)(0.4156863,0.0862745)(0.4823529,0.06666666) Cut off at index 1
+Sorted Values: (0.3803922,0.05882353)(0.4431373,0.06274509)(0.4901961,0.04705882) Cut off at index 2
+Sorted Values: (0.4470588,0.04313725)(0.454902,0.007843137)(0.4941176,0.03921568) Cut off at index 1
+Sorted Values: (0.4666667,0.02745098)(0.5058824,0.03921571)(0.5176471,0.01176471) Cut off at index 2
+Sorted Values: (0.4078431,0.02352941)(0.4980392,0.09019607)(0.509804,0.01176473) Cut off at index 2
+Sorted Values: (0.3333333,0.02352941)(0.427451,0.09411764)(0.4470588,0.01960784) Cut off at index 2
+Sorted Values: (0.2980392,0.01568627)(0.4235294,0.1254902)(0.4352941,0.01176471) Cut off at index 2
+Sorted Values: (0.2941177,0.01960784)(0.4627451,0.1686274)(0.4705882,0.007843137) Cut off at index 2
+Sorted Values: (0.2431373,0.1372549)(0.3411765,0.09803922)(0.3960784,0.05490196) Cut off at index 1
+Sorted Values: (0.3529412,0.09411764)(0.4039216,0.05098039)(0.4313726,0.02745098) Cut off at index 1
+Sorted Values: (0.4705882,0.05490196)(0.4901961,0.01960784)(0.5137255,0.02352944) Cut off at index 1
+Sorted Values: (0.4039216,0.05098039)(0.4117647,0.007843137)(0.4392157,0.02745098) Cut off at index 1
+Sorted Values: (0.2941177,0.07450981)(0.3411765,0.04705882)(0.3960784,0.05490196) Cut off at index 1
+Sorted Values: (0.3764706,0.02352941)(0.3921569,0.01568627)(0.427451,0.03529412) Cut off at index 3
+Sorted Values: (0.1568628,0.003921568)(0.3490196,0.1921569)(0.3529412,0.003921568) Cut off at index 2
+Sorted Values: (0.2588235,0.01568629)(0.3960784,0.1372549)(0.4039216,0.007843137) Cut off at index 2
+Sorted Values: (0.3058824,0.01960784)(0.4078431,0.1019608)(0.4117647,0.003921568) Cut off at index 2
+Sorted Values: (0.3372549,0.007843137)(0.3764706,0.03921568)(0.3960784,0.01960784) Cut off at index 2
+Sorted Values: (0.2980392,0.01960784)(0.345098,0.04705882)(0.3568628,0.01176471) Cut off at index 2
+Sorted Values: (0.172549,0.01568627)(0.2156863,0.04313725)(0.2392157,0.02352941) Cut off at index 2
+Sorted Values: (0.2862745,0.09411766)(0.3019608,0.01568627)(0.3529412,0.05098039) Cut off at index 1
+Sorted Values: (0.4078431,0.01960784)(0.427451,0.01960784)(0.4352941,0.007843137) Cut off at index 1
+Sorted Values: (0.3686275,0.0862745)(0.3803922,0.01176471)(0.3960784,0.01568627) Cut off at index 1
+Sorted Values: (0.4078431,0.01960784)(0.4117647,0.003921568)(0.4156863,0.003921568) Cut off at index 1
+Sorted Values: (0.4,0.0745098)(0.4078431,0.007843137)(0.4313726,0.02352941) Cut off at index 1
+Sorted Values: (0.4431373,0.03921568)(0.4588235,0.01568627)(0.4588235,0) Cut off at index 1
+Sorted Values: (0.1176471,0.01176471)(0.3921569,0.2745098)(0.4039216,0.01176471) Cut off at index 2
+Sorted Values: (0.2431373,0.02745098)(0.4313726,0.1882353)(0.4470588,0.01568627) Cut off at index 2
+Sorted Values: (0.3333333,0.0745098)(0.4156863,0.08235294)(0.4627451,0.04705882) Cut off at index 2
+Sorted Values: (0.3882353,0.1098039)(0.4039216,0.01568627)(0.4745098,0.07058823) Cut off at index 1
+Sorted Values: (0.3764706,0.09803921)(0.4117647,0.03529412)(0.4509804,0.03921568) Cut off at index 1
+Sorted Values: (0.4078431,0.1254902)(0.427451,0.01960784)(0.4784314,0.05098039) Cut off at index 1
+Sorted Values: (0.3803922,0.1372549)(0.3960784,0.01568627)(0.4705882,0.0745098) Cut off at index 1
+Sorted Values: (0.3137255,0.1607843)(0.3254902,0.01176471)(0.4196078,0.09411764) Cut off at index 1
+Sorted Values: (0.1137255,0.02745098)(0.372549,0.2588235)(0.3960784,0.02352941) Cut off at index 2
+Sorted Values: (0.2627451,0.003921568)(0.4392157,0.1764706)(0.4509804,0.01176471) Cut off at index 2
+Sorted Values: (0.427451,0.03137255)(0.5019608,0.07450983)(0.5215687,0.01960784) Cut off at index 2
+Sorted Values: (0.4470588,0.04313725)(0.4862745,0.03921568)(0.4862745,0) Cut off at index 1
+Sorted Values: (0.4235294,0.05882353)(0.4666667,0.04313725)(0.4862745,0.01960784) Cut off at index 1
+Sorted Values: (0.3882353,0.07843137)(0.4352941,0.04705882)(0.4784314,0.04313725) Cut off at index 1
+Sorted Values: (0.3294118,0.08235295)(0.4078431,0.07843137)(0.4705882,0.06274509) Cut off at index 1
+Sorted Values: (0.2705882,0.05490197)(0.372549,0.1019608)(0.4117647,0.03921568) Cut off at index 2
+Sorted Values: (0.2509804,0.04705884)(0.3764706,0.1254902)(0.4,0.02352941) Cut off at index 2
+Sorted Values: (0.2627451,0.04705884)(0.4313726,0.1686274)(0.4509804,0.01960784) Cut off at index 2
+Sorted Values: (0.01176471,0.01176471)(0.2392157,0.227451)(0.3254902,0.08627452) Cut off at index 2
+Sorted Values: (0.2392157,0.06666666)(0.3843137,0.145098)(0.427451,0.04313725) Cut off at index 2
+Sorted Values: (0.4196078,0.04313725)(0.4509804,0.03137255)(0.4980392,0.04705882) Cut off at index 3
+Sorted Values: (0.3019608,0.09411766)(0.345098,0.04313725)(0.3960784,0.05098039) Cut off at index 1
+Sorted Values: (0.3803922,0.06274509)(0.3882353,0.007843137)(0.4313726,0.04313725) Cut off at index 1
+Sorted Values: (0.4078431,0.02745098)(0.4235294,0.01568627)(0.427451,0.003921568) Cut off at index 1
+Sorted Values: (0.1176471,0.0745098)(0.2509804,0.1333334)(0.3294118,0.07843137) Cut off at index 2
+Sorted Values: (0.2509804,0)(0.3921569,0.1411765)(0.4078431,0.01568627) Cut off at index 2
+Sorted Values: (0.3490196,0.04313725)(0.4235294,0.0745098)(0.427451,0.003921568) Cut off at index 2
+Sorted Values: (0.3529412,0.007843137)(0.4039216,0.05098039)(0.4078431,0.003921568) Cut off at index 2
+Sorted Values: (0.3372549,0.01176471)(0.3647059,0.02745098)(0.3686275,0.003921568) Cut off at index 2
+Sorted Values: (0.1019608,0.09411765)(0.2039216,0.1019608)(0.2431373,0.03921568) Cut off at index 2
+Sorted Values: (0.3333333,0.06274509)(0.3647059,0.03137255)(0.3843137,0.01960784) Cut off at index 1
+Sorted Values: (0.3176471,0.1176471)(0.3372549,0.01960784)(0.3960784,0.05882353) Cut off at index 1
+Sorted Values: (0.4117647,0.03921568)(0.4156863,0.003921568)(0.4313726,0.01568627) Cut off at index 1
+Sorted Values: (0.3411765,0.05098039)(0.4078431,0.06666666)(0.4117647,0.003921568) Cut off at index 2
+Sorted Values: (0.227451,0.1333333)(0.3019608,0.07450981)(0.372549,0.07058823) Cut off at index 1
+Sorted Values: (0.3294118,0.08627452)(0.3882353,0.05882353)(0.4352941,0.04705882) Cut off at index 1
+Sorted Values: (0.02745098,0.02745098)(0.2862745,0.2588235)(0.3333333,0.04705882) Cut off at index 2
+Sorted Values: (0.1568628,0.08627451)(0.3019608,0.145098)(0.3764706,0.0745098) Cut off at index 2
+Sorted Values: (0.2509804,0.1098039)(0.372549,0.1215686)(0.427451,0.05490196) Cut off at index 2
+Sorted Values: (0.3098039,0.1137255)(0.3803922,0.07058823)(0.4235294,0.04313725) Cut off at index 1
+Sorted Values: (0.3215686,0.1529412)(0.3254902,0.003921568)(0.4196078,0.09411764) Cut off at index 1
+Sorted Values: (0.3058824,0.1568628)(0.3490196,0.04313725)(0.4509804,0.1019608) Cut off at index 1
+Sorted Values: (0.2705882,0.1411765)(0.3490196,0.07843137)(0.427451,0.07843137) Cut off at index 1
+Sorted Values: (0.2117647,0.1254902)(0.3254902,0.1137255)(0.3921569,0.06666666) Cut off at index 1
+Sorted Values: (0.1568628,0.1137255)(0.2941177,0.1372549)(0.3529412,0.05882353) Cut off at index 2
+Sorted Values: (0.1294118,0.1294118)(0.2784314,0.1490196)(0.3254902,0.04705882) Cut off at index 2
+Sorted Values: (0.1019608,0.1019608)(0.2627451,0.1607843)(0.3333333,0.07058823) Cut off at index 2
+Sorted Values: (0.1176471,0.1176471)(0.2980392,0.1803922)(0.3764706,0.07843137) Cut off at index 2
+Sorted Values: (0.04705882,0.003921568)(0.3137255,0.2666667)(0.3411765,0.02745098) Cut off at index 2
+Sorted Values: (0.2470588,0.01568627)(0.4,0.1529412)(0.4117647,0.01176471) Cut off at index 2
+Sorted Values: (0.3333333,0.007843137)(0.3960784,0.06274509)(0.4196078,0.02352941) Cut off at index 2
+Sorted Values: (0.003921569,0.003921569)(0.172549,0.1686275)(0.254902,0.08235295) Cut off at index 2
+Sorted Values: (0.2313726,0.01960784)(0.3529412,0.1215686)(0.3686275,0.01568627) Cut off at index 2
+Sorted Values: (0.3176471,0)(0.3882353,0.07058823)(0.4039216,0.01568627) Cut off at index 2
+Sorted Values: (0.1568628,0.07843138)(0.2666667,0.1098039)(0.3215686,0.05490196) Cut off at index 2
+Sorted Values: (0.3176471,0.01960784)(0.4117647,0.09411764)(0.4196078,0.007843137) Cut off at index 2
+Sorted Values: (0.345098,0.0745098)(0.3686275,0.02352941)(0.4078431,0.03921568) Cut off at index 1
+Sorted Values: (0.3411765,0.03529412)(0.3764706,0.03529412)(0.3921569,0.01568627) Cut off at index 1
+Sorted Values: (0.3411765,0.01960784)(0.372549,0.03137255)(0.3882353,0.01568627) Cut off at index 2
+Sorted Values: (0.282353,0.08627452)(0.2941177,0.01176471)(0.3372549,0.04313725) Cut off at index 1
+Sorted Values: (0.3843137,0.03137255)(0.4039216,0.01960784)(0.4078431,0.003921568) Cut off at index 1
+Sorted Values: (0.345098,0.08235294)(0.3607843,0.01568627)(0.4117647,0.05098039) Cut off at index 1
+Sorted Values: (0.4156863,0.01176471)(0.4235294,0.007843137)(0.4313726,0.007843137) Cut off at index 1
+Sorted Values: (0.4117647,0.04705882)(0.4156863,0.003921568)(0.427451,0.01176471) Cut off at index 1
+Sorted Values: (0.372549,0.09019607)(0.4117647,0.03921568)(0.4509804,0.03921568) Cut off at index 1
+Sorted Values: (0.4352941,0.04313725)(0.4627451,0.02745098)(0.4862745,0.02352941) Cut off at index 1
+Sorted Values: (0.09411765,0.07843138)(0.2588235,0.1647059)(0.3137255,0.05490196) Cut off at index 2
+Sorted Values: (0.2117647,0.07843137)(0.3176471,0.1058824)(0.3764706,0.05882353) Cut off at index 2
+Sorted Values: (0.2862745,0.09803922)(0.3529412,0.06666666)(0.4078431,0.05490196) Cut off at index 1
+Sorted Values: (0.3372549,0.1098039)(0.3490196,0.01176471)(0.427451,0.07843137) Cut off at index 1
+Sorted Values: (0.3490196,0.1019608)(0.3529412,0.003921568)(0.4313726,0.07843137) Cut off at index 1
+Sorted Values: (0.3607843,0.09019607)(0.3803922,0.01960784)(0.4470588,0.06666666) Cut off at index 1
+Sorted Values: (0.3803922,0.1098039)(0.3921569,0.01176471)(0.4627451,0.07058823) Cut off at index 1
+Sorted Values: (0.3764706,0.1058823)(0.4,0.02352941)(0.454902,0.05490196) Cut off at index 1
+Sorted Values: (0.3960784,0.07843137)(0.4156863,0.01960784)(0.4431373,0.02745098) Cut off at index 1
+Sorted Values: (0.145098,0.01568627)(0.3176471,0.172549)(0.3176471,0) Cut off at index 2
+Sorted Values: (0.2666667,0.02352943)(0.3764706,0.1098039)(0.3803922,0.003921568) Cut off at index 2
+Sorted Values: (0.3411765,0.02745098)(0.4039216,0.06274509)(0.4117647,0.007843137) Cut off at index 2
+Sorted Values: (0.3882353,0.003921568)(0.4431373,0.05490196)(0.4588235,0.01568627) Cut off at index 2
+Sorted Values: (0.1490196,0.01176471)(0.3215686,0.172549)(0.3215686,0) Cut off at index 2
+Sorted Values: (0.2745098,0.03137256)(0.372549,0.09803921)(0.3882353,0.01568627) Cut off at index 2
+Sorted Values: (0.3607843,0.04705882)(0.4039216,0.04313725)(0.4313726,0.02745098) Cut off at index 1
+Sorted Values: (0.372549,0.01568627)(0.4235294,0.05098039)(0.427451,0.003921568) Cut off at index 2
+Sorted Values: (0.3294118,0.04705882)(0.3607843,0.03137255)(0.3921569,0.03137255) Cut off at index 1
+Sorted Values: (0.3137255,0.08627452)(0.3411765,0.02745098)(0.3764706,0.03529412) Cut off at index 1
+Sorted Values: (0.3843137,0.03921568)(0.3882353,0.003921568)(0.3960784,0.007843137) Cut off at index 1
+Sorted Values: (0.2980392,0.09803922)(0.3372549,0.03921568)(0.3803922,0.04313725) Cut off at index 1
+Sorted Values: (0.4156863,0.05490196)(0.4235294,0.007843137)(0.4352941,0.01176471) Cut off at index 1
+Sorted Values: (0.4078431,0.06666666)(0.427451,0.01960784)(0.4431373,0.01568627) Cut off at index 1
+Sorted Values: (0.4666667,0.03921568)(0.4666667,0)(0.4745098,0.007843137) Cut off at index 1
+Sorted Values: (0.1529412,0.02745098)(0.2941177,0.1411765)(0.3176471,0.02352941) Cut off at index 2
+Sorted Values: (0.2392157,0.05098039)(0.3176471,0.07843138)(0.3607843,0.04313725) Cut off at index 2
+Sorted Values: (0.3058824,0.06666668)(0.3490196,0.04313725)(0.4,0.05098039) Cut off at index 1
+Sorted Values: (0.372549,0.05098039)(0.4039216,0.03137255)(0.427451,0.02352941) Cut off at index 1
+Sorted Values: (0.4392157,0.03921568)(0.4470588,0.007843137)(0.4588235,0.01176471) Cut off at index 1
+Sorted Values: (0.1607843,0.007843137)(0.3215686,0.1607843)(0.3215686,0) Cut off at index 2
+Sorted Values: (0.2509804,0.003921583)(0.3803922,0.1294118)(0.3803922,0) Cut off at index 2
+Sorted Values: (0.345098,0.007843137)(0.4196078,0.0745098)(0.4313726,0.01176471) Cut off at index 2
+Sorted Values: (0.4313726,0.02352941)(0.4392157,0.007843137)(0.454902,0.01568627) Cut off at index 1
+Sorted Values: (0.4627451,0.003921568)(0.4627451,0)(0.4705882,0.007843137) Cut off at index 3
+Sorted Values: (0.1215686,0.09803922)(0.2666667,0.1450981)(0.3137255,0.04705882) Cut off at index 2
+Sorted Values: (0.2352941,0.04313725)(0.372549,0.1372549)(0.3882353,0.01568627) Cut off at index 2
+Sorted Values: (0.3372549,0.02352941)(0.4156863,0.07843137)(0.4392157,0.02352941) Cut off at index 2
+Sorted Values: (0.4196078,0.03921568)(0.4235294,0.003921568)(0.4509804,0.02745098) Cut off at index 1
+Sorted Values: (0.4313726,0.01960784)(0.4470588,0.01568627)(0.454902,0.007843137) Cut off at index 1
+Sorted Values: (0.2666667,0.06666668)(0.372549,0.1058823)(0.3882353,0.01568627) Cut off at index 2
+Sorted Values: (0.3647059,0.01960784)(0.4156863,0.05098039)(0.4235294,0.007843137) Cut off at index 2
+Sorted Values: (0.4156863,0.01568627)(0.4235294,0.007843137)(0.4431373,0.01960784) Cut off at index 3
+Sorted Values: (0.2784314,0.08627452)(0.3568628,0.07843137)(0.3960784,0.03921568) Cut off at index 1
+Sorted Values: (0.4117647,0.05098039)(0.4470588,0.03529412)(0.454902,0.007843137) Cut off at index 1
+Running Second Round of Max-flow Segmentation
+numScans = 20, scanWidth = 512, scanHeight = 512
+xfreq, yfreq, zfreq = 2, 2, 1
+Setup Time            = 5331
+Reset Time            = 0
+BFS Time              = 0
+Computing flow Time   = 0
+Total number of vertexes in graph = 1310722
+Total number of edges in graph    = 7712783
+Maximum size of queue             = 0
+Iterations of bfs            = 0
+Iterations of flow reduction = 0
