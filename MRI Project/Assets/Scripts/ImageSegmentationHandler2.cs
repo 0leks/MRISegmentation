@@ -10,10 +10,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public LoadLegend m_legendScript;
     public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
-    public int m_numScans;
     public float m_threshold;
     public bool m_3DFlow;
-    public int m_textureoffset;
 
     public AudioSource m_ErrorAudio;
 
@@ -38,33 +36,24 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     private int guiWidth;
     private int guiHeight;
-
-    private int m_scanWidth;
-    private int m_scanHeight;
-
+    
     private int edgesCounter;
 
     private float SOURCESINKFLOW = 2.0f;
     private float SIGMASQUARED = 0.0001f;
-
-    private Texture2D displayedTexture;
-    private Texture2D[] originalScanTextures;
-    private float[,,] originalScans; // this is an array of all of the original Scans stored as 2d float arrays
-
-    private Texture2D[] segmentedTextures;
+    
+    private bool[,,] segmentedTextures;
 
     private List<Point> partOfObject;
     private List<Point> partOfBackground;
 
     private List<GameObject> objectSeeds;
     private List<GameObject> backgroundSeeds;
+    
+    [SerializeField]
+    private DataContainer data;
 
     StreamWriter file;
-
-    public int GetOffset()
-    {
-        return m_textureoffset;
-    }
 
     // Use this for initialization
     void Start() {
@@ -79,47 +68,19 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             m_Renderer.material.SetVector("_UseAlpha", new Vector4(0, 0, 0, 1));
         }
         displayMode2D = true;
-        originalScanTextures = new Texture2D[m_numScans];
-        segmentedTextures = new Texture2D[m_numScans];
         partOfObject = new List<Point>();
         partOfBackground = new List<Point>();
         objectSeeds = new List<GameObject>();
         backgroundSeeds = new List<GameObject>();
-        m_scanWidth = -1;
-        m_scanHeight = -1;
-
-        for (int scanIndex = 0; scanIndex < m_numScans; scanIndex++) {
-            //int ones = scanIndex % 10;
-            //int tens = ((scanIndex - ones) % 100) / 10;
-            //int hundreds = ((scanIndex - ones - 10 * tens) % 1000) / 100;
-            //string filePath = "Assets/Resources/scans/png-0" + hundreds + tens + ones + ".png";
-            string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + (scanIndex + GetOffset()).ToString().PadLeft(3, '0') + ".png";
-            Texture2D scanTexture = LoadScan(filePath);
-            if (m_scanWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
-            {
-                m_scanWidth = scanTexture.width;
-                m_scanHeight = scanTexture.height;
-                originalScans = new float[m_numScans, m_scanWidth, m_scanHeight];
-            }
-            for (int x = 0; x < m_scanWidth; x++) {
-                for (int y = 0; y < m_scanHeight; y++) {
-                    originalScans[scanIndex, x, y] = scanTexture.GetPixel(-x, -y).r;
-                }
-            }
-            originalScanTextures[scanIndex] = scanTexture;
-            //saveTextureToFile(originalScans, scanIndex, "Saved Texture " + scanIndex + ".png");
-        }
-
-        ValueChangeCheck();
-
-        m_mainSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
     }
 
-    public int GetNumImages() {
-        return m_numScans;
+    public void loadMedicalData(string folderName, string filePrefix, int startLayer, int numLayers) {
+        
+        segmentedTextures = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
     }
+
     /**
-     * Populates the passed in texture with color values from the array of floats.
+     * Populates a texture with color values from the array of floats.
      */
     public void saveTextureToFile(float[,,] texturesArray, int indexInArray, string fileName) {
         Texture2D texture = new Texture2D(texturesArray.GetLength(1), texturesArray.GetLength(2));
@@ -133,105 +94,52 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         File.WriteAllBytes(Application.dataPath + "/" + fileName + ".png", bytes);
     }
 
-    public void saveSegmentToFile(bool[,,] segmentArray, float[,,] texturesArray, string fileName) {
-
-        for (int z = 0; z < m_numScans; z++) {
-            if (segmentedTextures[z] == null || true)   // only create new texture when no textures yet, otherwise keep adding to the same segmented texture to allow
-            {                                   // multiple segments to be rendered 
-                segmentedTextures[z] = new Texture2D(segmentArray.GetLength(0), segmentArray.GetLength(1));
-                //Debug.LogError("Creating new texture");
-                for (int x = 0; x < segmentedTextures[z].width; x++) {
-                    for (int y = 0; y < segmentedTextures[z].height; y++) {
-                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(1, 1, 1));
-                    }
-                }
-            }
-
-            for (int x = 0; x < segmentedTextures[z].width; x++) {
-                for (int y = 0; y < segmentedTextures[z].height; y++) {
-                    if (segmentArray[x, y, z]) {
-                        segmentedTextures[z].SetPixel(segmentedTextures[z].width - 1 - x, segmentedTextures[z].height - 1 - y, new Color(0, 0, 0));
-                    }
-                }
-            }
-
-            byte[] bytes = segmentedTextures[z].EncodeToPNG();
-            //Debug.Log("segmentedTextures[" + z + "] = " + segmentedTextures[z]);
-            File.WriteAllBytes(Application.dataPath + "/" + fileName + z.ToString().PadLeft(4, '0') + ".png", bytes);
-        }
-    }
-
-    public Texture2D[] getSegments() {
-        return segmentedTextures;
-    }
-
-    public void ValueChangeCheck() {
-        // select a scan beased on position of the slider. the min is to prevent selecting past the array size
-        selectedScan = Mathf.Min((int)(m_mainSlider.value * m_numScans), originalScanTextures.Length - 1);
-        displayedTexture = originalScanTextures[selectedScan];
-    }
-
-    void OnGUI() {
-        if (displayMode2D == true) {
-            guiWidth = Mathf.Max(Screen.height - 100, m_scanWidth);
-            guiHeight = Mathf.Max(Screen.height - 100, m_scanHeight);
-            GUI.DrawTexture(new Rect(0, 0, guiWidth, guiHeight), displayedTexture, ScaleMode.ScaleToFit, true, 1.0F);
-        }
-    }
-
-    public void AddSeed(float x, float y, float z, bool objectSeed, Vector3 originalSpot)
-    {
-        if( x > -0.5 && x < 0.5 && y > -0.5 && y < 0.5 && z > -0.5 && z < 0.5 )
-        {
-            int xCoord = (int)((0.5f - x) * m_scanWidth);
-            int zCoord = (int)((y + 0.5f) * m_numScans);
-            int yCoord = (int)((0.5f - z) * m_scanHeight);
-            zCoord = 0;
-            Debug.Log("Point on Cube: " + x + "," + y + "," + z);
-            Debug.Log("Pixel on scans: " + xCoord + "," + yCoord + "," + zCoord);
-            Point point = new Point(xCoord, yCoord, zCoord, 0);
-            if (objectSeed)
-            {
-                GameObject seed = Instantiate<GameObject>(seedObject);
-                seed.transform.position = originalSpot;
-                seed.transform.parent = renderCube.transform;
-                seed.transform.localScale = 0.02f * new Vector3(1, 1, 1); //  renderCube.transform.localScale;
-                partOfObject.Add(point);
+    /** This function is called from a click on the 3D cube. */
+    public void AddSeedThreeD(float x, float y, float z, bool objectSeed, Vector3 originalSpot) {
+        if (x > -0.5 && x < 0.5 && y > -0.5 && y < 0.5 && z > -0.5 && z < 0.5) {
+            int xCoord = (int)((0.5f - x) * data.getWidth());
+            int zCoord = (int)((y + 0.5f) * data.getNumLayers());
+            int yCoord = (int)((0.5f - z) * data.getHeight());
+            AddSeed(xCoord, yCoord, zCoord, objectSeed);
+            GameObject seed;
+            if (objectSeed) {
+                seed = Instantiate(seedObject);
                 objectSeeds.Add(seed);
             }
-            else
-            {
-                GameObject seed = Instantiate<GameObject>(seedBackground);
-                seed.transform.position = originalSpot;
-                seed.transform.parent = renderCube.transform;
-                seed.transform.localScale = 0.02f * new Vector3(1, 1, 1);// * renderCube.transform.localScale;
-                partOfBackground.Add(point);
+            else {
+                seed = Instantiate(seedBackground);
                 backgroundSeeds.Add(seed);
             }
+            seed.transform.position = originalSpot;
+            seed.transform.parent = renderCube.transform;
+            seed.transform.localScale = 0.02f * new Vector3(1, 1, 1); //  renderCube.transform.localScale;
         }
-        else
-        {
+        else {
+            // If user tried to put seed outside of the cube, make an error sound
             m_ErrorAudio.Play();
         }
     }
-
-
-    void Update() {
-        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && displayMode2D) { // if left button pressed...
-            int x = (int)((guiWidth - Input.mousePosition.x) * m_scanWidth / guiWidth);
-            int y = (int)((Screen.height - Input.mousePosition.y + 3) * m_scanHeight / guiHeight);
-            if (x >= 0 && x < m_scanWidth && y >= 0 && y < m_scanHeight) {
-                if (Input.GetMouseButtonDown(0)) {
-                    Debug.LogErrorFormat("Added point to Object {0}, {1}", x, y);
-                    //AddSeed
-                    partOfObject.Add(new Point(x, y, selectedScan, 0));
-                }
-                else {
-                    Debug.LogErrorFormat("Adding point to Background {0}, {1}", x, y);
-                    partOfBackground.Add(new Point(x, y, selectedScan, 0));
-                }
-            }
+    /** This function is called from the 2D Display x and y are between 0 and 1 */
+    public void AddSeedTwoD(float x, float y, int z, bool objectSeed) {
+        int xCoord = (int) ( x * data.getWidth() );
+        int yCoord = (int) ( y * data.getHeight() );
+        if( xCoord >= 0 && xCoord < data.getWidth() && yCoord >= 0 && yCoord < data.getHeight() ) {
+            AddSeed( xCoord, yCoord, z, objectSeed );
         }
+    }
+    private void AddSeed(int x, int y, int z, bool objectSeed) {
+        Debug.Log("Pixel on scans: " + x + "," + y + "," + z);
+        Point point = new Point(x, y, z, 0);
+        if (objectSeed) {
+            partOfObject.Add(point);
+        }
+        else {
+            partOfBackground.Add(point);
+        }
+    }
+    
+    void Update() {
+        
         if (Input.GetKeyDown("f")) {
             Debug.LogError("beginning flood fill segmenting");
             RunSegmentation(selectedScan);
@@ -2034,21 +1942,5 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     }
 
 
-    /** 
-     * This function loads the image located at filePath and returns it as a Texture2D.
-     * If the file at the specified path doesn't exist, it returns null.
-     */
-    public static Texture2D LoadScan(string filePath) {
-        Texture2D tex = null;
-        byte[] fileData;
-        if (File.Exists(filePath)) {
-            fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(2, 2);
-            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-        }
-        else {
-            Debug.LogErrorFormat("The file at %s could not be found.", filePath);
-        }
-        return tex;
-    }
+    
 }
