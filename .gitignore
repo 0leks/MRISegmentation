@@ -3,10 +3,18 @@
 *Asset.asset
 *Asset.asset.meta
 *debugLog.txt
+*debugLog*.txt
+*colon.meta
 
 # =============== #
 # Unity generated #
 # =============== #
+MRI Project/[Tt]emp/
+MRI Project/[Oo]bj/
+MRI Project/[Bb]uild
+MRI Project/[Ll]ibrary/
+MRI Project/sysinfo.txt
+MRI Project/*.stackdump
 [Tt]emp/
 [Oo]bj/
 [Bb]uild
