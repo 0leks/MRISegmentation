@@ -33,3 +33,7 @@ Given a set of MRI scans, create and application that allows a user to easily vi
   * ~~A way to rotate the segment, grab with a different button and rotate controller to rotate the segment~~
   * ~~A way to modify the result of the segmentation by~~
     * ~~marking areas as part of the segment or as not part of the segment~~
+* Add better GUI to be able to save and load segments at will.
+* Save segments as a text file instead of a set of pngs
+* Make ~~Region Growing~~ and Max Flow run in separate threads so that the application doesn't freeze while they run.
+* convert segments into triangle meshes for faster rendering
