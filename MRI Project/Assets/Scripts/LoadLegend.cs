@@ -13,7 +13,9 @@ using System.IO;
 public class LoadLegend : MonoBehaviour
 {
 
-    public ImageSegmentationHandler2 m_SegmentationHandler;
+    [SerializeField] private ImageSegmentationHandler2 m_SegmentationHandler;
+    [SerializeField] private DataContainer m_Data;
+
     public int startIndex;
     public int endIndex;
     public int indexIncrement;
@@ -105,22 +107,21 @@ public class LoadLegend : MonoBehaviour
         //folderPath = "Legend/segment0010.png";
         //Debug.Log("Loading legend from " + folderPath);
 
-        Texture2D[] textures = m_SegmentationHandler.getSegments();
-        Debug.Log("Loading " + textures.Length + " layers of the legend");
+        bool[,,] segments = m_Data.GetSegment();
+        
+        int width = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getWidth() ) / System.Math.Log( 2 ) ) );
+        int height = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getHeight() ) / System.Math.Log( 2 ) ) );
+        int numImages = m_Data.getNumLayers();
 
-        Texture2D first = textures[0];//Resources.Load(folderPath + startIndex.ToString().PadLeft(4, '0')) as Texture2D;
-        int width = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.width) / System.Math.Log(2)));
-        int height = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(first.height) / System.Math.Log(2)));
-        int numImages = textures.Length;
+        addSegmentColorsToList( segments );
+        //for( int i = 0; i < numImages; i += 1)
+        //{
+        //    Texture2D anImage = new Texture2D(width, height);
+        //    Texture2D temp = textures[i];
 
-        for (int i = 0; i <= textures.Length - 1; i += 1)
-        {
-            Texture2D anImage = new Texture2D(width, height);
-            Texture2D temp = textures[i];
-
-            anImage.SetPixels(temp.GetPixels());
-            addImageColorToList(anImage);
-        }
+        //    anImage.SetPixels(temp.GetPixels());
+        //    addImageColorToList(anImage);
+        //}
 
         //Convert volTex dimensions to nearest power of two
         int numSlices = (int)System.Math.Pow(2, System.Math.Ceiling(System.Math.Log(numImages) / System.Math.Log(2)));
@@ -159,8 +160,7 @@ public class LoadLegend : MonoBehaviour
 #endif
     }
 
-    public void LoadLegendFrom(string path)
-    {
+    public void LoadLegendFrom(string path) {
         folderPath = path + "/segment";
         LoadSegments();
     }
@@ -168,15 +168,27 @@ public class LoadLegend : MonoBehaviour
     /*
      * Copy the pixel colors of the given image to the master array.
      */
-    void addImageColorToList(Texture2D anImage)
-    {
+    private void addImageColorToList(Texture2D anImage) {
         Color[] tempColors = anImage.GetPixels();
-        for (int i = 0; i < tempColors.Length; i++)
-        {
+        for (int i = 0; i < tempColors.Length; i++) {
             imageColors.Add(tempColors[i]);
         }
     }
 
+    private void addSegmentColorsToList( bool[,,] segments ) {
+        for( int z = 0; z < segments.GetLength(2); z++ ) {
+            for( int y = segments.GetLength( 1 ) - 1; y >= 0; y-- ) {
+                for( int x = segments.GetLength( 0 ) - 1; x >= 0; x-- ) {
+                    // Part of segment is black and part of the background is white
+                    if( segments[x, y, z] ) {
+                        imageColors.Add( Color.black );
+                    } else {
+                        imageColors.Add( Color.white );
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Function that constructs the final path that corresponds the user selected IDs. 
@@ -186,8 +198,7 @@ public class LoadLegend : MonoBehaviour
      *      subsystemID = 1
      *      bodyPartID = 2
      */
-    string constructPathForSelectedIDs()
-    {
+    string constructPathForSelectedIDs() {
         string path = LegendSystemPath;
 
         //Error check, there must be a system selected.

@@ -15,35 +15,29 @@ MRI Project/[Bb]uild
 MRI Project/[Ll]ibrary/
 MRI Project/sysinfo.txt
 MRI Project/*.stackdump
-[Tt]emp/
-[Oo]bj/
-[Bb]uild
-/[Ll]ibrary/
-sysinfo.txt
-*.stackdump
  
 # ============================================= #
 # Visual Studio / MonoDevelop / Rider generated #
 # ============================================= #
-[Ee]xported[Oo]bj/
-.vs/
-/*.userprefs
-/*.csproj
-/*.pidb
-/*.suo
-/*.sln*
-/*.user
-/*.unityproj
-/*.booproj
-/.idea*/
+MRI Project/[Ee]xported[Oo]bj/
+MRI Project/.vs/
+MRI Project/*.userprefs
+MRI Project/*.csproj
+MRI Project/*.pidb
+MRI Project/*.suo
+MRI Project/*.sln*
+MRI Project/*.user
+MRI Project/*.unityproj
+MRI Project/*.booproj
+MRI Project/.idea*/
  
 # ============ #
 # OS generated #
 # ============ #
-.DS_Store*
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-[Tt]humbs.db
-[Dd]esktop.ini
+MRI Project/.DS_Store*
+MRI Project/._*
+MRI Project/.Spotlight-V100
+MRI Project/.Trashes
+MRI Project/ehthumbs.db
+MRI Project/[Tt]humbs.db
+MRI Project/[Dd]esktop.ini

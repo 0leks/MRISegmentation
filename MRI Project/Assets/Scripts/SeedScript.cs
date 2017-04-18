@@ -22,23 +22,20 @@ public class SeedScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (AddObjectActive && Input.GetAxis(addObjectButtonName) == 1) {
-            Vector3 asdf = renderCube.transform.InverseTransformPoint(tipOfWand.transform.position);
-            segmentationScript.AddSeed(asdf.x, asdf.y, asdf.z, true, tipOfWand.transform.position);
+            Vector3 tipOfWandInCubeCoords = renderCube.transform.InverseTransformPoint(tipOfWand.transform.position);
+            segmentationScript.AddSeedThreeD( tipOfWandInCubeCoords.x, tipOfWandInCubeCoords.y, tipOfWandInCubeCoords.z, true, tipOfWand.transform.position);
             AddObjectActive = false;
         }
-        if(Input.GetAxis(addObjectButtonName) < 0.1)
-        {
+        if(Input.GetAxis(addObjectButtonName) < 0.1) {
             AddObjectActive = true;
         }
 
-        if (AddBackgroundActive && Input.GetAxis(addBackgroundButtonName) == 1)
-        {
-            Vector3 asdf = renderCube.transform.InverseTransformPoint(tipOfWand.transform.position);
-            segmentationScript.AddSeed(asdf.x, asdf.y, asdf.z, false, tipOfWand.transform.position);
+        if (AddBackgroundActive && Input.GetAxis(addBackgroundButtonName) == 1) {
+            Vector3 tipOfWandInCubeCoords = renderCube.transform.InverseTransformPoint(tipOfWand.transform.position);
+            segmentationScript.AddSeedThreeD( tipOfWandInCubeCoords.x, tipOfWandInCubeCoords.y, tipOfWandInCubeCoords.z, false, tipOfWand.transform.position);
             AddBackgroundActive = false;
         }
-        if (Input.GetAxis(addBackgroundButtonName) < 0.1)
-        {
+        if (Input.GetAxis(addBackgroundButtonName) < 0.1) {
             AddBackgroundActive = true;
         }
     }

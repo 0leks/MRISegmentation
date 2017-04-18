@@ -38,10 +38,7 @@ public class ScanLoaderScript : MonoBehaviour {
     
     private int currentActive = 0;
 
-    public Camera camera;
-
-    private Material fakeMaterial;
-
+    public Camera cam;
 
     private bool[,] visited;
     private int visitedwidth;
@@ -112,10 +109,6 @@ public class ScanLoaderScript : MonoBehaviour {
         textures = new Texture2D[numScans];
         texturesCopy = new Texture2D[numScans];
         texturesGaussianFilter = new Texture2D[numScans];
-
-
-
-        fakeMaterial = new Material(Shader.Find(" Diffuse"));
 
         for (int scanIndex = 0; scanIndex < numScans; scanIndex++)
         {
@@ -197,7 +190,7 @@ public class ScanLoaderScript : MonoBehaviour {
         //Check if user clicked on a spot on the mri scan, this will be the seed to start segmentation from
         if (Input.GetMouseButtonDown(0) && !DISABLESEGMENTATION)
         { // if left button pressed...
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
