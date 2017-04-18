@@ -22,14 +22,15 @@ public class DataContainer : MonoBehaviour {
     private int m_layerHeight;
 
     private Texture2D[] originalTextures;
-    private float[,,] originalScans; // this is an array of all of the original Scans stored as 2d float arrays
-
-    private byte[,,] originalData;
-
-    // Use this for initialization
+    private float[,,] originalFloatData;
+    private byte[,,] originalByteData;
+    
     void Start () {
-        
-        
+
+    }
+
+    void Update() {
+
     }
 
     public void loadMedicalData( string folderName, string filePrefix, int startLayer, int numLayers) {
@@ -45,23 +46,18 @@ public class DataContainer : MonoBehaviour {
             {
                 m_layerWidth = layerTexture.width;
                 m_layerHeight = layerTexture.height;
-                originalScans = new float[m_numLayers, m_layerWidth, m_layerHeight];
-                originalData = new byte[m_layerWidth, m_layerHeight, m_numLayers];
+                originalFloatData = new float[m_numLayers, m_layerWidth, m_layerHeight];
+                originalByteData = new byte[m_layerWidth, m_layerHeight, m_numLayers];
             }
             for (int x = 0; x < m_layerWidth; x++) {
                 for (int y = 0; y < m_layerHeight; y++) {
-                    originalScans[layerIndex, x, y] = layerTexture.GetPixel(-x, -y).r;
-                    originalData[layerIndex, x, y] = (byte) (originalScans[layerIndex, x, y] * 255); // Assuming the values are from 0 to 1 initially
+                    originalFloatData[ x, y, layerIndex] = layerTexture.GetPixel(-x, -y).r;
+                    originalByteData[ x, y, layerIndex ] = (byte) ( originalFloatData[ x, y, layerIndex ] * 255); // Assuming the values are from 0 to 1 initially
                 }
             }
             //saveTextureToFile(originalScans, scanIndex, "Saved Texture " + scanIndex + ".png");
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public int getWidth() {
         return m_layerWidth;
@@ -75,13 +71,24 @@ public class DataContainer : MonoBehaviour {
         return m_numLayers;
     }
 
-    /** Used for the 2D display  
-     *  float ratio is a number from 0 to 1 */
-    public Texture2D getSelectedTexture(float ratio) {
-        // select a scan beased on position of the slider. 
+    public float getOriginalPixelFloat(int x, int y, int z) {
+        return originalFloatData[ x, y, z ];
+    }
+
+    public byte getOriginalPixelByte(int x, int y, int z) {
+        return originalByteData[ x, y, z ];
+    }
+
+    /** Used for the 2D display,    float ratio is a number from 0 to 1 */
+    public int getSelectedLayer( float ratio ) {
+        // select a scan based on position of the slider. 
         // the max and min is to prevent selecting past the array size
-        int layer = (int)(Mathf.Max(Mathf.Min(ratio * getNumLayers(), originalTextures.Length - 1), 0));
-        return originalTextures[layer];
+        return (int) ( Mathf.Max( Mathf.Min( ratio * getNumLayers(), originalTextures.Length - 1 ), 0 ) );
+    }
+
+    /** Used for the 2D display,    float ratio is a number from 0 to 1 */
+    public Texture2D getSelectedTexture(float ratio) {
+        return originalTextures[ getSelectedLayer(ratio) ];
     }
 
     /** 

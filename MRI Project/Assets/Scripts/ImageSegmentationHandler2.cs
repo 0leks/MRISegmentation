@@ -7,8 +7,9 @@ using System.Collections.Generic;
 
 public class ImageSegmentationHandler2 : MonoBehaviour {
 
+    [SerializeField] private TwoDDisplay m_twoDDisplay;
+
     public LoadLegend m_legendScript;
-    public GameObject m_sliderCanvas;
     public Slider m_mainSlider;
     public float m_threshold;
     public bool m_3DFlow;
@@ -59,12 +60,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     void Start() {
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
-        if( m_useAlpha )
-        {
+        if( m_useAlpha ) {
             m_Renderer.material.SetVector("_UseAlpha", new Vector4(1, 0, 0, 0));
         }
-        else
-        {
+        else {
             m_Renderer.material.SetVector("_UseAlpha", new Vector4(0, 0, 0, 1));
         }
         displayMode2D = true;
@@ -74,8 +73,12 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         backgroundSeeds = new List<GameObject>();
     }
 
+    public bool[,,] GetSegments() {
+        return segmentedTextures;
+    }
+
     public void loadMedicalData(string folderName, string filePrefix, int startLayer, int numLayers) {
-        
+        data.loadMedicalData( folderName, filePrefix, startLayer, numLayers );
         segmentedTextures = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
     }
 
@@ -84,7 +87,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
      */
     public void saveTextureToFile(float[,,] texturesArray, int indexInArray, string fileName) {
         Texture2D texture = new Texture2D(texturesArray.GetLength(1), texturesArray.GetLength(2));
-
         for (int x = 0; x < texture.width; x++) {
             for (int y = 0; y < texture.height; y++) {
                 texture.SetPixel(texture.width - 1 - x, texture.height - 1 - y, new Color(texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y], texturesArray[indexInArray, x, y]));
@@ -115,98 +117,111 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             seed.transform.localScale = 0.02f * new Vector3(1, 1, 1); //  renderCube.transform.localScale;
         }
         else {
-            // If user tried to put seed outside of the cube, make an error sound
-            m_ErrorAudio.Play();
+            m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
         }
     }
-    /** This function is called from the 2D Display x and y are between 0 and 1 */
+    /**
+     * This function is called from the 2D Display x and y are between 0 and 1 
+     *      Converts the 0 to 1 to -0.5 to 0.5 in order to add visual feedback just like 3D seeds.
+     */
     public void AddSeedTwoD(float x, float y, int z, bool objectSeed) {
         int xCoord = (int) ( x * data.getWidth() );
         int yCoord = (int) ( y * data.getHeight() );
         if( xCoord >= 0 && xCoord < data.getWidth() && yCoord >= 0 && yCoord < data.getHeight() ) {
             AddSeed( xCoord, yCoord, z, objectSeed );
+            float visualX = xCoord - 0.5f;
+            float visualY = yCoord - 0.5f;
+            float visualZ = ( 1.0f * z / data.getNumLayers() ) - 0.5f;
+            GameObject seed;
+            if( objectSeed ) {
+                seed = Instantiate( seedObject );
+                objectSeeds.Add( seed );
+            }
+            else {
+                seed = Instantiate( seedBackground );
+                backgroundSeeds.Add( seed );
+            }
+            seed.transform.parent = renderCube.transform;
+            seed.transform.localPosition = new Vector3( visualX, visualY, visualZ);
+            seed.transform.localScale = 0.02f * new Vector3( 1, 1, 1 );
+        }
+        else {
+            m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
         }
     }
+
     private void AddSeed(int x, int y, int z, bool objectSeed) {
-        Debug.Log("Pixel on scans: " + x + "," + y + "," + z);
         Point point = new Point(x, y, z, 0);
         if (objectSeed) {
+            Debug.LogErrorFormat( "Added point to Object {0}, {1}, {2}", x, y, z );
             partOfObject.Add(point);
         }
         else {
+            Debug.LogErrorFormat( "Added point to Background {0}, {1}, {2}", x, y, z );
             partOfBackground.Add(point);
         }
     }
     
+    public void StartFloodFillSegmentationThread() {
+        Debug.LogError( "beginning flood fill segmenting" );
+        RunSegmentation( selectedScan );
+        Debug.LogError( "finished flood fill segmenting" );
+        m_twoDDisplay.disableTwoDDisplay();
+        m_legendScript.LoadLegendFrom( "segment" );
+    }
+
+    public void StartMaxFlowSegmentationThread() {
+        Debug.LogError( "beginning max flow segmenting" );
+        file = new StreamWriter( "debugLog.txt" );
+        RunMaxFlowSegmentation();
+        file.Close();
+        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        Debug.LogError( "finished max flow segmenting" );
+        m_twoDDisplay.disableTwoDDisplay();
+        m_legendScript.LoadLegendFrom( "segment" );
+    }
+
+    public void StartMaxFlowSegmentationTimedThread() {
+        Debug.LogError( "beginning timed max flow segmenting" );
+        string filename = data.getNumLayers() + " " + data.getWidth() + " debugLog" + Time.time + ".txt";
+        file = new StreamWriter( filename );
+        Debug.LogError( " filename = " + filename );
+        RunMaxFlowSegmentationTimed( selectedScan );
+        file.Close();
+        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        Debug.LogError( "finished timed max flow segmenting" );
+        m_twoDDisplay.disableTwoDDisplay();
+        m_legendScript.LoadLegendFrom( "segment" );
+    }
+    
+    public void ClearSeeds() {
+        Debug.LogError( "Reset object and background seed list" );
+        partOfObject.Clear();
+        partOfBackground.Clear();
+        foreach( GameObject obj in objectSeeds ) {
+            Destroy( obj );
+        }
+        objectSeeds.Clear();
+        foreach( GameObject obj in backgroundSeeds ) {
+            Destroy( obj );
+        }
+        backgroundSeeds.Clear();
+    }
+
     void Update() {
-        
         if (Input.GetKeyDown("f")) {
-            Debug.LogError("beginning flood fill segmenting");
-            RunSegmentation(selectedScan);
-            Debug.LogError("finished flood fill segmenting");
-            SwitchToDisplaySegment();
-            m_legendScript.LoadLegendFrom("segment");
+            StartFloodFillSegmentationThread();
         }
         if (Input.GetKeyDown("s")) {
-            Debug.LogError("beginning max flow segmenting");
-            file = new StreamWriter("debugLog.txt");
-            RunMaxFlowSegmentation();
-            file.Close();
-            GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, 1);
-            Debug.LogError("finished max flow segmenting");
-            SwitchToDisplaySegment();
-            m_legendScript.LoadLegendFrom("segment");
+            StartMaxFlowSegmentationThread();
         }
-
         if (Input.GetKeyDown("t")) {
-            Debug.LogError("beginning timed max flow segmenting");
-            string filename = m_numScans + " " + m_scanWidth + " debugLog" + Time.time + ".txt";
-            file = new StreamWriter(filename);
-            Debug.LogError(" filename = " + filename);
-            RunMaxFlowSegmentationTimed(selectedScan);
-            file.Close();
-            GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, 1);
-            Debug.LogError("finished timed max flow segmenting");
-            SwitchToDisplaySegment();
-            m_legendScript.LoadLegendFrom("segment");
+            StartMaxFlowSegmentationTimedThread();
         }
-        if (Input.GetKeyDown("space")) {
-            if (!displayMode2D) {
-                SwitchToDisplayScans();
-            }
-            else {
-                SwitchToDisplaySegment();
-            }
-        }
-
         if (Input.GetKeyDown("r")) {
-            Debug.LogError("Reset object and background point list");
-            segmentedTextures = new Texture2D[m_numScans];
-            partOfObject.Clear();
-            partOfBackground.Clear();
-            foreach( GameObject obj in objectSeeds)
-            {
-                Destroy(obj);
-            }
-            objectSeeds.Clear();
-            foreach (GameObject obj in backgroundSeeds)
-            {
-                Destroy(obj);
-            }
-            backgroundSeeds.Clear();
+            segmentedTextures = new bool[ data.getWidth(), data.getHeight(), data.getNumLayers() ];
+            ClearSeeds();
         }
-    }
-
-    void SwitchToDisplaySegment() {
-        //m_Renderer.enabled = true;
-        displayMode2D = false;
-        m_sliderCanvas.SetActive(false);
-    }
-
-    void SwitchToDisplayScans() {
-        //m_Renderer.enabled = false;
-        displayMode2D = true;
-        m_sliderCanvas.SetActive(true);
     }
 
     public class Vertex {
@@ -224,91 +239,74 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             value = svalue;
         }
     }
-
-    public float ComputeFlowBetween(Vertex one, Vertex two ) {
+    private float ComputeFlowBetween(Vertex one, Vertex two ) {
         float delta = (one.value - two.value);
         float sigmaSquared = SIGMASQUARED;
         float flow = (float)Math.Exp(-(delta * delta) / sigmaSquared);
         return flow;
     }
-
-    public float MaxFlowBetweenPoints(int x1, int y1, int z1, int x2, int y2, int z2) {
-        float delta = (originalScans[z1, x1, y1] - originalScans[z2, x2, y2]);
+    private float MaxFlowBetweenPoints(int x1, int y1, int z1, int x2, int y2, int z2) {
+        //float delta = (originalScans[z1, x1, y1] - originalScans[z2, x2, y2]);
+        float delta = ( data.getOriginalPixelFloat(x1, y1, z1 ) - data.getOriginalPixelFloat( x2, y2, z2 ) );
         float sigmaSquared = SIGMASQUARED;
         float flow = (float)Math.Exp(-(delta * delta) / sigmaSquared);
         //file.WriteLine("\tPoint {0},{1} has intensity = {2}, delta = {3}, and flow = {4}", x2, y2, originalScans[z2, x2, y2], delta, flow);
         return flow;
     }
-    public float ComputeAverageValue(int x1, int y1, int z1, int xfreq, int yfreq, int zfreq) {
+    private float ComputeAverageValue(int x1, int y1, int z1, int xfreq, int yfreq, int zfreq) {
         float sum1 = 0.0f;
         int x, y, z;
         int sx1 = x1 * xfreq, sy1 = y1 * yfreq, sz1 = z1 * zfreq;
         for (x = 0; x < xfreq; x++) {
             for (y = 0; y < yfreq; y++) {
                 for (z = 0; z < zfreq; z++) {
-                    sum1 += originalScans[sz1 + z, sx1 + x, sy1 + y];
+                    //sum1 += originalScans[sz1 + z, sx1 + x, sy1 + y];
+                    sum1 += data.getOriginalPixelFloat( sx1 + x, sy1 + y, sz1 + z );
                 }
             }
         }
         return sum1 / (xfreq * yfreq * zfreq);
     }
-    public float MaxFlowBetweenPointsSampling(int x1, int y1, int z1, int x2, int y2, int z2, int xfreq, int yfreq, int zfreq) {
-        float sum1 = 0.0f, sum2 = 0.0f;
-        int x, y, z;
-        int sx1 = x1 * xfreq, sy1 = y1 * yfreq, sz1 = z1 * zfreq;
-        int sx2 = x2 * xfreq, sy2 = y2 * yfreq, sz2 = z2 * zfreq;
-        for (x = 0; x < xfreq; x++ ) {
-            //Debug.Log("x1 = " + x + " + " + sx1);
-            //Debug.Log("x2 = " + x + " + " + sx2);
-            for (y = 0; y < yfreq; y++ ) {
-                //Debug.Log("y1 = " + y + " + " + sy1);
-                //Debug.Log("y2 = " + y + " + " + sy2);
-                for (z = 0; z < zfreq; z++) {
-                    //Debug.Log("z1 = " + z + " + " + sz1);
-                    //Debug.Log("z2 = " + z + " + " + sz2);
-                    sum1 += originalScans[sz1 + z, sx1 + x, sy1 + y];
-                    sum2 += originalScans[sz2 + z, sx2 + x, sy2 + y];
-                }
-            }
-        }
-        float delta = (sum2 - sum1) / (xfreq*yfreq*zfreq);
+    private float MaxFlowBetweenPointsSampling(int x1, int y1, int z1, int x2, int y2, int z2, int xfreq, int yfreq, int zfreq) {
+        float average1 = ComputeAverageValue( x1, y1, z1, xfreq, yfreq, zfreq );
+        float average2 = ComputeAverageValue( x2, y2, z2, xfreq, yfreq, zfreq );
+        float delta = average1 - average2;
         float sigmaSquared = SIGMASQUARED;
-        float flow = (float)Math.Exp(-(delta * delta) / sigmaSquared);
+        float flow = (float) Math.Exp ( - (delta * delta) / sigmaSquared); // e ^ ( delta^2 / sigma^2 )
         //file.WriteLine("\tPoint {0},{1} has intensity = {2}, delta = {3}, and flow = {4}", x2, y2, originalScans[z2, x2, y2], delta, flow);
-
         return flow;
     }
 
-    public void MaxFlowSetup(Vertex[,,] vertices, Vertex sink, Vertex source) {
+    private void MaxFlowSetup(Vertex[,,] vertices, Vertex sink, Vertex source) {
         int numNeighbors = 7;
         //float startTime = Time.time;
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     if (m_3DFlow) {
                         numNeighbors = 7;
                     }
                     else {
                         numNeighbors = 5;
                     }
-                    if (x == 0 || x == m_scanWidth - 1) {
+                    if (x == 0 || x == data.getWidth() - 1) {
                         numNeighbors--;
                     }
-                    if (y == 0 || y == m_scanHeight - 1) {
+                    if (y == 0 || y == data.getHeight() - 1) {
                         numNeighbors--;
                     }
-                    if (m_3DFlow && (z == 0 || z == m_numScans - 1)) {
+                    if (m_3DFlow && (z == 0 || z == data.getNumLayers() - 1)) {
                         numNeighbors--;
                     }
-                    vertices[x, y, z] = new Vertex(numNeighbors, originalScans[z, x, y]);
+                    vertices[x, y, z] = new Vertex(numNeighbors, data.getOriginalPixelFloat(x, y, z));
                 }
             }
         }
         float maximumFlow = 0.0f;
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
-                    source.neighbors[(x * m_scanHeight + y) * m_numScans + z] = vertices[x, y, z]; // the source is connected to each pixel
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
+                    source.neighbors[(x * data.getHeight() + y) * data.getNumLayers() + z] = vertices[x, y, z]; // the source is connected to each pixel
                     int n_i = 0;
                     vertices[x, y, z].neighbors[n_i++] = sink; // each vertex is connected to the sink
                     //file.WriteLine("Point {0},{1},{2} has intensity {3}", x, y, z, originalScans[scanIndex, x, y]);
@@ -319,7 +317,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         vertices[x, y, z].neighbors[n_i++] = vertices[x - 1, y, z];
 
                     }
-                    if (x != m_scanWidth - 1) {
+                    if (x != data.getWidth() - 1) {
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x + 1, y, z);
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x + 1, y, z];
@@ -329,7 +327,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x, y - 1, z];
                     }
-                    if (y != m_scanHeight - 1) {
+                    if (y != data.getHeight() - 1) {
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y + 1, z);
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x, y + 1, z];
@@ -340,7 +338,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                             maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                             vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z - 1];
                         }
-                        if (z != m_numScans - 1) {
+                        if (z != data.getNumLayers() - 1) {
                             vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z + 1);
                             maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                             vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z + 1];
@@ -351,22 +349,22 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         //file.WriteLine("The maximum flow between any two pixels was: {0}", maximumFlow);
 
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
-                    source.flows[(x * m_scanHeight + y) * m_numScans + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
+                    source.flows[(x * data.getHeight() + y) * data.getNumLayers() + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
                     vertices[x, y, z].flows[0] = 0.0f; // need to figure out what to put here
                 }
             }
         }
         foreach (Point obj in partOfObject) {
-            source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
+            source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
-            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
         foreach (Point obj in partOfBackground) {
-            source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
+            source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x, obj.y, obj.z].flows[0] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
         }
@@ -374,7 +372,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     public Vertex[,,] MaxFlowSetupBetter(Vertex sink, Vertex source, int xfreq, int yfreq, int zfreq) {
         int numNeighbors;
-        Vertex[,,] vertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers() ];
         foreach (Point obj in partOfBackground) {
             int x = obj.x; int y = obj.y; int z = obj.z;
             if (m_3DFlow) {
@@ -383,23 +381,23 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             else {
                 numNeighbors = 5;
             }
-            if (x == 0 || x == m_scanWidth - 1) {
+            if (x == 0 || x == data.getWidth() - 1) {
                 numNeighbors--;
             }
-            if (y == 0 || y == m_scanHeight - 1) {
+            if (y == 0 || y == data.getHeight() - 1) {
                 numNeighbors--;
             }
-            if (m_3DFlow && (z == 0 || z == m_numScans - 1)) {
+            if (m_3DFlow && (z == 0 || z == data.getNumLayers() - 1)) {
                 numNeighbors--;
             }
             edgesCounter += numNeighbors;
-            vertices[x, y, z] = new Vertex(numNeighbors, originalScans[z, x, y]);
+            vertices[x, y, z] = new Vertex(numNeighbors, data.getOriginalPixelFloat(x, y, z));
             vertices[x, y, z].neighbors[numNeighbors - 1] = sink;
         }
         //float startTime = Time.time;
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     if (vertices[x, y, z] == null) {
                         if (m_3DFlow) {
                             numNeighbors = 6;
@@ -407,26 +405,26 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         else {
                             numNeighbors = 4;
                         }
-                        if (x == 0 || x == m_scanWidth - 1) {
+                        if (x == 0 || x == data.getWidth() - 1) {
                             numNeighbors--;
                         }
-                        if (y == 0 || y == m_scanHeight - 1) {
+                        if (y == 0 || y == data.getHeight() - 1) {
                             numNeighbors--;
                         }
-                        if (m_3DFlow && (z == 0 || z == m_numScans - 1)) {
+                        if (m_3DFlow && (z == 0 || z == data.getNumLayers() - 1)) {
                             numNeighbors--;
                         }
                         edgesCounter += numNeighbors;
-                        vertices[x, y, z] = new Vertex(numNeighbors, originalScans[z, x, y]);
+                        vertices[x, y, z] = new Vertex(numNeighbors, data.getOriginalPixelFloat( x, y, z ) );
                     }
                 }
             }
         }
         float maximumFlow = 0.0f;
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
-                    //source.neighbors[(x * m_scanHeight + y) * m_numScans + z] = vertices[x, y, z]; // the source is connected to each pixel
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
+                    //source.neighbors[(x * data.getHeight() + y) * data.getNumLayers() + z] = vertices[x, y, z]; // the source is connected to each pixel
                     int n_i = 0;
                     if (x != 0) { // Add the four neighbors of each pixel but check edge cases.
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x - 1, y, z);
@@ -434,7 +432,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         vertices[x, y, z].neighbors[n_i++] = vertices[x - 1, y, z];
 
                     }
-                    if (x != m_scanWidth - 1) {
+                    if (x != data.getWidth() - 1) {
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x + 1, y, z);
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x + 1, y, z];
@@ -444,7 +442,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x, y - 1, z];
                     }
-                    if (y != m_scanHeight - 1) {
+                    if (y != data.getHeight() - 1) {
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y + 1, z);
                         maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                         vertices[x, y, z].neighbors[n_i++] = vertices[x, y + 1, z];
@@ -455,7 +453,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                             maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                             vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z - 1];
                         }
-                        if (z != m_numScans - 1) {
+                        if (z != data.getNumLayers() - 1) {
                             vertices[x, y, z].flows[n_i] = MaxFlowBetweenPoints(x, y, z, x, y, z + 1);
                             maximumFlow = Mathf.Max(maximumFlow, vertices[x, y, z].flows[n_i]);
                             vertices[x, y, z].neighbors[n_i++] = vertices[x, y, z + 1];
@@ -465,10 +463,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
         }
 
-        //for (int x = 0; x < m_scanWidth; x++) {
-        //    for (int y = 0; y < m_scanHeight; y++) {
-        //        for (int z = 0; z < m_numScans; z++) {
-        //            source.flows[(x * m_scanHeight + y) * m_numScans + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
+        //for (int x = 0; x < data.getWidth(); x++) {
+        //    for (int y = 0; y < data.getHeight(); y++) {
+        //        for (int z = 0; z < data.getNumLayers(); z++) {
+        //            source.flows[(x * data.getHeight() + y) * data.getNumLayers() + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
         //            vertices[x, y, z].flows[0] = 0.0f; // need to figure out what to put here
         //        }
         //    }
@@ -480,10 +478,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             index++;
             //vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
-            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
         foreach (Point obj in partOfBackground) {
-            //source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
+            //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x, obj.y, obj.z].flows[vertices[obj.x, obj.y, obj.z].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
         }
@@ -493,9 +491,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public Vertex[,,] MaxFlowSetupBetterSampling(Vertex sink, Vertex source, int xfreq, int yfreq, int zfreq) {
         int numNeighbors;
         int numEdges = 0;
-        int scanWidth = m_scanWidth / xfreq;
-        int scanHeight = m_scanHeight / yfreq;
-        int numScans = m_numScans / zfreq;
+        int scanWidth = data.getWidth() / xfreq;
+        int scanHeight = data.getHeight() / yfreq;
+        int numScans = data.getNumLayers() / zfreq;
         Vertex[,,] vertices = new Vertex[scanWidth, scanHeight, numScans];
         foreach (Point obj in partOfBackground) {
             int x = obj.x/xfreq; int y = obj.y/yfreq; int z = obj.z/zfreq;
@@ -517,7 +515,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             numEdges += numNeighbors;
             //Debug.Log(x + ", " + y + ",  " + z);
             //Debug.Log(scanWidth + ", " + scanHeight + ",  " + numScans);
-            vertices[x, y, z] = new Vertex(numNeighbors, originalScans[obj.z, obj.x, obj.y]);
+            vertices[x, y, z] = new Vertex(numNeighbors, data.getOriginalPixelFloat(obj.x, obj.y, obj.z ) );
             vertices[x, y, z].neighbors[numNeighbors - 1] = sink;
         }
         //float startTime = Time.time;
@@ -550,7 +548,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         for (int x = 0; x < scanWidth; x++) {
             for (int y = 0; y < scanHeight; y++) {
                 for (int z = 0; z < numScans; z++) {
-                    //source.neighbors[(x * m_scanHeight + y) * m_numScans + z] = vertices[x, y, z]; // the source is connected to each pixel
+                    //source.neighbors[(x * data.getHeight() + y) * data.getNumLayers() + z] = vertices[x, y, z]; // the source is connected to each pixel
                     int n_i = 0;
                     if (x != 0) { // Add the four neighbors of each pixel but check edge cases.
                         vertices[x, y, z].flows[n_i] = MaxFlowBetweenPointsSampling(x, y, z, x - 1, y, z, xfreq, yfreq, zfreq);
@@ -588,10 +586,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
         }
 
-        //for (int x = 0; x < m_scanWidth; x++) {
-        //    for (int y = 0; y < m_scanHeight; y++) {
-        //        for (int z = 0; z < m_numScans; z++) {
-        //            source.flows[(x * m_scanHeight + y) * m_numScans + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
+        //for (int x = 0; x < data.getWidth(); x++) {
+        //    for (int y = 0; y < data.getHeight(); y++) {
+        //        for (int z = 0; z < data.getNumLayers(); z++) {
+        //            source.flows[(x * data.getHeight() + y) * data.getNumLayers() + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
         //            vertices[x, y, z].flows[0] = 0.0f; // need to figure out what to put here
         //        }
         //    }
@@ -603,10 +601,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             index++;
             //vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
-            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
         foreach (Point obj in partOfBackground) {
-            //source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
+            //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x/xfreq, obj.y/yfreq, obj.z/zfreq].flows[vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
         }
@@ -617,9 +615,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public Vertex[,,] MaxFlowSetupBetterSamplingRound2(Vertex sink, Vertex source, int xfreq, int yfreq, int zfreq) {
         int numNeighbors;
         int numEdges = 0;
-        int scanWidth = m_scanWidth / xfreq;
-        int scanHeight = m_scanHeight / yfreq;
-        int numScans = m_numScans / zfreq;
+        int scanWidth = data.getWidth() / xfreq;
+        int scanHeight = data.getHeight() / yfreq;
+        int numScans = data.getNumLayers() / zfreq;
         Vertex[,,] vertices = new Vertex[scanWidth, scanHeight, numScans];
         foreach (Point obj in partOfBackground) {
             int x = obj.x / xfreq; int y = obj.y / yfreq; int z = obj.z / zfreq;
@@ -641,7 +639,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             numEdges += numNeighbors;
             //Debug.Log(x + ", " + y + ",  " + z);
             //Debug.Log(scanWidth + ", " + scanHeight + ",  " + numScans);
-            vertices[x, y, z] = new Vertex(numNeighbors, originalScans[z, x, y]);
+            vertices[x, y, z] = new Vertex(numNeighbors, data.getOriginalPixelFloat(x, y, z));
             vertices[x, y, z].neighbors[numNeighbors - 1] = sink;
         }
         //float startTime = Time.time;
@@ -674,7 +672,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         for (int x = 0; x < scanWidth; x++) {
             for (int y = 0; y < scanHeight; y++) {
                 for (int z = 0; z < numScans; z++) {
-                    //source.neighbors[(x * m_scanHeight + y) * m_numScans + z] = vertices[x, y, z]; // the source is connected to each pixel
+                    //source.neighbors[(x * data.getHeight() + y) * data.getNumLayers() + z] = vertices[x, y, z]; // the source is connected to each pixel
                     int n_i = 0;
                     if (x != 0) { // Add the four neighbors of each pixel but check edge cases.
                         vertices[x, y, z].flows[n_i] = xfreq*MaxFlowBetweenPointsSampling(x, y, z, x - 1, y, z, xfreq, yfreq, zfreq);
@@ -712,10 +710,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
         }
 
-        //for (int x = 0; x < m_scanWidth; x++) {
-        //    for (int y = 0; y < m_scanHeight; y++) {
-        //        for (int z = 0; z < m_numScans; z++) {
-        //            source.flows[(x * m_scanHeight + y) * m_numScans + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
+        //for (int x = 0; x < data.getWidth(); x++) {
+        //    for (int y = 0; y < data.getHeight(); y++) {
+        //        for (int z = 0; z < data.getNumLayers(); z++) {
+        //            source.flows[(x * data.getHeight() + y) * data.getNumLayers() + z] = 0.0f; // need to figure out what to put here 0 seems to be working just fine for now
         //            vertices[x, y, z].flows[0] = 0.0f; // need to figure out what to put here
         //        }
         //    }
@@ -727,10 +725,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             index++;
             //vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
-            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z]);
+            // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
         foreach (Point obj in partOfBackground) {
-            //source.flows[(obj.x * m_scanHeight + obj.y) * m_numScans + obj.z] = 0.0f;
+            //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows[vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
         }
@@ -739,19 +737,19 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     }
 
     public void RunMaxFlowSegmentation() {
-        bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
+        bool[,,] visited = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
         // create array of width by height vertices, one for each pixel on the image
         long startTime = DateTime.Now.Ticks;
 
 
-        Vertex[,,] vertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         Vertex sink = new Vertex(0, 0);
-        //Vertex source = new Vertex(m_scanWidth * m_scanHeight * m_numScans);
+        //Vertex source = new Vertex(data.getWidth() * data.getHeight() * data.getNumLayers());
         Vertex source = new Vertex(partOfObject.Count, 1);
         
-        int scanWidth = m_scanWidth / m_xfreq;
-        int scanHeight = m_scanHeight / m_yfreq;
-        int numScans = m_numScans / m_zfreq;
+        int scanWidth = data.getWidth() / m_xfreq;
+        int scanHeight = data.getHeight() / m_yfreq;
+        int numScans = data.getNumLayers() / m_zfreq;
 
         vertices = MaxFlowSetupBetterSampling(sink, source, m_xfreq, m_yfreq, m_zfreq);
 
@@ -849,9 +847,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         file.WriteLine("Iterations of flow reduction = {0}", iterations);
         Debug.Log("Iterations of flow reduction = " + iterations);
         //file.WriteLine("Final results:");
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     if (vertices[x/m_xfreq, y/m_yfreq, z/m_zfreq].visited) {
                         //file.Write("#");
                         visited[x, y, z] = true;
@@ -863,7 +861,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
             //file.WriteLine("");
         }
-        saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
+        data.saveSegmentToFileAsImages( visited, "Resources/segment/segment");
     }
 
     public void ReattachVertexes(Vertex oldOne, Vertex oldTwo, Vertex[,,] vertices, int x1, int x2, int y1, int y2, int z1, int z2, int xx1, int xx2, int yy1, int yy2, int zz1, int zz2) {
@@ -1006,7 +1004,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     public Vertex[,,] ResetGraph( Vertex[,,] verticesBefore, Vertex[,,] verticesAfter , int scanWidth, int scanHeight, int numScans, Vertex source, Vertex sink, float sourceSinkFlow) {
         bool[,,] edgeVertexes = new bool[scanWidth, scanHeight, numScans];
-        Vertex[,,] fullRezVertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex[,,] fullRezVertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         for (int x = 0; x < scanWidth; x++) {
             for (int y = 0; y < scanHeight; y++) {
                 for (int z = 0; z < numScans; z++) {
@@ -1082,16 +1080,16 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                                     } else {
                                         numNeighbors = 4;
                                     }
-                                    if (finalX == 0 || finalX == m_scanWidth - 1) {
+                                    if (finalX == 0 || finalX == data.getWidth() - 1) {
                                         numNeighbors--;
                                     }
-                                    if (finalY == 0 || finalY == m_scanHeight - 1) {
+                                    if (finalY == 0 || finalY == data.getHeight() - 1) {
                                         numNeighbors--;
                                     }
-                                    if (m_3DFlow && (finalZ == 0 || finalZ == m_numScans - 1)) {
+                                    if (m_3DFlow && (finalZ == 0 || finalZ == data.getNumLayers() - 1)) {
                                         numNeighbors--;
                                     }
-                                    fullRezVertices[finalX, finalY, finalZ] = new Vertex(numNeighbors, originalScans[finalZ, finalX, finalY]);
+                                    fullRezVertices[finalX, finalY, finalZ] = new Vertex(numNeighbors, data.getOriginalPixelFloat(finalX, finalY, finalZ));
                                     if (xOffset > 0) {
                                         float flowBetween = ComputeFlowBetween(fullRezVertices[finalX - 1, finalY, finalZ], fullRezVertices[finalX, finalY, finalZ]);
                                         for ( int i = 0; i < fullRezVertices[finalX - 1, finalY, finalZ].neighbors.Length; i++ ) {
@@ -1257,9 +1255,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         int numNull = 0;
         int numTotal = 0;
-        for( int x = 0; x < m_scanWidth; x++ ) {
-            for( int y = 0; y < m_scanHeight; y++ ) {
-                for( int z = 0; z < m_numScans; z++ ) {
+        for( int x = 0; x < data.getWidth(); x++ ) {
+            for( int y = 0; y < data.getHeight(); y++ ) {
+                for( int z = 0; z < data.getNumLayers(); z++ ) {
                     if( fullRezVertices[x, y, z] != null ) {
                         for( int i = 0; i < fullRezVertices[x, y, z].neighbors.Length; i++ ) {
                             if(fullRezVertices[x, y, z].neighbors[i] == null ) {
@@ -1310,9 +1308,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         numNull = 0;
         numTotal = 0;
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     if (fullRezVertices[x, y, z] != null) {
                         for (int i = 0; i < fullRezVertices[x, y, z].neighbors.Length; i++) {
                             if (fullRezVertices[x, y, z].neighbors[i] == null) {
@@ -1344,7 +1342,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public Vertex[,,] ResetGraphHistogramWay(Vertex[,,] verticesBefore, Vertex[,,] verticesAfter, int scanWidth, int scanHeight, int numScans, Vertex source, Vertex sink, float sourceSinkFlow)
     {
         bool[,,] edgeVertexes = new bool[scanWidth, scanHeight, numScans];
-        Vertex[,,] fullRezVertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex[,,] fullRezVertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         for (int x = 0; x < scanWidth; x++)
         {
             for (int y = 0; y < scanHeight; y++)
@@ -1452,19 +1450,19 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                                     {
                                         numNeighbors = 4;
                                     }
-                                    if (finalX == 0 || finalX == m_scanWidth - 1)
+                                    if (finalX == 0 || finalX == data.getWidth() - 1)
                                     {
                                         numNeighbors--;
                                     }
-                                    if (finalY == 0 || finalY == m_scanHeight - 1)
+                                    if (finalY == 0 || finalY == data.getHeight() - 1)
                                     {
                                         numNeighbors--;
                                     }
-                                    if (m_3DFlow && (finalZ == 0 || finalZ == m_numScans - 1))
+                                    if (m_3DFlow && (finalZ == 0 || finalZ == data.getNumLayers() - 1))
                                     {
                                         numNeighbors--;
                                     }
-                                    fullRezVertices[finalX, finalY, finalZ] = new Vertex(numNeighbors, originalScans[finalZ, finalX, finalY]);
+                                    fullRezVertices[finalX, finalY, finalZ] = new Vertex(numNeighbors, data.getOriginalPixelFloat(finalX, finalY, finalZ));
                                     newvertices.Add(fullRezVertices[finalX, finalY, finalZ]);
                                 }
 
@@ -1570,21 +1568,21 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         long numEdges = 0;
         long time1 = DateTime.Now.Ticks;
 
-        bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
+        bool[,,] visited = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
         // create array of 512 by 512 vertices, one for each pixel on the image
-        Vertex[,,] vertices = new Vertex[m_scanWidth, m_scanHeight, m_numScans];
+        Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         Vertex sink = new Vertex(0, 0);
-        //Vertex source = new Vertex(m_scanWidth * m_scanHeight * m_numScans);
+        //Vertex source = new Vertex(data.getWidth() * data.getHeight() * data.getNumLayers());
         Vertex source = new Vertex(partOfObject.Count, 1);
 
-        //numEdges += m_scanWidth * m_scanHeight * m_numScans;
+        //numEdges += data.getWidth() * data.getHeight() * data.getNumLayers();
         numEdges += partOfObject.Count;
 
         edgesCounter = 0;
         
-        int scanWidth = m_scanWidth / m_xfreq;
-        int scanHeight = m_scanHeight / m_yfreq;
-        int numScans = m_numScans / m_zfreq;
+        int scanWidth = data.getWidth() / m_xfreq;
+        int scanHeight = data.getHeight() / m_yfreq;
+        int numScans = data.getNumLayers() / m_zfreq;
 
         vertices = MaxFlowSetupBetterSampling(sink, source, m_xfreq, m_yfreq, m_zfreq);
 
@@ -1702,7 +1700,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         long setupTime = time2 - time1;
         int numVertexes = numScans * scanHeight * scanWidth + 2;
         file.WriteLine("Running Timed Max-flow Segmentation");
-        file.WriteLine("numScans = {0}, scanWidth = {1}, scanHeight = {2}", numScans, m_scanWidth, m_scanHeight);
+        file.WriteLine("numScans = {0}, scanWidth = {1}, scanHeight = {2}", numScans, data.getWidth(), data.getHeight());
         file.WriteLine("xfreq, yfreq, zfreq = {0}, {1}, {2}", m_xfreq, m_yfreq, m_zfreq);
         file.WriteLine("Setup Time            = {0}", setupTime / TimeSpan.TicksPerMillisecond);
         file.WriteLine("Reset Time            = {0}", resetTime / TimeSpan.TicksPerMillisecond);
@@ -1715,14 +1713,14 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         file.WriteLine("Iterations of flow reduction = {0}", flowIterations);
         file.WriteLine("Leftover flow from source = {0}", leftoverFlow);
         file.WriteLine("Initial flow from source = {0}", initialFlow);
-        file.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}", m_scanWidth, m_numScans, setupTime / TimeSpan.TicksPerMillisecond, resetTime / TimeSpan.TicksPerMillisecond,
+        file.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}", data.getWidth(), data.getNumLayers(), setupTime / TimeSpan.TicksPerMillisecond, resetTime / TimeSpan.TicksPerMillisecond,
             bfsTime / TimeSpan.TicksPerMillisecond, flowTime / TimeSpan.TicksPerMillisecond, numVertexes, numEdges, maximumQueue, bfsIterations, flowIterations);
 
         vertices[0, 0, 0].visited = true;
         //file.WriteLine("Final results:");
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     if (vertices[x/ m_xfreq, y/ m_yfreq, z/ m_zfreq].visited) {
                         //file.Write("#");
                         visited[x, y, z] = true;
@@ -1763,9 +1761,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                     }
                 }
             }
-            for (int x = 0; x < m_scanWidth; x++) {
-                for (int y = 0; y < m_scanHeight; y++) {
-                    for (int z = 0; z < m_numScans; z++) {
+            for (int x = 0; x < data.getWidth(); x++) {
+                for (int y = 0; y < data.getHeight(); y++) {
+                    for (int z = 0; z < data.getNumLayers(); z++) {
                         if (vertices2[x, y, z] != null) {
                             //if(vertices2[x, y, z].visited ) {
                             //    Debug.LogError("OMG something in vertices2 was visited");
@@ -1842,7 +1840,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             flowTime += time6 - time5;
         }
         file.WriteLine("Running Second Round of Max-flow Segmentation");
-        file.WriteLine("numScans = {0}, scanWidth = {1}, scanHeight = {2}", numScans, m_scanWidth, m_scanHeight);
+        file.WriteLine("numScans = {0}, scanWidth = {1}, scanHeight = {2}", numScans, data.getWidth(), data.getHeight());
         file.WriteLine("xfreq, yfreq, zfreq = {0}, {1}, {2}", m_xfreq, m_yfreq, m_zfreq);
         file.WriteLine("Setup Time            = {0}", setupTime / TimeSpan.TicksPerMillisecond);
         file.WriteLine("Reset Time            = {0}", resetTime / TimeSpan.TicksPerMillisecond);
@@ -1855,19 +1853,19 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         file.WriteLine("Iterations of flow reduction = {0}", flowIterations);
 
         //saveSegmentToFile(visited, originalScans, "Resources/segment/segmentLowRez");
-        saveSegmentToFile(visited, originalScans, "Resources/segment/" + segmentName);
-        //for (int x = 0; x < m_scanWidth; x++) {
-        //    for (int y = 0; y < m_scanHeight; y++) {
-        //        for (int z = 0; z < m_numScans; z++) {
+        data.saveSegmentToFileAsImages(visited, "Resources/segment/" + segmentName);
+        //for (int x = 0; x < data.getWidth(); x++) {
+        //    for (int y = 0; y < data.getHeight(); y++) {
+        //        for (int z = 0; z < data.getNumLayers(); z++) {
         //            if( vertices[x / m_xfreq, y / m_yfreq, z / m_zfreq].neighbors.Length > 5 ) {
         //                Debug.LogError(" Vertex  has " + vertices[x / m_xfreq, y / m_yfreq, z / m_zfreq].neighbors.Length + " neighbors");
         //            }
         //        }
         //    }
         //}
-        for (int x = 0; x < m_scanWidth; x++) {
-            for (int y = 0; y < m_scanHeight; y++) {
-                for (int z = 0; z < m_numScans; z++) {
+        for (int x = 0; x < data.getWidth(); x++) {
+            for (int y = 0; y < data.getHeight(); y++) {
+                for (int z = 0; z < data.getNumLayers(); z++) {
                     //if (vertices2[x, y, z] != null && vertices2[x, y, z].visited ) {
                     //if (vertices[x / m_xfreq, y / m_yfreq, z / m_zfreq].visited || (vertices2[x, y, z] != null && vertices2[x, y, z].visited)) {
                     visited[x, y, z] = false;
@@ -1887,16 +1885,16 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
             //file.WriteLine("");
         }
-        saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
+        data.saveSegmentToFileAsImages( visited, "Resources/segment/segment" );
     }
 
 
     int count = 0;
     public void RunSegmentation(int scanIndex) {
-        bool[,,] visited = new bool[m_scanWidth, m_scanHeight, m_numScans];
+        bool[,,] visited = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
         Stack<Point> searchArea = new Stack<Point>();
         foreach (Point obj in partOfObject) {
-            Point seed = new Point(obj.x, obj.y, obj.z, originalScans[obj.z, obj.x, obj.y]);
+            Point seed = new Point( obj.x, obj.y, obj.z, data.getOriginalPixelFloat( obj.x, obj.y, obj.z ));
             searchArea.Push(seed);
         }
         partOfObject.Clear();
@@ -1904,9 +1902,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         while (searchArea.Count > 0) {
             Point point = searchArea.Pop();
 
-            if (point.x >= 0 && point.x < m_scanWidth && point.y >= 0 && point.y < m_scanHeight && point.z >= 0 && point.z < m_numScans) {
+            if (point.x >= 0 && point.x < data.getWidth() && point.y >= 0 && point.y < data.getHeight() && point.z >= 0 && point.z < data.getNumLayers()) {
                 if (!visited[point.x, point.y, point.z]) {
-                    float color = originalScans[point.z, point.x, point.y];
+                    float color = data.getOriginalPixelFloat( point.x, point.y, point.z);
                     float diff = Mathf.Abs(point.from - color);
                     if (diff <= m_threshold) {
                         visited[point.x, point.y, point.z] = true;
@@ -1921,7 +1919,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
         }
         //saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
-        saveSegmentToFile(visited, originalScans, "Resources/segment/" + segmentName);
+        data.saveSegmentToFileAsImages( visited, "Resources/segment/" + segmentName );
 
     }
 
