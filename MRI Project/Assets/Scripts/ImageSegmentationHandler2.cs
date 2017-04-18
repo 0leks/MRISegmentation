@@ -31,10 +31,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public bool loadSegmentOnStart;
     public bool m_useAlpha;
 
-    private bool displayMode2D;
-
-    private int selectedScan;
-
     private int guiWidth;
     private int guiHeight;
     
@@ -45,9 +41,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     
     private bool[,,] segmentedTextures;
 
-    private List<Point> partOfObject;
-    private List<Point> partOfBackground;
-
     private List<GameObject> objectSeeds;
     private List<GameObject> backgroundSeeds;
     
@@ -55,6 +48,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     private DataContainer data;
 
     StreamWriter file;
+    
+    private RegionGrowingJob regionGrowingJob;
 
     // Use this for initialization
     void Start() {
@@ -66,9 +61,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         else {
             m_Renderer.material.SetVector("_UseAlpha", new Vector4(0, 0, 0, 1));
         }
-        displayMode2D = true;
-        partOfObject = new List<Point>();
-        partOfBackground = new List<Point>();
         objectSeeds = new List<GameObject>();
         backgroundSeeds = new List<GameObject>();
     }
@@ -127,11 +119,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public void AddSeedTwoD(float x, float y, int z, bool objectSeed) {
         int xCoord = (int) ( x * data.getWidth() );
         int yCoord = (int) ( y * data.getHeight() );
+        Debug.Log( " clicked on = (" + x + "," + y + ")" );
+        Debug.Log( " Coord of new seed = (" + xCoord + "," + yCoord + ")" );
         if( xCoord >= 0 && xCoord < data.getWidth() && yCoord >= 0 && yCoord < data.getHeight() ) {
             AddSeed( xCoord, yCoord, z, objectSeed );
-            float visualX = xCoord - 0.5f;
-            float visualY = yCoord - 0.5f;
-            float visualZ = ( 1.0f * z / data.getNumLayers() ) - 0.5f;
+            float visualX = 0.5f - x;
+            float visualZ = 0.5f - y;
+            float visualY = ( 1.0f * z / data.getNumLayers() ) - 0.5f;
             GameObject seed;
             if( objectSeed ) {
                 seed = Instantiate( seedObject );
@@ -146,26 +140,20 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             seed.transform.localScale = 0.02f * new Vector3( 1, 1, 1 );
         }
         else {
-            m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
+            //m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
         }
     }
 
     private void AddSeed(int x, int y, int z, bool objectSeed) {
-        Point point = new Point(x, y, z, 0);
-        if (objectSeed) {
-            Debug.LogErrorFormat( "Added point to Object {0}, {1}, {2}", x, y, z );
-            partOfObject.Add(point);
-        }
-        else {
-            Debug.LogErrorFormat( "Added point to Background {0}, {1}, {2}", x, y, z );
-            partOfBackground.Add(point);
-        }
+        data.AddSeed( x, y, z, objectSeed );
     }
-    
+
     public void StartFloodFillSegmentationThread() {
-        Debug.LogError( "beginning flood fill segmenting" );
-        RunSegmentation( selectedScan );
-        Debug.LogError( "finished flood fill segmenting" );
+        regionGrowingJob = new RegionGrowingJob( this, data, m_threshold );
+        regionGrowingJob.StartThread();
+    }
+
+    public void FinishedSegmentationCallback() {
         m_twoDDisplay.disableTwoDDisplay();
         m_legendScript.LoadLegendFrom( "segment" );
     }
@@ -186,7 +174,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         string filename = data.getNumLayers() + " " + data.getWidth() + " debugLog" + Time.time + ".txt";
         file = new StreamWriter( filename );
         Debug.LogError( " filename = " + filename );
-        RunMaxFlowSegmentationTimed( selectedScan );
+        RunMaxFlowSegmentationTimed();
         file.Close();
         GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
         Debug.LogError( "finished timed max flow segmenting" );
@@ -196,8 +184,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     
     public void ClearSeeds() {
         Debug.LogError( "Reset object and background seed list" );
-        partOfObject.Clear();
-        partOfBackground.Clear();
+        data.ClearSeeds();
         foreach( GameObject obj in objectSeeds ) {
             Destroy( obj );
         }
@@ -208,19 +195,44 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         backgroundSeeds.Clear();
     }
 
+    public void SeedPresetOne() {
+        int M = 2;
+        AddSeedTwoD( 155.0f * M / data.getWidth(), 149.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 155.0f * M / data.getWidth(), 149.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 144.0f * M / data.getWidth(), 160.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 132.0f * M / data.getWidth(), 176.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 131.0f * M / data.getWidth(), 197.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 115.0f * M / data.getWidth(), 202.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 115.0f * M / data.getWidth(), 179.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 125.0f * M / data.getWidth(), 160.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 135.0f * M / data.getWidth(), 145.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 151.0f * M / data.getWidth(), 132.0f * M / data.getHeight(), 0, true );
+        AddSeedTwoD( 159.0f * M / data.getWidth(), 139.0f * M / data.getHeight(), 0, true );
+
+        AddSeedTwoD( 154.0f * M / data.getWidth(), 171.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 144.0f * M / data.getWidth(), 197.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 132.0f * M / data.getWidth(), 217.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 103.0f * M / data.getWidth(), 213.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD(  98.0f * M / data.getWidth(), 188.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 111.0f * M / data.getWidth(), 161.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 123.0f * M / data.getWidth(), 141.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 141.0f * M / data.getWidth(), 124.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 163.0f * M / data.getWidth(), 124.0f * M / data.getHeight(), 0, false );
+        AddSeedTwoD( 172.0f * M / data.getWidth(), 146.0f * M / data.getHeight(), 0, false );
+    }
+
     void Update() {
-        if (Input.GetKeyDown("f")) {
-            StartFloodFillSegmentationThread();
-        }
-        if (Input.GetKeyDown("s")) {
-            StartMaxFlowSegmentationThread();
-        }
-        if (Input.GetKeyDown("t")) {
-            StartMaxFlowSegmentationTimedThread();
+        if( Input.GetKeyDown( "g" ) ) {
+            loadMedicalData( "heart", "heart-", 0, 10 );
         }
         if (Input.GetKeyDown("r")) {
             segmentedTextures = new bool[ data.getWidth(), data.getHeight(), data.getNumLayers() ];
             ClearSeeds();
+        }
+        if( regionGrowingJob != null ) {
+            if( regionGrowingJob.Update() ) {
+                regionGrowingJob = null;
+            }
         }
     }
 
@@ -357,13 +369,13 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                 }
             }
         }
-        foreach (Point obj in partOfObject) {
+        foreach ( DataContainer.Point obj in data.GetObjectSeeds()) {
             source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             vertices[obj.x, obj.y, obj.z].flows[0] = 0.0f; // the flow to the sink from a seed is 0
 
             // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds() ) {
             source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x, obj.y, obj.z].flows[0] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
@@ -373,7 +385,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public Vertex[,,] MaxFlowSetupBetter(Vertex sink, Vertex source, int xfreq, int yfreq, int zfreq) {
         int numNeighbors;
         Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers() ];
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds() ) {
             int x = obj.x; int y = obj.y; int z = obj.z;
             if (m_3DFlow) {
                 numNeighbors = 7;
@@ -472,7 +484,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         //    }
         //}
         int index = 0;
-        foreach (Point obj in partOfObject) {
+        foreach ( DataContainer.Point obj in data.GetObjectSeeds()) {
             source.neighbors[index] = vertices[obj.x, obj.y, obj.z];
             source.flows[index] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             index++;
@@ -480,7 +492,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
             // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x, obj.y, obj.z].flows[vertices[obj.x, obj.y, obj.z].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
@@ -495,7 +507,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         int scanHeight = data.getHeight() / yfreq;
         int numScans = data.getNumLayers() / zfreq;
         Vertex[,,] vertices = new Vertex[scanWidth, scanHeight, numScans];
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             int x = obj.x/xfreq; int y = obj.y/yfreq; int z = obj.z/zfreq;
             if (m_3DFlow) {
                 numNeighbors = 7;
@@ -595,7 +607,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         //    }
         //}
         int index = 0;
-        foreach (Point obj in partOfObject) {
+        foreach ( DataContainer.Point obj in data.GetObjectSeeds()) {
             source.neighbors[index] = vertices[obj.x/xfreq, obj.y/yfreq, obj.z/zfreq];
             source.flows[index] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             index++;
@@ -603,7 +615,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
             // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x/xfreq, obj.y/yfreq, obj.z/zfreq].flows[vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
@@ -619,7 +631,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         int scanHeight = data.getHeight() / yfreq;
         int numScans = data.getNumLayers() / zfreq;
         Vertex[,,] vertices = new Vertex[scanWidth, scanHeight, numScans];
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             int x = obj.x / xfreq; int y = obj.y / yfreq; int z = obj.z / zfreq;
             if (m_3DFlow) {
                 numNeighbors = 7;
@@ -719,7 +731,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         //    }
         //}
         int index = 0;
-        foreach (Point obj in partOfObject) {
+        foreach ( DataContainer.Point obj in data.GetObjectSeeds()) {
             source.neighbors[index] = vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq];
             source.flows[index] = 1.0f + maximumFlow; // the flow from the source to a seed is 1 + maxflow
             index++;
@@ -727,7 +739,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
             // file.WriteLine("source to pixel {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z]);
         }
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             //source.flows[(obj.x * data.getHeight() + obj.y) * data.getNumLayers() + obj.z] = 0.0f;
             vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows[vertices[obj.x / xfreq, obj.y / yfreq, obj.z / zfreq].flows.Length - 1] = 1.0f + maximumFlow;
             //file.WriteLine("pixel to background {0},{1},{2}  flow: {3}", obj.x, obj.y, obj.z, vertices[obj.x, obj.y, obj.z].flows[0]);
@@ -745,7 +757,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         Vertex sink = new Vertex(0, 0);
         //Vertex source = new Vertex(data.getWidth() * data.getHeight() * data.getNumLayers());
-        Vertex source = new Vertex(partOfObject.Count, 1);
+        Vertex source = new Vertex(data.GetObjectSeeds().Count, 1);
         
         int scanWidth = data.getWidth() / m_xfreq;
         int scanHeight = data.getHeight() / m_yfreq;
@@ -938,8 +950,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         Vertex[] newNeighbors = new Vertex[newNumNeighbors];
         float[] newFlows = new float[newNumNeighbors];
 
-        float oldFlowOut = 0; // OldFlowOut is the current flow from attach to replace.
-        float oldFlowIn = 0; // oldFlowIn is the current flow from replace to attach.
+        //float oldFlowOut = 0; // OldFlowOut is the current flow from attach to replace.
+        //float oldFlowIn = 0; // oldFlowIn is the current flow from replace to attach.
         int counter = 0; // This for loop adds all of the neighbors that will stay with attach to the new neighbor array
         for ( int i = 0; i < attach.neighbors.Length; i++ ) {
             if (attach.neighbors[i] != replace ) {
@@ -947,18 +959,18 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                 newFlows[counter] = attach.flows[i];
                 counter++;
             } else {
-                oldFlowOut = attach.flows[i];
+                //oldFlowOut = attach.flows[i];
             }
         }
         // This for loop looks through replace's neighbors to find the flow from replace to attach.
         for (int i2 = 0; i2 < replace.neighbors.Length; i2++) { 
             if (replace.neighbors[i2] == attach) {
-                oldFlowIn = replace.flows[i2];
+                //oldFlowIn = replace.flows[i2];
             }
         }
-        float oldFlowTotalOut = ComputeFlowBetween(replace, attach);
-        float oldFlowTotalIn = oldFlowTotalOut;
-        float eachDeduct = (oldFlowTotalOut - oldFlowOut) / numVerts;
+        //float oldFlowTotalOut = ComputeFlowBetween(replace, attach);
+        //float oldFlowTotalIn = oldFlowTotalOut;
+        //float eachDeduct = (oldFlowTotalOut - oldFlowOut) / numVerts;
         // This for loop appends the new neighbors that are replacing replace to attach's new neighbor array
         for( int x = x1; x < x2; x++ ) {
             for( int y = y1; y < y2; y++ ) {
@@ -1271,7 +1283,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         Debug.LogError("Number of nulls after graph set up before source and sink set up = " + numNull);
         Debug.LogError("Number of total new edges = " + numTotal);
-        foreach (Point obj in partOfObject) {
+        foreach ( DataContainer.Point obj in data.GetObjectSeeds()) {
             if( edgeVertexes[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq] ) {
                 Debug.LogError("Encountered edge object");
                 Vertex oldVertex = verticesAfter[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq];
@@ -1287,7 +1299,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
             }
         }
-        foreach (Point obj in partOfBackground) {
+        foreach ( DataContainer.Point obj in data.GetBackgroundSeeds()) {
             if (edgeVertexes[obj.x / m_xfreq, obj.y / m_yfreq, obj.z / m_zfreq]) {
                 Debug.LogError("Encountered edge background");
                 Vertex v = fullRezVertices[obj.x, obj.y, obj.z];
@@ -1537,33 +1549,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         //    }
         //}
-        return fullRezVertices;
+        //return fullRezVertices;
     }
 
-    public void RunMaxFlowSegmentationTimed(int scanIndex) {
-        //partOfObject.Clear();
-        //int M = 2;
-        //partOfObject.Add(new Point(155 * M, 149 * M, 0, 1));
-        //partOfObject.Add(new Point(144 * M, 160 * M, 0, 1));
-        //partOfObject.Add(new Point(132 * M, 176 * M, 0, 1));
-        //partOfObject.Add(new Point(131 * M, 197 * M, 0, 1));
-        //partOfObject.Add(new Point(115 * M, 202 * M, 0, 1));
-        //partOfObject.Add(new Point(115 * M, 179 * M, 0, 1));
-        //partOfObject.Add(new Point(125 * M, 160 * M, 0, 1));
-        //partOfObject.Add(new Point(135 * M, 145 * M, 0, 1));
-        //partOfObject.Add(new Point(151 * M, 132 * M, 0, 1));
-        //partOfObject.Add(new Point(159 * M, 139 * M, 0, 1));
-        //partOfBackground.Clear();
-        //partOfBackground.Add(new Point(154 * M, 171 * M, 0, 1));
-        //partOfBackground.Add(new Point(144 * M, 197 * M, 0, 1));
-        //partOfBackground.Add(new Point(132 * M, 217 * M, 0, 1));
-        //partOfBackground.Add(new Point(103 * M, 213 * M, 0, 1));
-        //partOfBackground.Add(new Point(98 * M, 188 * M, 0, 1));
-        //partOfBackground.Add(new Point(111 * M, 161 * M, 0, 1));
-        //partOfBackground.Add(new Point(123 * M, 141 * M, 0, 1));
-        //partOfBackground.Add(new Point(141 * M, 124 * M, 0, 1));
-        //partOfBackground.Add(new Point(163 * M, 124 * M, 0, 1));
-        //partOfBackground.Add(new Point(172 * M, 146 * M, 0, 1));
+    public void RunMaxFlowSegmentationTimed() {
 
         long numEdges = 0;
         long time1 = DateTime.Now.Ticks;
@@ -1573,10 +1562,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         Vertex[,,] vertices = new Vertex[data.getWidth(), data.getHeight(), data.getNumLayers()];
         Vertex sink = new Vertex(0, 0);
         //Vertex source = new Vertex(data.getWidth() * data.getHeight() * data.getNumLayers());
-        Vertex source = new Vertex(partOfObject.Count, 1);
+
+        Vertex source = new Vertex(data.GetObjectSeeds().Count, 1);
 
         //numEdges += data.getWidth() * data.getHeight() * data.getNumLayers();
-        numEdges += partOfObject.Count;
+        numEdges += data.GetObjectSeeds().Count;
 
         edgesCounter = 0;
         
@@ -1887,58 +1877,4 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         data.saveSegmentToFileAsImages( visited, "Resources/segment/segment" );
     }
-
-
-    int count = 0;
-    public void RunSegmentation(int scanIndex) {
-        bool[,,] visited = new bool[data.getWidth(), data.getHeight(), data.getNumLayers()];
-        Stack<Point> searchArea = new Stack<Point>();
-        foreach (Point obj in partOfObject) {
-            Point seed = new Point( obj.x, obj.y, obj.z, data.getOriginalPixelFloat( obj.x, obj.y, obj.z ));
-            searchArea.Push(seed);
-        }
-        partOfObject.Clear();
-
-        while (searchArea.Count > 0) {
-            Point point = searchArea.Pop();
-
-            if (point.x >= 0 && point.x < data.getWidth() && point.y >= 0 && point.y < data.getHeight() && point.z >= 0 && point.z < data.getNumLayers()) {
-                if (!visited[point.x, point.y, point.z]) {
-                    float color = data.getOriginalPixelFloat( point.x, point.y, point.z);
-                    float diff = Mathf.Abs(point.from - color);
-                    if (diff <= m_threshold) {
-                        visited[point.x, point.y, point.z] = true;
-                        searchArea.Push(new Point(point.x - 1, point.y, point.z, color));
-                        searchArea.Push(new Point(point.x + 1, point.y, point.z, color));
-                        searchArea.Push(new Point(point.x, point.y - 1, point.z, color));
-                        searchArea.Push(new Point(point.x, point.y + 1, point.z, color));
-                        searchArea.Push(new Point(point.x, point.y, point.z + 1, color));
-                        searchArea.Push(new Point(point.x, point.y, point.z - 1, color));
-                    }
-                }
-            }
-        }
-        //saveSegmentToFile(visited, originalScans, "Resources/segment/segment");
-        data.saveSegmentToFileAsImages( visited, "Resources/segment/" + segmentName );
-
-    }
-
-    public struct Point {
-        public int x;
-        public int y;
-        public int z;
-        public float from;
-        public Point(int p1, int p2, int p3, float fro) {
-            x = p1;
-            y = p2;
-            z = p3;
-            from = fro;
-        }
-        public override string ToString() {
-            return "( " + x + " , " + y + " , " + from + " )";
-        }
-    }
-
-
-    
 }

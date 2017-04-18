@@ -17,28 +17,48 @@ public class DataContainer : MonoBehaviour {
     // the SegmentHandler will also be able to save and load different textures in different places. If they are 1 txt file each, then it'll be pretty easy to store them.
 
 
-    public int m_numLayers;
+    private int m_numLayers = 3;
     private int m_layerWidth;
     private int m_layerHeight;
 
     private Texture2D[] originalTextures;
     private float[,,] originalFloatData;
     private byte[,,] originalByteData;
+
+    private List<bool[,,]> segments;
+    
+    private List<Point> partOfObject;
+    private List<Point> partOfBackground;
     
     void Start () {
+        partOfObject = new List<Point>();
+        partOfBackground = new List<Point>();
 
+        segments = new List<bool[,,]>();
     }
 
-    void Update() {
-
+    public struct Point {
+        public int x;
+        public int y;
+        public int z;
+        public Point( int p1, int p2, int p3) {
+            x = p1;
+            y = p2;
+            z = p3;
+        }
+        public override string ToString() {
+            return "( " + x + " , " + y + " , " + z + " )";
+        }
     }
 
     public void loadMedicalData( string folderName, string filePrefix, int startLayer, int numLayers) {
 
         m_layerWidth = -1;
         m_layerHeight = -1;
+        m_numLayers = numLayers;
+        originalTextures = new Texture2D[ getNumLayers() ];
 
-        for (int layerIndex = 0; layerIndex < m_numLayers; layerIndex++) {
+        for (int layerIndex = 0; layerIndex < getNumLayers(); layerIndex++) {
             string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + layerIndex.ToString().PadLeft(3, '0') + ".png";
             Texture2D layerTexture = LoadLayer(filePath);
             originalTextures[layerIndex] = layerTexture;
@@ -46,7 +66,7 @@ public class DataContainer : MonoBehaviour {
             {
                 m_layerWidth = layerTexture.width;
                 m_layerHeight = layerTexture.height;
-                originalFloatData = new float[m_numLayers, m_layerWidth, m_layerHeight];
+                originalFloatData = new float[m_layerWidth, m_layerHeight, m_numLayers ];
                 originalByteData = new byte[m_layerWidth, m_layerHeight, m_numLayers];
             }
             for (int x = 0; x < m_layerWidth; x++) {
@@ -59,22 +79,53 @@ public class DataContainer : MonoBehaviour {
         }
     }
 
-    public int getWidth() {
-        return m_layerWidth;
+    public bool[,,] GetSegment() {
+        return segments[ segments.Count - 1 ];
+    }
+    public void AddSegment(bool[,,] segment ) {
+        segments.Add( segment );
+        Debug.Log( "Adding segment" );
+        //for( int x = 0; x < segment.GetLength( 0 ); x++ ) {
+        //    for( int y = 0; y < segment.GetLength( 1 ); y++ ) {
+        //        for( int z = 0; z < segment.GetLength( 2 ); z++ ) {
+        //            segmentedTextures[ x, y, z ] = segmentedTextures[ x, y, z ] || segment[ x, y, z ];
+        //        }
+        //    }
+        //}
     }
 
-    public int getHeight() {
-        return m_layerHeight;
+    public List<Point> GetObjectSeeds() {
+        return partOfObject;
     }
-
-    public int getNumLayers() {
-        return m_numLayers;
+    public List<Point> GetBackgroundSeeds() {
+        return partOfBackground;
     }
+    public void ClearSeeds() {
+        partOfObject.Clear();
+        partOfBackground.Clear();
+    }
+    public void AddSeed(int x, int y, int z, bool isPartOfObject) {
+        if( x >= 0 && x < getWidth() && y >= 0 && y < getHeight() && z >= 0 && z < getNumLayers() ) {
+            if( isPartOfObject ) {
+                Debug.LogErrorFormat( "Added point to Object {0}, {1}, {2}", x, y, z );
+                partOfObject.Add( new Point( x, y, z) );
+            }
+            else {
+                Debug.LogErrorFormat( "Added point to Background {0}, {1}, {2}", x, y, z );
+                partOfBackground.Add( new Point( x, y, z) );
+            }
+        }
+        else {
+            Debug.LogErrorFormat( "Seed was out of range = {0}, {1}, {2}", x, y, z );
+        }
+    }
+    public int getWidth() {     return m_layerWidth;    }
+    public int getHeight() {    return m_layerHeight;   }
+    public int getNumLayers() { return m_numLayers;     }
 
     public float getOriginalPixelFloat(int x, int y, int z) {
         return originalFloatData[ x, y, z ];
     }
-
     public byte getOriginalPixelByte(int x, int y, int z) {
         return originalByteData[ x, y, z ];
     }
@@ -85,7 +136,6 @@ public class DataContainer : MonoBehaviour {
         // the max and min is to prevent selecting past the array size
         return (int) ( Mathf.Max( Mathf.Min( ratio * getNumLayers(), originalTextures.Length - 1 ), 0 ) );
     }
-
     /** Used for the 2D display,    float ratio is a number from 0 to 1 */
     public Texture2D getSelectedTexture(float ratio) {
         return originalTextures[ getSelectedLayer(ratio) ];

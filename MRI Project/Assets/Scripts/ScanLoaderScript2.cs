@@ -38,7 +38,7 @@ public class ScanLoaderScript2 : MonoBehaviour {
     
     private int currentActive = 0;
 
-    public Camera camera;
+    public Camera cam;
 
     //private Material fakeMaterial;
 
@@ -197,7 +197,7 @@ public class ScanLoaderScript2 : MonoBehaviour {
         //Check if user clicked on a spot on the mri scan, this will be the seed to start segmentation from
         if (Input.GetMouseButtonDown(0) && !DISABLESEGMENTATION)
         { // if left button pressed...
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {

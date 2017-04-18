@@ -160,8 +160,7 @@ public class ImageSegmentationHandler : MonoBehaviour
         m_legendScript.LoadLegendFrom("segment");
 
     }
-
-    int count = 0;
+    
     public void RunSegmentation(int mousex, int mousey, int scanIndex)
     {
         float threshold = 0.005f;

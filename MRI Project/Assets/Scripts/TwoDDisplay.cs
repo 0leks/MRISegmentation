@@ -22,9 +22,9 @@ public class TwoDDisplay : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        ValueChangeCheck();
-        m_mainSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         drawGUI = true;
+        disableTwoDDisplay();
+        m_mainSlider.onValueChanged.AddListener( delegate { ValueChangeCheck(); } );
     }
     
     void OnGUI() {
@@ -39,8 +39,8 @@ public class TwoDDisplay : MonoBehaviour {
     void Update () {
         // if left or right mouse button pressed...
         if( (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && drawGUI ) { 
-            float x = (guiWidth - Input.mousePosition.x) * data.getWidth() / guiWidth;
-            float y = (Screen.height - Input.mousePosition.y + 3) * data.getHeight() / guiHeight;
+            float x = (guiWidth - Input.mousePosition.x) / guiWidth;
+            float y = (Screen.height - Input.mousePosition.y + 3) / guiHeight;
             if (Input.GetMouseButtonDown(0)) {
                 m_segmentationHandler.AddSeedTwoD( x, y, data.getSelectedLayer(m_mainSlider.value), true );
             }
@@ -50,6 +50,12 @@ public class TwoDDisplay : MonoBehaviour {
         }
         if( Input.GetKeyDown( "space" ) ) {
             toggleTwoDDisplay();
+        }
+        if( Input.GetKeyDown( "f" ) ) {
+            RegionGrowingButtonPressed();
+        }
+        if( Input.GetKeyDown( "s" ) ) {
+            MaxFlowButtonPressed();
         }
     }
 
@@ -67,6 +73,7 @@ public class TwoDDisplay : MonoBehaviour {
         drawGUI = !drawGUI;
         if( drawGUI ) {
             m_sliderCanvas.SetActive( true );
+            ValueChangeCheck();
         }
         else {
             m_sliderCanvas.SetActive( false );
@@ -75,5 +82,18 @@ public class TwoDDisplay : MonoBehaviour {
 
     public void ValueChangeCheck() {
         displayedTexture = data.getSelectedTexture(m_mainSlider.value);
+    }
+
+    public void RegionGrowingButtonPressed() {
+        m_segmentationHandler.StartFloodFillSegmentationThread();
+    }
+    public void MaxFlowButtonPressed() {
+        m_segmentationHandler.StartMaxFlowSegmentationThread();
+    }
+    public void SeedPresetOneButtonPressed() {
+        m_segmentationHandler.SeedPresetOne();
+    }
+    public void ClearSeedsButtonPressed() {
+        m_segmentationHandler.ClearSeeds();
     }
 }

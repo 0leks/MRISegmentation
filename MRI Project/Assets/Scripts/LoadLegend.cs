@@ -107,7 +107,7 @@ public class LoadLegend : MonoBehaviour
         //folderPath = "Legend/segment0010.png";
         //Debug.Log("Loading legend from " + folderPath);
 
-        bool[,,] segments = m_SegmentationHandler.GetSegments();
+        bool[,,] segments = m_Data.GetSegment();
         
         int width = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getWidth() ) / System.Math.Log( 2 ) ) );
         int height = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getHeight() ) / System.Math.Log( 2 ) ) );
@@ -177,8 +177,8 @@ public class LoadLegend : MonoBehaviour
 
     private void addSegmentColorsToList( bool[,,] segments ) {
         for( int z = 0; z < segments.GetLength(2); z++ ) {
-            for( int x = 0; x < segments.GetLength(0); x++ ) {
-                for( int y = 0; y < segments.GetLength(1); y++ ) {
+            for( int y = segments.GetLength( 1 ) - 1; y >= 0; y-- ) {
+                for( int x = segments.GetLength( 0 ) - 1; x >= 0; x-- ) {
                     // Part of segment is black and part of the background is white
                     if( segments[x, y, z] ) {
                         imageColors.Add( Color.black );
