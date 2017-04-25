@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ThreadedJob {
     private bool m_IsDone = false;
+    private bool m_calledOnFinished = false;
     private object m_Handle = new object();
     private System.Threading.Thread m_Thread = null;
     public bool IsDone {
@@ -35,7 +36,10 @@ public class ThreadedJob {
 
     public virtual bool Update() {
         if( IsDone ) {
-            OnFinished();
+            if( !m_calledOnFinished ) {
+                OnFinished();
+                m_calledOnFinished = true;
+            }
             return true;
         }
         return false;
@@ -46,6 +50,7 @@ public class ThreadedJob {
         }
     }
     private void Run() {
+        m_calledOnFinished = false;
         ThreadFunction();
         IsDone = true;
     }

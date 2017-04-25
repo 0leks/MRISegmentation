@@ -29,7 +29,7 @@ public class DataContainer : MonoBehaviour {
     
     private List<Point> partOfObject;
     private List<Point> partOfBackground;
-    
+
     void Start () {
         partOfObject = new List<Point>();
         partOfBackground = new List<Point>();
@@ -160,7 +160,31 @@ public class DataContainer : MonoBehaviour {
         return tex;
     }
 
-    public void saveSegmentToFileAsImages(bool[,,] segmentArray, string fileName) {
+    public void saveSegmentToFileAsText( bool[,,] segmentArray, string fileName ) {
+        StreamWriter file = new StreamWriter( Application.dataPath + "/" + fileName );
+        Debug.LogError( "Saving segment to " + Application.dataPath + "/" + fileName );
+        file.WriteLine(segmentArray.GetLength(2) + "," + segmentArray.GetLength( 0 ) + "," + segmentArray.GetLength( 1 ) );
+        for( int a = 0; a < segmentArray.GetLength( 2 ); a++ ) {
+            for( int b = 0; b < segmentArray.GetLength( 0 ); b++ ) {
+                for( int c = 0; c < segmentArray.GetLength( 1 ); c++ ) {
+                    if( segmentArray[ b, c, a ] ) {
+                        file.Write( "#" );
+                    }
+                    else {
+                        file.Write( "-" );
+                    }
+                }
+                file.WriteLine();
+            }
+            for( int c = 0; c < segmentArray.GetLength( 1 ); c++ ) {
+                file.Write( "~" );
+            }
+            file.WriteLine();
+        }
+        file.Close();
+    }
+
+    public void saveSegmentToFileAsImages( bool[,,] segmentArray, string fileName) {
 
         for (int z = 0; z < getNumLayers(); z++) {
             Texture2D texture = new Texture2D(getWidth(), getHeight());

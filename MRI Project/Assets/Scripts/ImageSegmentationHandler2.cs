@@ -226,6 +226,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             loadMedicalData( "heart", "heart-", 0, 10 );
         }
         if (Input.GetKeyDown("r")) {
+            data.saveSegmentToFileAsText( segmentedTextures, "testSegment.txt" );
             segmentedTextures = new bool[ data.getWidth(), data.getHeight(), data.getNumLayers() ];
             ClearSeeds();
         }

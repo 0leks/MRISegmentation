@@ -1,9 +1,0 @@
-Setup Time            = 2455
-Reset Time            = 144969
-BFS Time              = 198905
-Computing flow Time   = 36127
-Total number of vertexes in graph = 1179650
-Total number of edges in graph    = 9287680
-Maximum size of queue             = 4885
-Iterations of bfs            = 3503
-Iterations of flow reduction = 3502
