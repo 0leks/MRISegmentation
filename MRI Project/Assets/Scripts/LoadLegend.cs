@@ -159,7 +159,7 @@ public class LoadLegend : MonoBehaviour
         writeLoadedAssetsToFile(legendVolume);
 #endif
     }
-
+    
     public void LoadLegendFrom(string path) {
         folderPath = path + "/segment";
         LoadSegments();

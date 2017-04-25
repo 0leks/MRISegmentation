@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -160,10 +161,40 @@ public class DataContainer : MonoBehaviour {
         return tex;
     }
 
+    public bool[,,] loadSegmentFromTextFile( string fileName ) {
+        StreamReader file = new StreamReader( Application.dataPath + "/" + fileName );
+        Debug.LogError( "Loading segment from " + Application.dataPath + "/" + fileName );
+        string dimensionString = file.ReadLine();
+        string[] dimensionStrings = dimensionString.Split( ',' );
+        int xDim = Int32.Parse( dimensionStrings[ 0 ] );
+        int yDim = Int32.Parse( dimensionStrings[ 1 ] );
+        int zDim = Int32.Parse( dimensionStrings[ 2 ] );
+        bool[,,] segmentArray = new bool[ xDim, yDim, zDim ];
+        int num = 0;
+        Debug.LogError( "Array size is " + xDim + "," + yDim + "," + zDim );
+        for( int a = 0; a < segmentArray.GetLength( 2 ); a++ ) {
+            for( int b = 0; b < segmentArray.GetLength( 0 ); b++ ) {
+                string line = file.ReadLine();
+                for( int c = 0; c < segmentArray.GetLength( 1 ); c++ ) {
+                    if( line[c] == '#' ) {
+                        segmentArray[ b, c, a ] = true;
+                        num++;
+                    }
+                    else {
+                        segmentArray[ b, c, a ] = false;
+                    }
+                }
+            }
+            file.ReadLine(); // Skip line of ~~~~~~~~~~~~~~ in between every layer.
+        }
+        Debug.LogError( "Number of pixels = " + num );
+        return segmentArray;
+    }
+
     public void saveSegmentToFileAsText( bool[,,] segmentArray, string fileName ) {
         StreamWriter file = new StreamWriter( Application.dataPath + "/" + fileName );
         Debug.LogError( "Saving segment to " + Application.dataPath + "/" + fileName );
-        file.WriteLine(segmentArray.GetLength(2) + "," + segmentArray.GetLength( 0 ) + "," + segmentArray.GetLength( 1 ) );
+        file.WriteLine(segmentArray.GetLength( 0 ) + "," + segmentArray.GetLength( 1 ) + "," + segmentArray.GetLength( 2 ) );
         for( int a = 0; a < segmentArray.GetLength( 2 ); a++ ) {
             for( int b = 0; b < segmentArray.GetLength( 0 ); b++ ) {
                 for( int c = 0; c < segmentArray.GetLength( 1 ); c++ ) {

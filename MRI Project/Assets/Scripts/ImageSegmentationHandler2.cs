@@ -226,9 +226,15 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             loadMedicalData( "heart", "heart-", 0, 10 );
         }
         if (Input.GetKeyDown("r")) {
-            data.saveSegmentToFileAsText( segmentedTextures, "testSegment.txt" );
+            data.saveSegmentToFileAsText( data.GetSegment(), "testSegment.txt" );
             segmentedTextures = new bool[ data.getWidth(), data.getHeight(), data.getNumLayers() ];
             ClearSeeds();
+        }
+        if( Input.GetKeyDown( "q" ) ) {
+            segmentedTextures = data.loadSegmentFromTextFile( "testSegment.txt" );
+            data.AddSegment( segmentedTextures );
+            m_legendScript.LoadLegendFrom( "segment" );
+            m_twoDDisplay.disableTwoDDisplay();
         }
         if( regionGrowingJob != null ) {
             if( regionGrowingJob.Update() ) {
