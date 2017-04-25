@@ -18,7 +18,7 @@ public class DataContainer : MonoBehaviour {
     // the SegmentHandler will also be able to save and load different textures in different places. If they are 1 txt file each, then it'll be pretty easy to store them.
 
 
-    private int m_numLayers = 3;
+    private int m_numLayers = 20;
     private int m_layerWidth;
     private int m_layerHeight;
 
