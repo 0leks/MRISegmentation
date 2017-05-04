@@ -9,10 +9,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     [SerializeField] private TwoDDisplay m_twoDDisplay;
     [SerializeField] private MarchingCubes m_marchingCubes;
+    [SerializeField] private MeshReduction m_meshReduction;
     [SerializeField] private DataContainer m_data;
-
-    public int m_numLayers;
+    
     public GameObject tempCube;
+    public GameObject tempCube2;
 
     public LoadLegend m_legendScript;
     public Slider m_mainSlider;
@@ -226,7 +227,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     void Update() {
         if( Input.GetKeyDown( "g" ) ) {
-            loadMedicalData( "heart", "heart-", 0, m_numLayers );
+            loadMedicalData( "heart", "heart-", 0, m_data.m_numLayers );
         }
         if (Input.GetKeyDown("r")) {
             m_data.saveSegmentToFileAsText( m_data.GetSegment(), "testSegment.txt" );
@@ -239,24 +240,77 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             m_legendScript.LoadLegendFrom( "segment" );
             m_twoDDisplay.disableTwoDDisplay();
         }
+
+        if( Input.GetKeyDown( "space" ) ) {
+            long key = ( 5 << 30 ) + (6 << 15) + 7;
+            Debug.Log( "key = " + key );
+        }
         if( Input.GetKeyDown( "m" ) ) {
             Debug.LogError( "Beginning Marching Cubes on most recent segment" );
             List<Vector3> newVertices = new List<Vector3>();
             List<int> newTriangles = new List<int>();
             m_marchingCubes.createTriangleArrayFromSegment( m_data.GetSegment(), newTriangles, newVertices);
-            Debug.LogError( "Number of vertices = " + newVertices.Count );
-            Debug.LogError( "Number of triangles = " + newTriangles.Count );
             Mesh mesh = new Mesh();
             tempCube.GetComponent<MeshFilter>().mesh = mesh;
+            //tempCube.gameObject
             mesh.vertices = newVertices.ToArray();
             mesh.triangles = newTriangles.ToArray();
             Debug.LogError( "Finished Marching Cubes on most recent segment" );
+
+            Mesh mesh2 = new Mesh();
+            mesh2.vertices = newVertices.ToArray();
+            mesh2.triangles = newTriangles.ToArray();
+            newVertices.Clear();
+            newTriangles.Clear();
+            m_meshReduction.ReduceMesh( mesh2.vertices , mesh2.triangles, newVertices, newTriangles, true );
+            //mesh2.vertices = newVertices.ToArray();
+            //mesh2.triangles = newTriangles.ToArray();
+            //newVertices.Clear();
+            //newTriangles.Clear();
+            //m_meshReduction.ReduceMesh( mesh2.vertices, mesh2.triangles, newVertices, newTriangles, false );
+            //mesh2.vertices = newVertices.ToArray();
+            //mesh2.triangles = newTriangles.ToArray();
+            //newVertices.Clear();
+            //newTriangles.Clear();
+            //m_meshReduction.ReduceMesh( mesh2.vertices, mesh2.triangles, newVertices, newTriangles, true );
+            //mesh2.vertices = newVertices.ToArray();
+            //mesh2.triangles = newTriangles.ToArray();
+            //newVertices.Clear();
+            //newTriangles.Clear();
+            //m_meshReduction.ReduceMesh( mesh2.vertices, mesh2.triangles, newVertices, newTriangles, false );
+            mesh2 = new Mesh();
+            tempCube2.GetComponent<MeshFilter>().mesh = mesh2;
+            mesh2.vertices = newVertices.ToArray();
+            mesh2.triangles = newTriangles.ToArray();
+            
+            mesh2.normals = computeNormals( mesh2.vertices, mesh2.triangles );
+
+            Color32[] col = new Color32[ mesh2.vertices.Length ];
+            for( int i = 0; i < mesh2.normals.Length; i++ ) {
+                col[i] = new Color( mesh2.normals[i].x, mesh2.normals[ i ].y, mesh2.normals[ i ].z, 1.0f );
+            }
+            mesh2.colors32 = col;
         }
         if( regionGrowingJob != null ) {
             if( regionGrowingJob.Update() ) {
                 regionGrowingJob = null;
             }
         }
+    }
+
+    public Vector3[] computeNormals( Vector3[] vertices, int[] triangles ) {
+
+        int numTriangles = triangles.Length / 3;
+        Vector3[] normals = new Vector3[ vertices.Length ];
+        for( int t = 0; t < numTriangles; t++ ) {
+            Vector3 normal = Vector3.Cross( vertices[ triangles[ t * 3 + 1 ] ] - vertices[ triangles[ t * 3 ] ],
+                                                vertices[ triangles[ t * 3 + 2 ] ] - vertices[ triangles[ t * 3 ] ] );
+            normal = Vector3.Normalize( normal );
+            for( int i = 0; i < 3; i++ ) {
+                normals[ triangles[ t * 3 + i ] ] = normal;
+            }
+        }
+        return normals;
     }
 
     public class Vertex {
