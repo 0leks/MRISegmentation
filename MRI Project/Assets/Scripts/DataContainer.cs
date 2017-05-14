@@ -155,7 +155,7 @@ public class DataContainer : MonoBehaviour {
             tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
         }
         else {
-            Debug.LogErrorFormat("The file at %s could not be found.", filePath);
+            Debug.LogError("The file at " + filePath + " could not be found.");
             throw new System.IO.FileNotFoundException(filePath);
         }
         return tex;

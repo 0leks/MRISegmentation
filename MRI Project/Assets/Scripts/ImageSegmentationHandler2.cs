@@ -227,7 +227,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     void Update() {
         if( Input.GetKeyDown( "g" ) ) {
-            loadMedicalData( "heart", "heart-", 0, m_data.m_numLayers );
+            loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
         }
         if (Input.GetKeyDown("r")) {
             m_data.saveSegmentToFileAsText( m_data.GetSegment(), "testSegment.txt" );
@@ -260,9 +260,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             Mesh mesh2 = new Mesh();
             mesh2.vertices = newVertices.ToArray();
             mesh2.triangles = newTriangles.ToArray();
-            newVertices.Clear();
-            newTriangles.Clear();
-            m_meshReduction.ReduceMesh( mesh2.vertices , mesh2.triangles, newVertices, newTriangles, true );
+            //newVertices.Clear();
+            //newTriangles.Clear();
+
+            //m_meshReduction.ReduceMesh( mesh2.vertices , mesh2.triangles, newVertices, newTriangles, true );
+
             //mesh2.vertices = newVertices.ToArray();
             //mesh2.triangles = newTriangles.ToArray();
             //newVertices.Clear();

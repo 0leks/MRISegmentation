@@ -37,7 +37,7 @@ public class MarchingCubes : MonoBehaviour {
                     caseNumber = determineCase( x, y, z, segment );
 
                     if( caseNumber != 0 && caseNumber != 255 ) {
-                        int mult = 1;
+                        int mult = 2;
                         //Adds 36 elements, 3 for each of 12 vertices on the cube 
                         tempVertices.AddRange( getCubeVerticesOffset(x* mult, y* mult, z* mult ) );
 
@@ -56,10 +56,11 @@ public class MarchingCubes : MonoBehaviour {
             }
         }
         StreamWriter file = new StreamWriter( Application.dataPath + "/MarchingCubesTest.txt" );
-        float size = 100;
+        float size = 300;
         float xscale = 0.002f * size;
         float yscale = 0.002f * size;
-        float zscale = 0.01f * size;
+        float zscale = 0.002f * size;
+        //float zscale = 0.01f * size;
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );
         int[] conversion = new int[ numberOfVertices ];
         for( int i = 0; i < conversion.Length; i++ ) { conversion[ i ] = -1; }
@@ -144,15 +145,16 @@ public class MarchingCubes : MonoBehaviour {
 
         0, 0, 1 ,
         2, 0, 1 ,
-        2, 2, 1 ,
-        0, 2, 1
+        0, 2, 1 ,   
+        2, 2, 1    
     };
 
     /**
      * lookup table is way to translate from a certain case of cube to actual edge vertices that need to become triangles.
      * -1 means not active vertex
      */
-    private static int[] lookupTable = {
+    private static int[] lookupTable =
+    {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         0, 1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -408,5 +410,6 @@ public class MarchingCubes : MonoBehaviour {
         1, 3, 8, 9, 1, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         0, 9, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+    };
 }
