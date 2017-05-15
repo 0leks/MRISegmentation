@@ -29,9 +29,9 @@ public class MarchingCubes : MonoBehaviour {
         SortedList<int, int> sortedVertices = new SortedList<int, int>();
         int caseNumber, indexInTable;
         int numberOfVertices = 0;
-        for( int x = -1; x < segment.GetLength( 0 ); x++ ) {
-            for( int y = -1; y < segment.GetLength( 1 ); y++ ) {
-                for( int z = -1; z < segment.GetLength( 2 ); z++ ) {
+        for( int x = 0; x < segment.GetLength( 0 ) - 1; x++ ) {
+            for( int y = 0; y < segment.GetLength( 1 ) - 1; y++ ) {
+                for( int z = 0; z < segment.GetLength( 2 ) - 1; z++ ) {
                 //for( int z = -1; z < 0; z++ ) {
 
                     caseNumber = determineCase( x, y, z, segment );
@@ -56,10 +56,16 @@ public class MarchingCubes : MonoBehaviour {
             }
         }
         StreamWriter file = new StreamWriter( Application.dataPath + "/MarchingCubesTest.txt" );
-        float size = 300;
-        float xscale = 0.002f * size;
-        float yscale = 0.002f * size;
-        float zscale = 0.002f * size;
+        float zscale = 0.5f / segment.GetLength( 2 );
+        float xscale = zscale;// 0.5f / segment.GetLength( 0 );
+        float yscale = zscale;//0.5f / segment.GetLength( 1 );
+        float xoffset = -0.3f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.7f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
+
+        //float xoffset = -0.5f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.5f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
+        //float size = 300;
+        //float xscale = 0.002f * size;
+        //float yscale = 0.002f * size;
+        //float zscale = 0.002f * size;
         //float zscale = 0.01f * size;
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );
         int[] conversion = new int[ numberOfVertices ];
@@ -98,9 +104,9 @@ public class MarchingCubes : MonoBehaviour {
             }
             else {
                 vertices.Add( new Vector3(
-                            tempVertices2[ index*3 ] * xscale,
-                            tempVertices2[ index * 3 + 1 ] * yscale,
-                            tempVertices2[ index * 3 + 2 ] * zscale ) );
+                            tempVertices2[ index*3 ] * xscale + xoffset,
+                            tempVertices2[ index * 3 + 1 ] * yscale + yoffset,
+                            tempVertices2[ index * 3 + 2 ] * zscale + zoffset) );
                 conversion2[ index ] = vertices.Count - 1;
                 keys.Add( key );
             }

@@ -100,9 +100,8 @@ public class Control : MonoBehaviour
         }
 
         //going back to scene
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            SceneManager.LoadScene("Menu Scene", LoadSceneMode.Single);
+        if (Input.GetKeyDown(KeyCode.X)) {
+            this.gameObject.SetActive( false );
         }
     }
 }

@@ -260,10 +260,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             Mesh mesh2 = new Mesh();
             mesh2.vertices = newVertices.ToArray();
             mesh2.triangles = newTriangles.ToArray();
+
             //newVertices.Clear();
             //newTriangles.Clear();
-
-            //m_meshReduction.ReduceMesh( mesh2.vertices , mesh2.triangles, newVertices, newTriangles, true );
+            //m_meshReduction.ReduceMesh( mesh2.vertices , mesh2.triangles, newVertices, newTriangles );
 
             //mesh2.vertices = newVertices.ToArray();
             //mesh2.triangles = newTriangles.ToArray();
