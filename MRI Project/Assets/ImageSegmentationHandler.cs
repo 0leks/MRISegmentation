@@ -157,7 +157,7 @@ public class ImageSegmentationHandler : MonoBehaviour
         m_Renderer.enabled = true;
         displayMode2D = false;
         m_sliderCanvas.SetActive(false);
-        m_legendScript.LoadLegendFrom("segment");
+        m_legendScript.LoadLegendFromSegmentationHandler();
 
     }
     

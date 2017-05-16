@@ -160,8 +160,7 @@ public class LoadLegend : MonoBehaviour
 #endif
     }
     
-    public void LoadLegendFrom(string path) {
-        folderPath = path + "/segment";
+    public void LoadLegendFromSegmentationHandler() {
         LoadSegments();
     }
 

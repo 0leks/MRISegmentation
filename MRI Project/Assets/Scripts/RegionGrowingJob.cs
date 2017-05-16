@@ -25,7 +25,7 @@ public class RegionGrowingJob : ThreadedJob {
 
     // This runs in the main thread
     protected override void OnFinished() {
-        Debug.LogError( "entered OnFinished" );
+        Debug.LogError( "entered OnFinished for flood fill" );
         m_data.AddSegment( visited );
         m_segmentationHandler.FinishedSegmentationCallback();
     }
