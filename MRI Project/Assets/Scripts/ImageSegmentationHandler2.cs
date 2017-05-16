@@ -8,7 +8,6 @@ using System.Collections.Generic;
 public class ImageSegmentationHandler2 : MonoBehaviour {
 
     [SerializeField] private TwoDDisplay m_twoDDisplay;
-    [SerializeField] private MarchingCubes m_marchingCubes;
     [SerializeField] private MeshReduction m_meshReduction;
     [SerializeField] private DataContainer m_data;
     
@@ -46,12 +45,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     private List<GameObject> objectSeeds;
     private List<GameObject> backgroundSeeds;
-    
 
+    public string dataPath;
     StreamWriter file;
-    
-    private RegionGrowingJob regionGrowingJob;
-    private MaxFlowJob maxFlowJob;
+
+    private List<ThreadedJob> m_runningThreads;
 
     // Use this for initialization
     void Start() {
@@ -65,6 +63,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         objectSeeds = new List<GameObject>();
         backgroundSeeds = new List<GameObject>();
+        m_runningThreads = new List<ThreadedJob>();
+        dataPath = Application.dataPath;
     }
 
     public bool[,,] GetSegments() {
@@ -150,43 +150,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_data.AddSeed( x, y, z, objectSeed );
     }
 
-    public void StartFloodFillSegmentationThread() {
-        regionGrowingJob = new RegionGrowingJob( this, m_data, m_threshold );
-        regionGrowingJob.StartThread();
-    }
-
-    public void FinishedSegmentationCallback() {
-        m_twoDDisplay.disableTwoDDisplay();
-        m_legendScript.LoadLegendFromSegmentationHandler();
-    }
-
-    public void StartMaxFlowSegmentationThread() {
-        maxFlowJob = new MaxFlowJob( this, m_data, m_xfreq, m_zfreq, m_3DFlow);
-        maxFlowJob.StartThread();
-
-        //Debug.LogError( "beginning max flow segmenting" );
-        //file = new StreamWriter( "debugLog.txt" );
-        //RunMaxFlowSegmentation();
-        //file.Close();
-        //GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
-        //Debug.LogError( "finished max flow segmenting" );
-        //m_twoDDisplay.disableTwoDDisplay();
-        //m_legendScript.LoadLegendFromSegmentationHandler();
-    }
-
-    public void StartMaxFlowSegmentationTimedThread() {
-        Debug.LogError( "beginning timed max flow segmenting, currently doesnt do anything" );
-        string filename = m_data.getNumLayers() + " " + m_data.getWidth() + " debugLog" + Time.time + ".txt";
-        file = new StreamWriter( filename );
-        Debug.LogError( " filename = " + filename );
-        //RunMaxFlowSegmentationTimed();
-        file.Close();
-        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
-        Debug.LogError( "finished timed max flow segmenting" );
-        m_twoDDisplay.disableTwoDDisplay();
-        m_legendScript.LoadLegendFromSegmentationHandler();
-    }
-    
     public void ClearSeeds() {
         Debug.LogError( "Reset object and background seed list" );
         m_data.ClearSeeds();
@@ -218,13 +181,63 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         AddSeedTwoD( 144.0f * M / m_data.getWidth(), 197.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 132.0f * M / m_data.getWidth(), 217.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 103.0f * M / m_data.getWidth(), 213.0f * M / m_data.getHeight(), 0, false );
-        AddSeedTwoD(  98.0f * M / m_data.getWidth(), 188.0f * M / m_data.getHeight(), 0, false );
+        AddSeedTwoD( 98.0f * M / m_data.getWidth(), 188.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 111.0f * M / m_data.getWidth(), 161.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 123.0f * M / m_data.getWidth(), 141.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 141.0f * M / m_data.getWidth(), 124.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 163.0f * M / m_data.getWidth(), 124.0f * M / m_data.getHeight(), 0, false );
         AddSeedTwoD( 172.0f * M / m_data.getWidth(), 146.0f * M / m_data.getHeight(), 0, false );
     }
+    public void StartFloodFillSegmentationThread() {
+        RegionGrowingJob regionGrowingJob = new RegionGrowingJob( this, m_data, m_threshold );
+        regionGrowingJob.StartThread();
+        m_runningThreads.Add( regionGrowingJob );
+    }
+    public void StartMaxFlowSegmentationThread() {
+        MaxFlowJob maxFlowJob = new MaxFlowJob( this, m_data, m_xfreq, m_zfreq, m_3DFlow);
+        maxFlowJob.StartThread();
+        m_runningThreads.Add( maxFlowJob );
+    }
+    public void FinishedSegmentationCallback() {
+        m_twoDDisplay.disableTwoDDisplay();
+        m_legendScript.LoadLegendFromSegmentationHandler();
+        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+    }
+    public void StartMarchingCubesThread() {
+        MarchingCubesJob marchingCubesJob = new MarchingCubesJob(this, m_data );
+        marchingCubesJob.StartThread();
+        m_runningThreads.Add( marchingCubesJob );
+    }
+    public void MarchingCubesFinished( List<Vector3> vertices, List<int> triangles ) {
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        if( true ) {
+            mesh.normals = computeNormals( mesh.vertices, mesh.triangles );
+            Color32[] col = new Color32[ mesh.vertices.Length ];
+            for( int i = 0; i < mesh.normals.Length; i++ ) {
+                col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
+            }
+            mesh.colors32 = col;
+        }
+
+        tempCube2.GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+    public void StartMaxFlowSegmentationTimedThread() {
+        Debug.LogError( "beginning timed max flow segmenting, currently doesnt do anything" );
+        string filename = m_data.getNumLayers() + " " + m_data.getWidth() + " debugLog" + Time.time + ".txt";
+        file = new StreamWriter( filename );
+        Debug.LogError( " filename = " + filename );
+        //RunMaxFlowSegmentationTimed();
+        file.Close();
+        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        Debug.LogError( "finished timed max flow segmenting" );
+        m_twoDDisplay.disableTwoDDisplay();
+        m_legendScript.LoadLegendFromSegmentationHandler();
+    }
+
 
     void Update() {
         if( Input.GetKeyDown( "g" ) ) {
@@ -242,49 +255,16 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             m_twoDDisplay.disableTwoDDisplay();
         }
         if( Input.GetKeyDown( "m" ) ) {
-            Debug.LogError( "Beginning Marching Cubes on most recent segment" );
-            List<Vector3> newVertices = new List<Vector3>();
-            List<int> newTriangles = new List<int>();
-            m_marchingCubes.createTriangleArrayFromSegment( m_data.GetSegment(), newTriangles, newVertices);
-            Mesh mesh = new Mesh();
-            tempCube.GetComponent<MeshFilter>().mesh = mesh;
-            //tempCube.gameObject
-            mesh.vertices = newVertices.ToArray();
-            mesh.triangles = newTriangles.ToArray();
-            Debug.LogError( "Finished Marching Cubes on most recent segment" );
-
-            Mesh mesh2 = new Mesh();
-            mesh2.vertices = newVertices.ToArray();
-            mesh2.triangles = newTriangles.ToArray();
-
-            //newVertices.Clear();
-            //newTriangles.Clear();
-            //m_meshReduction.ReduceMesh( mesh2.vertices, mesh2.triangles, newVertices, newTriangles );
-
-            mesh2 = new Mesh();
-            tempCube2.GetComponent<MeshFilter>().mesh = mesh2;
-            mesh2.vertices = newVertices.ToArray();
-            mesh2.triangles = newTriangles.ToArray();
-            
-            mesh2.normals = computeNormals( mesh2.vertices, mesh2.triangles );
-
-            Color32[] col = new Color32[ mesh2.vertices.Length ];
-            for( int i = 0; i < mesh2.normals.Length; i++ ) {
-                col[i] = new Color( mesh2.normals[i].x, mesh2.normals[ i ].y, mesh2.normals[ i ].z, 1.0f );
-            }
-            mesh2.colors32 = col;
+            StartMarchingCubesThread();
         }
-        if( regionGrowingJob != null ) {
-            if( regionGrowingJob.Update() ) {
-                regionGrowingJob = null;
-            }
-        }
-        if( maxFlowJob != null ) {
-            if( maxFlowJob.Update() ) {
-                maxFlowJob = null;
+        // Update each thread to see if it is done yet.
+        for( int index = m_runningThreads.Count - 1; index >= 0; index-- ) {
+            if( m_runningThreads[index].Update() ) {
+                m_runningThreads.Remove( m_runningThreads[ index ] );
             }
         }
     }
+
 
     public Vector3[] computeNormals( Vector3[] vertices, int[] triangles ) {
 
@@ -300,5 +280,4 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         return normals;
     }
-
 }

@@ -1,15 +1,39 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class MarchingCubes : MonoBehaviour {
+public class MarchingCubesJob : ThreadedJob {
+    private ImageSegmentationHandler2 m_segmentationHandler;
+    private DataContainer m_data;
+
+    List<Vector3> newVertices = new List<Vector3>();
+    List<int> newTriangles = new List<int>();
+
+    public MarchingCubesJob( ImageSegmentationHandler2 segmentationHandler, DataContainer data ) {
+        m_segmentationHandler = segmentationHandler;
+        m_data = data;
+    }
+
+    // this runs in the new thread
+    protected override void ThreadFunction() {
+        Debug.LogError( "beginning marching cubes" );
+        newVertices = new List<Vector3>();
+        newTriangles = new List<int>();
+        createTriangleArrayFromSegment( m_data.GetSegment(), newTriangles, newVertices );
+    }
+
+    // This runs in the main thread
+    protected override void OnFinished() {
+        Debug.LogError( "entered OnFinished for marching cubes" );
+        m_segmentationHandler.MarchingCubesFinished( newVertices, newTriangles );
+    }
+
 
     public int[] getCubeVerticesOffset( int x, int y, int z ) {
         int[] verticesCopy = new int[ getCubeVertices().Length ];
         Array.Copy( getCubeVertices(), verticesCopy, getCubeVertices().Length );
-        for( int i = 0; i < verticesCopy.Length; i+=3 ) {
+        for( int i = 0; i < verticesCopy.Length; i += 3 ) {
             verticesCopy[ i ] += x;
             verticesCopy[ i + 1 ] += y;
             verticesCopy[ i + 2 ] += z;
@@ -21,7 +45,7 @@ public class MarchingCubes : MonoBehaviour {
         return cubeVertices;
     }
 
-    public void createTriangleArrayFromSegment(bool[,,] segment, List<int> triangles, List<Vector3> vertices) {
+    public void createTriangleArrayFromSegment( bool[,,] segment, List<int> triangles, List<Vector3> vertices ) {
 
         List<int> tempVertices = new List<int>();
         List<int> tempVertices2 = new List<int>();
@@ -32,14 +56,14 @@ public class MarchingCubes : MonoBehaviour {
         for( int x = 0; x < segment.GetLength( 0 ) - 1; x++ ) {
             for( int y = 0; y < segment.GetLength( 1 ) - 1; y++ ) {
                 for( int z = 0; z < segment.GetLength( 2 ) - 1; z++ ) {
-                //for( int z = -1; z < 0; z++ ) {
+                    //for( int z = -1; z < 0; z++ ) {
 
                     caseNumber = determineCase( x, y, z, segment );
 
                     if( caseNumber != 0 && caseNumber != 255 ) {
                         int mult = 2;
                         //Adds 36 elements, 3 for each of 12 vertices on the cube 
-                        tempVertices.AddRange( getCubeVerticesOffset(x* mult, y* mult, z* mult ) );
+                        tempVertices.AddRange( getCubeVerticesOffset( x * mult, y * mult, z * mult ) );
 
                         indexInTable = caseNumber * 15;
                         // Adds triangles one at a time
@@ -50,12 +74,12 @@ public class MarchingCubes : MonoBehaviour {
                             tempTriangles.Add( numberOfVertices + lookupTable[ indexInTable + index ] );
                         }
                         //Increases by 12 each time
-                        numberOfVertices += cubeVertices.Length/3;
+                        numberOfVertices += cubeVertices.Length / 3;
                     }
                 }
             }
         }
-        StreamWriter file = new StreamWriter( Application.dataPath + "/MarchingCubesTest.txt" );
+        StreamWriter file = new StreamWriter( m_segmentationHandler.dataPath + "/MarchingCubesTest.txt" );
         float zscale = 0.5f / segment.GetLength( 2 );
         float xscale = zscale;// 0.5f / segment.GetLength( 0 );
         float yscale = zscale;//0.5f / segment.GetLength( 1 );
@@ -76,21 +100,21 @@ public class MarchingCubes : MonoBehaviour {
         // This loop removes unused vertexes since for every cube, all 12 vertexes were added to the list.
         for( int index = 0; index < tempTriangles.Count; index++ ) {
             int oldVertexIndex = tempTriangles[ index ];
-            int oldVertexX = tempVertices[ oldVertexIndex*3 ];
-            int oldVertexY = tempVertices[ oldVertexIndex*3 + 1 ];
-            int oldVertexZ = tempVertices[ oldVertexIndex*3 + 2 ];
+            int oldVertexX = tempVertices[ oldVertexIndex * 3 ];
+            int oldVertexY = tempVertices[ oldVertexIndex * 3 + 1 ];
+            int oldVertexZ = tempVertices[ oldVertexIndex * 3 + 2 ];
             //file.WriteLine("Index " + index + " tempTriangles[]=" + oldVertexIndex + "  x,y,z=" + oldVertexX + "," + oldVertexY + "," + oldVertexZ );
             if( conversion[ oldVertexIndex ] == -1 ) {
                 tempVertices2.Add( oldVertexX );
                 tempVertices2.Add( oldVertexY );
                 tempVertices2.Add( oldVertexZ );
-                conversion[ oldVertexIndex ] = tempVertices2.Count/3 - 1;
+                conversion[ oldVertexIndex ] = tempVertices2.Count / 3 - 1;
                 //file.WriteLine("Added Vertex " + (vertices.Count - 1) + " = " + oldVertexX * xscale + "," + oldVertexY * yscale + "," + oldVertexZ * zscale );
             }
             triangles.Add( conversion[ oldVertexIndex ] );
             // file.WriteLine( "Index " + index + " points to " + conversion[ oldVertexIndex ] );
         }
-        
+
         Debug.Log( "Before combining vertexes tempVertices2.Count = " + tempVertices2.Count + ", triangles.Count = " + triangles.Count );
 
         // Now try to combine identical vertexes in different cubes.
@@ -98,15 +122,15 @@ public class MarchingCubes : MonoBehaviour {
         for( int i = 0; i < conversion2.Length; i++ ) { conversion2[ i ] = -1; }
         List<long> keys = new List<long>();
         for( int index = 0; index < tempVertices2.Count / 3; index += 1 ) {
-            long key = (tempVertices2[ index*3 ] << 40) + (tempVertices2[ index*3 + 1 ] << 20) + tempVertices2[ index*3 + 2 ];
-            if( keys.Contains(key) ) {
+            long key = ( tempVertices2[ index * 3 ] << 40 ) + ( tempVertices2[ index * 3 + 1 ] << 20 ) + tempVertices2[ index * 3 + 2 ];
+            if( keys.Contains( key ) ) {
                 conversion2[ index ] = keys.IndexOf( key );
             }
             else {
                 vertices.Add( new Vector3(
-                            tempVertices2[ index*3 ] * xscale + xoffset,
+                            tempVertices2[ index * 3 ] * xscale + xoffset,
                             tempVertices2[ index * 3 + 1 ] * yscale + yoffset,
-                            tempVertices2[ index * 3 + 2 ] * zscale + zoffset) );
+                            tempVertices2[ index * 3 + 2 ] * zscale + zoffset ) );
                 conversion2[ index ] = vertices.Count - 1;
                 keys.Add( key );
             }
@@ -125,10 +149,10 @@ public class MarchingCubes : MonoBehaviour {
      * x, y, z coordinate on 3D segment passed in. 
      * Using (x,x+1), (y,y+1), (z,z+1) 8 pixels returns correct index in the lookup table
      */
-    public int determineCase(int x, int y, int z, bool[,,] segment) {
+    public int determineCase( int x, int y, int z, bool[,,] segment ) {
         return
             ( !( x < 0 || y < 0 || z < 0 ) && segment[ x, y, z ] ? 1 : 0 ) +
-            ( !( x+1 >= segment.GetLength( 0 ) || y < 0 || z < 0 ) && segment[ x + 1, y, z ] ? 2 : 0 ) +
+            ( !( x + 1 >= segment.GetLength( 0 ) || y < 0 || z < 0 ) && segment[ x + 1, y, z ] ? 2 : 0 ) +
             ( !( x + 1 >= segment.GetLength( 0 ) || y + 1 >= segment.GetLength( 1 ) || z < 0 ) && segment[ x + 1, y + 1, z ] ? 4 : 0 ) +
             ( !( x < 0 || y + 1 >= segment.GetLength( 1 ) || z < 0 ) && segment[ x, y + 1, z ] ? 8 : 0 ) +
             ( !( x < 0 || y < 0 || z + 1 >= segment.GetLength( 2 ) ) && segment[ x, y, z + 1 ] ? 16 : 0 ) +
@@ -151,8 +175,8 @@ public class MarchingCubes : MonoBehaviour {
 
         0, 0, 1 ,
         2, 0, 1 ,
-        0, 2, 1 ,   
-        2, 2, 1    
+        0, 2, 1 ,
+        2, 2, 1
     };
 
     /**
