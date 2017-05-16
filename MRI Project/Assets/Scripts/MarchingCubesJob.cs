@@ -80,17 +80,17 @@ public class MarchingCubesJob : ThreadedJob {
             }
         }
         StreamWriter file = new StreamWriter( m_segmentationHandler.dataPath + "/MarchingCubesTest.txt" );
-        float zscale = 0.5f / segment.GetLength( 2 );
-        float xscale = zscale;// 0.5f / segment.GetLength( 0 );
-        float yscale = zscale;//0.5f / segment.GetLength( 1 );
-        float xoffset = -0.3f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.7f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
-
+        //float zscale = 0.5f / segment.GetLength( 2 );
+        //float xscale = zscale;// 0.5f / segment.GetLength( 0 );
+        //float yscale = zscale;//0.5f / segment.GetLength( 1 );
+        //float xoffset = -0.3f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.7f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
         //float xoffset = -0.5f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.5f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
-        //float size = 300;
-        //float xscale = 0.002f * size;
-        //float yscale = 0.002f * size;
-        //float zscale = 0.002f * size;
-        //float zscale = 0.01f * size;
+
+        float zscale = 0.5f / segment.GetLength( 2 );
+        float xscale = 0.5f / segment.GetLength( 0 );
+        float yscale = 0.5f / segment.GetLength( 1 );
+        float xoffset = -0.5f, yoffset = -0.5f, zoffset = -0.5f;
+        
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );
         int[] conversion = new int[ numberOfVertices ];
         for( int i = 0; i < conversion.Length; i++ ) { conversion[ i ] = -1; }

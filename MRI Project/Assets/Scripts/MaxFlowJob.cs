@@ -80,7 +80,8 @@ public class MaxFlowJob : ThreadedJob {
         // Upon parsing every accesible vertex and not having visited sink yet, that is the end and the max flow has been found.
 
         // For BFS use a queue
-        Queue<Vertex> searchArea = new Queue<Vertex>();
+        //Queue<Vertex> searchArea = new Queue<Vertex>();
+        Stack<Vertex> searchArea = new Stack<Vertex>();
 
         long time1 = 0;
         long time2 = 0;
@@ -99,14 +100,16 @@ public class MaxFlowJob : ThreadedJob {
             }
 
             // First enqueue the source node
-            searchArea.Enqueue( source );
+            //searchArea.Enqueue( source );
+            searchArea.Push( source );
             source.visited = true;
 
             Vertex v = null;
             Vertex n = null;
             while( searchArea.Count > 0 ) // visit all possible from source 
             {                            // This loop is Breadth first search until finding the sink, or visiting every possible node
-                v = searchArea.Dequeue();
+                //v = searchArea.Dequeue();
+                v = searchArea.Pop();
                 if( v == sink ) {
                     break;
                 }
@@ -115,7 +118,8 @@ public class MaxFlowJob : ThreadedJob {
                     if( !n.visited && v.flows[ i ] > 0 ) {
                         n.visited = true;
                         n.from = v;
-                        searchArea.Enqueue( n );
+                        //searchArea.Enqueue( n );
+                        searchArea.Push( n );
                     }
                 }
             }

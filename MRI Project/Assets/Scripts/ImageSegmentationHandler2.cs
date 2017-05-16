@@ -217,7 +217,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             mesh.normals = computeNormals( mesh.vertices, mesh.triangles );
             Color32[] col = new Color32[ mesh.vertices.Length ];
             for( int i = 0; i < mesh.normals.Length; i++ ) {
-                col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
+                //col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
+                col[ i ] = new Color( Mathf.Abs(0.0f - mesh.normals[ i ].x), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
             }
             mesh.colors32 = col;
         }
