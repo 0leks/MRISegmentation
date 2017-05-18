@@ -1,0 +1,68 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MenuButtonScript : MonoBehaviour {
+
+    public delegate void TestDelegate();
+    public TestDelegate method;
+
+    private float countdown;
+    private bool countingDown;
+    private bool canceled;
+    private const float MAX_COUNTDOWN = 2.0f;
+
+    private Color restingColor = new Color( 0.1f, 0.1f, 0.1f, 0.1f );
+    private Color activeColor = new Color( 1, 1, 1, 1 );
+    private Color activatedColor = new Color( 0, 1, 0, 1 );
+    private Color canceledColor = new Color( 1, 0, 0, 1 );
+
+    // Use this for initialization
+    void Start () {
+        gameObject.GetComponent<Renderer>().material.color = restingColor;
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        if( countdown >= 0 ) {
+            countdown -= Time.deltaTime;
+        } else if( countingDown ) {
+            gameObject.GetComponent<Renderer>().material.color = restingColor;
+            countingDown = false;
+            canceled = false;
+        }
+	}
+
+    void OnTriggerEnter( Collider col ) {
+        if( !countingDown || canceled ) {
+            Debug.Log( "Entered collision with " + col.gameObject.name );
+            gameObject.GetComponent<Renderer>().material.color = activeColor;
+            countingDown = false;
+            canceled = false;
+        }
+    }
+    void OnTriggerStay( Collider col ) {
+        if( !countingDown || canceled ) {
+            OnTriggerEnter( col );
+        }
+    }
+
+    void OnTriggerExit( Collider col ) {
+        Debug.Log( "Exited collision with " + col.gameObject.name );
+        // Check if exited thru the bottom
+        if( !countingDown ) {
+            if( gameObject.transform.position.y - col.gameObject.transform.position.y > 0 ) {
+                this.GetComponent<Button>().onClick.Invoke();
+                Debug.Log( "calling func" );
+                gameObject.GetComponent<Renderer>().material.color = activatedColor;
+            }
+            else {
+                gameObject.GetComponent<Renderer>().material.color = canceledColor;
+                canceled = true;
+            }
+            countdown = MAX_COUNTDOWN;
+            countingDown = true;
+        }
+    }
+}

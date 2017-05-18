@@ -83,6 +83,23 @@ public class DataContainer : MonoBehaviour {
     public bool[,,] GetSegment() {
         return segments[ segments.Count - 1 ];
     }
+
+    public bool[,,] InvertSegment( bool[,,] segment ) {
+        bool[,,] inverted = (bool[,,]) segment.Clone();
+        for( int a = 0; a < inverted.GetLength(0); a++ ) {
+            for( int b = 0; b < inverted.GetLength( 1 ); b++ ) {
+                for( int c = 0; c < inverted.GetLength( 2 ); c++ ) {
+                    inverted[ a, b, c ] = !inverted[ a, b, c ];
+                }
+            }
+        }
+        return inverted;
+    }
+    public List<bool[,,]> SeparateSegment( bool[,,] segment ) {
+        // do DFS from each point unless its already visited. Each iteration of DFS increment group counter
+        // finally for each group create a new bool[,,] and assign values to true where the group is.
+    }
+
     public void AddSegment(bool[,,] segment ) {
         segments.Add( segment );
         Debug.Log( "Adding segment" );

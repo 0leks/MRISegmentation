@@ -1,4 +1,6 @@
-﻿Shader "Custom/LegendFilter" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/LegendFilter" {
 
 	Properties{
 		// the data cube, just so it can load different image data
@@ -82,7 +84,7 @@
 			o.ray_d = -ObjSpaceViewDir(i.pos);
 			o.ray_o = i.pos.xyz - o.ray_d;
 			// calculate position on screen (unused)
-			o.pos = mul(UNITY_MATRIX_MVP, i.pos);
+			o.pos = UnityObjectToClipPos(i.pos);
 
 			return o;
 		}

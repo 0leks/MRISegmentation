@@ -12,7 +12,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     [SerializeField] private DataContainer m_data;
     
     public GameObject tempCube;
-    public GameObject tempCube2;
+    public GameObject cubePrefab;
 
     public LoadLegend m_legendScript;
     public Slider m_mainSlider;
@@ -31,6 +31,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public GameObject renderCube;
     public GameObject seedObject;
     public GameObject seedBackground;
+
+    public GrabScript grabScript1;
+    public GrabScript grabScript2;
 
     public bool m_viewCopiedTextures;
     public bool loadSegmentOnStart;
@@ -65,6 +68,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         backgroundSeeds = new List<GameObject>();
         m_runningThreads = new List<ThreadedJob>();
         dataPath = Application.dataPath;
+        loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
     }
 
     public bool[,,] GetSegments() {
@@ -209,7 +213,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_runningThreads.Add( marchingCubesJob );
     }
     public void MarchingCubesFinished( List<Vector3> vertices, List<int> triangles ) {
-
+        GameObject newCube = Instantiate<GameObject>( cubePrefab );
         Mesh mesh = new Mesh();
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
@@ -218,12 +222,15 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             Color32[] col = new Color32[ mesh.vertices.Length ];
             for( int i = 0; i < mesh.normals.Length; i++ ) {
                 //col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
-                col[ i ] = new Color( Mathf.Abs(0.0f - mesh.normals[ i ].x), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
+                col[ i ] = new Color( Mathf.Abs( 0.0f - mesh.normals[ i ].x ), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
             }
             mesh.colors32 = col;
         }
 
-        tempCube2.GetComponent<MeshFilter>().mesh = mesh;
+        newCube.GetComponent<MeshFilter>().mesh = mesh;
+
+        grabScript1.AddGrabbable( newCube );
+        grabScript2.AddGrabbable( newCube );
     }
 
     public void StartMaxFlowSegmentationTimedThread() {

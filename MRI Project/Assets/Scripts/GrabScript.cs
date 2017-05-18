@@ -6,17 +6,47 @@ public class GrabScript : MonoBehaviour {
 
     public string moveButtonName; // the name of the button in the input manager
     public string rotateButtonName; // the name of the button in the input manager
-    public GameObject cube;   // the object which is used to render segments
     public GameObject grabbingSphere;
+
+    public GameObject displayCube;
 
     private bool grabMoveState;
     private bool grabRotateState;
-    private Vector3 offset;
-    private Quaternion rotation;
+
+    private List<GameObject> cubes;   // the object which is used to render segments
+    private List<Vector3> offsets;
+    private List<Quaternion> rotations;
+    private List<bool> grabbedMove;
+    private List<bool> grabbedRotate;
+    private List<bool> selected;
+
+    public void SelectedGameObject( GameObject obj, bool select ) {
+        for( int index = 0; index < cubes.Count; index++ ) {
+            if( cubes[index] == obj ) {
+                selected[ index ] = select;
+            }
+        }
+    }
+
+    public void AddGrabbable(GameObject obj ) {
+        cubes.Add( obj );
+        offsets.Add( new Vector3( 0, 0, 0 ) );
+        rotations.Add( new Quaternion() );
+        grabbedMove.Add( false );
+        grabbedRotate.Add( false );
+        selected.Add( false );
+    }
 
 	void Start () {
         grabMoveState = false;
         grabRotateState = false;
+        cubes = new List<GameObject>();
+        offsets = new List<Vector3>();
+        rotations = new List<Quaternion>();
+        grabbedMove = new List<bool>();
+        grabbedRotate = new List<bool>();
+        selected = new List<bool>();
+        AddGrabbable( displayCube );
     }
 	
 	void Update () {
@@ -25,35 +55,57 @@ public class GrabScript : MonoBehaviour {
         {
             //Debug.LogError("Grabbing! " + moveButtonName + " at " + Time.time);
             grabMoveState = true;
-            offset = cube.transform.position - grabbingSphere.transform.position;
+            for( int index = 0; index < cubes.Count; index++ ) {
+                if( selected[index] ) {
+                    offsets[ index ] = cubes[ index ].transform.position - grabbingSphere.transform.position;
+                    grabbedMove[ index ] = true;
+                }
+            }
         }
 
         if (grabMoveState && Input.GetAxis(moveButtonName) < 1)
         {
             //Debug.LogError("Releasing! " + moveButtonName + " at " + Time.time);
             grabMoveState = false;
+            for( int index = 0; index < cubes.Count; index++ ) {
+                grabbedMove[ index ] = false;
+            }
         }
 
         if (!grabRotateState && Input.GetAxis(rotateButtonName) >= 1)
         {
             //Debug.LogError("Grabbing! " + rotateButtonName + " at " + Time.time);
             grabRotateState = true;
-            rotation = Quaternion.Inverse(grabbingSphere.transform.rotation) * cube.transform.rotation;
+            for( int index = 0; index < cubes.Count; index++ ) {
+                if( selected[ index ] ) {
+                    rotations[ index ] = Quaternion.Inverse( grabbingSphere.transform.rotation ) * cubes[ index ].transform.rotation;
+                    grabbedRotate[ index ] = true;
+                }
+            }
         }
 
         if (grabRotateState && Input.GetAxis(rotateButtonName) < 1)
         {
             //Debug.LogError("Releasing! " + rotateButtonName + " at " + Time.time);
             grabRotateState = false;
+            for( int index = 0; index < cubes.Count; index++ ) {
+                grabbedRotate[ index ] = false;
+            }
         }
 
-        if (grabMoveState)
-        {
-            cube.transform.position = grabbingSphere.transform.position + offset;
+        if (grabMoveState) {
+            for( int index = 0; index < cubes.Count; index++ ) {
+                if( grabbedMove[index] ) {
+                    cubes[ index ].transform.position = grabbingSphere.transform.position + offsets[ index ];
+                }
+            }
         }
-        if(grabRotateState)
-        {
-            cube.transform.rotation = grabbingSphere.transform.rotation * rotation;
+        if(grabRotateState) {
+            for( int index = 0; index < cubes.Count; index++ ) {
+                if( grabbedRotate[index] ) {
+                    cubes[ index ].transform.rotation = grabbingSphere.transform.rotation * rotations[ index ];
+                }
+            }
         }
     }
 
@@ -61,9 +113,5 @@ public class GrabScript : MonoBehaviour {
     {
         grabMoveState = false;
         grabRotateState = false;
-        //if (cube.transform.parent == grabbingSphere.transform)
-        //{
-        //    cube.transform.parent = null;
-        //}
     }
 }
