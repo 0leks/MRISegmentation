@@ -6,13 +6,15 @@ using UnityEngine;
 public class MarchingCubesJob : ThreadedJob {
     private ImageSegmentationHandler2 m_segmentationHandler;
     private DataContainer m_data;
+    private bool[,,] m_segment;
 
     List<Vector3> newVertices = new List<Vector3>();
     List<int> newTriangles = new List<int>();
 
-    public MarchingCubesJob( ImageSegmentationHandler2 segmentationHandler, DataContainer data ) {
+    public MarchingCubesJob( ImageSegmentationHandler2 segmentationHandler, DataContainer data, bool[,,] segment ) {
         m_segmentationHandler = segmentationHandler;
         m_data = data;
+        m_segment = segment;
     }
 
     // this runs in the new thread
@@ -20,7 +22,7 @@ public class MarchingCubesJob : ThreadedJob {
         Debug.LogError( "beginning marching cubes" );
         newVertices = new List<Vector3>();
         newTriangles = new List<int>();
-        createTriangleArrayFromSegment( m_data.GetSegment(), newTriangles, newVertices );
+        createTriangleArrayFromSegment( m_segment, newTriangles, newVertices );
     }
 
     // This runs in the main thread

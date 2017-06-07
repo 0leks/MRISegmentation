@@ -80,6 +80,9 @@ public class DataContainer : MonoBehaviour {
         }
     }
 
+    public List<bool[,,]> GetSegments() {
+        return segments;
+    }
     public bool[,,] GetSegment() {
         return segments[ segments.Count - 1 ];
     }
@@ -95,11 +98,50 @@ public class DataContainer : MonoBehaviour {
         }
         return inverted;
     }
-    public List<bool[,,]> SeparateSegment( bool[,,] segment ) {
+    public List<bool[,,]> SeparateSegment( bool[,,] segment, int minimumVolume ) {
         // do DFS from each point unless its already visited. Each iteration of DFS increment group counter
         // finally for each group create a new bool[,,] and assign values to true where the group is.
+        bool[,,] segmentCopy = (bool[,,]) segment.Clone();
+        List<bool[,,]> segments = new List<bool[,,]>();
+        Stack<Point> searchArea = new Stack<Point>();
+
+        for( int a = 0; a < segment.GetLength( 0 ); a++ ) {
+            for( int b = 0; b < segment.GetLength( 1 ); b++ ) {
+                for( int c = 0; c < segment.GetLength( 2 ); c++ ) {
+                    if( segmentCopy[a, b, c] ) {
+                        int volume = 0;
+                        bool[,,] group = new bool[ segment.GetLength( 0 ), segment.GetLength( 1 ), segment.GetLength( 2 ) ];
+                        searchArea.Push( new Point( a, b, c ) );
+                        while( searchArea.Count > 0 ) {
+                            Point point = searchArea.Pop();
+
+                            if( point.x >= 0 && point.x < segment.GetLength(0) && point.y >= 0 && point.y < segment.GetLength( 1 ) && point.z >= 0 && point.z < segment.GetLength( 2 ) ) {
+                                if( segmentCopy[ point.x, point.y, point.z ] ) {
+                                    segmentCopy[ point.x, point.y, point.z ] = false;
+                                    group[ point.x, point.y, point.z ] = true;
+                                    volume++;
+                                    searchArea.Push( new Point( point.x - 1, point.y, point.z ) );
+                                    searchArea.Push( new Point( point.x + 1, point.y, point.z ) );
+                                    searchArea.Push( new Point( point.x, point.y - 1, point.z ) );
+                                    searchArea.Push( new Point( point.x, point.y + 1, point.z ) );
+                                    searchArea.Push( new Point( point.x, point.y, point.z + 1 ) );
+                                    searchArea.Push( new Point( point.x, point.y, point.z - 1 ) );
+                                }
+                            }
+                        }
+                        if( volume >= minimumVolume ) {
+                            segments.Add( group );
+                        }
+                    }
+                }
+            }
+        }
+        return segments;
     }
 
+    public void ClearSegments() {
+        segments.Clear();
+    }
     public void AddSegment(bool[,,] segment ) {
         segments.Add( segment );
         Debug.Log( "Adding segment" );
@@ -210,7 +252,7 @@ public class DataContainer : MonoBehaviour {
 
     public void saveSegmentToFileAsText( bool[,,] segmentArray, string fileName ) {
         StreamWriter file = new StreamWriter( Application.dataPath + "/" + fileName );
-        Debug.LogError( "Saving segment to " + Application.dataPath + "/" + fileName );
+        //Debug.Log( "Saving segment to " + Application.dataPath + "/" + fileName );
         file.WriteLine(segmentArray.GetLength( 0 ) + "," + segmentArray.GetLength( 1 ) + "," + segmentArray.GetLength( 2 ) );
         for( int a = 0; a < segmentArray.GetLength( 2 ); a++ ) {
             for( int b = 0; b < segmentArray.GetLength( 0 ); b++ ) {

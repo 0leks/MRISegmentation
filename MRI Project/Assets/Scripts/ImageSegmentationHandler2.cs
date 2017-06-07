@@ -208,9 +208,14 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
     }
     public void StartMarchingCubesThread() {
-        MarchingCubesJob marchingCubesJob = new MarchingCubesJob(this, m_data );
-        marchingCubesJob.StartThread();
-        m_runningThreads.Add( marchingCubesJob );
+        List<bool[,,]> segments = m_data.GetSegments();
+        Debug.LogError( "currently " + segments.Count + " segments" );
+        foreach(bool[,,] segment in segments ) {
+            Debug.LogError( "Running marching cubes" );
+            MarchingCubesJob marchingCubesJob = new MarchingCubesJob( this, m_data, segment );
+            m_runningThreads.Add( marchingCubesJob );
+            marchingCubesJob.StartThread();
+        }
     }
     public void MarchingCubesFinished( List<Vector3> vertices, List<int> triangles ) {
         GameObject newCube = Instantiate<GameObject>( cubePrefab );
@@ -231,6 +236,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         grabScript1.AddGrabbable( newCube );
         grabScript2.AddGrabbable( newCube );
+        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
     }
 
     public void StartMaxFlowSegmentationTimedThread() {
@@ -248,6 +254,32 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
 
     void Update() {
+        if( Input.GetKeyDown( "p" ) ) {
+            m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
+            bool[,,] inverted =  m_data.InvertSegment( m_data.GetSegment() );
+            segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
+            ClearSeeds();
+            m_data.ClearSegments();
+            m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
+            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 1000 );
+            Debug.LogError( "separated " + segments.Count + " segments" );
+            int count = 0;
+            foreach( bool[,,] segment in segments ) {
+                int segmentVolume = 0;
+                for( int a = 0; a < segment.GetLength( 0 ); a++ ) {
+                    for( int b = 0; b < segment.GetLength( 1 ); b++ ) {
+                        for( int c = 0; c < segment.GetLength( 2 ); c++ ) {
+                            if( segment[a, b, c] ) {
+                                segmentVolume++;
+                            }
+                        }
+                    }
+                }
+                m_data.saveSegmentToFileAsText( segment, "segments/" +  ++count + "after" + segmentVolume + ".txt" );
+                m_data.AddSegment( segment );
+            }
+            //m_legendScript.LoadLegendFromSegmentationHandler();
+        }
         if( Input.GetKeyDown( "g" ) ) {
             loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
         }
