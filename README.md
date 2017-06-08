@@ -21,6 +21,7 @@ Given a set of MRI scans, create and application that allows a user to easily vi
   * *A* adds the selected point to the background
   
 ## Goals:
+* Automatic clustering to prep the scans for the user to easily select what they want to look at.
 * ~~3D visualization of the segment ( going to meet with Sid on Friday 2/3 as he already has a rendering algorithm for segmented data )~~
 * ~~Implement a min-cut max-flow algorithm instead of flood fill ( flood fill is the most primitive solution and doesn't work a lot of the time )~~
 * Improve the algorithm to be able to handle larger images in a reasonable amount of time
@@ -34,6 +35,6 @@ Given a set of MRI scans, create and application that allows a user to easily vi
   * ~~A way to modify the result of the segmentation by~~
     * ~~marking areas as part of the segment or as not part of the segment~~
 * Add better GUI to be able to save and load segments at will.
-* Save segments as a text file instead of a set of pngs
+* ~~Save segments as a text file instead of a set of pngs~~
 * Make ~~Region Growing~~ and Max Flow run in separate threads so that the application doesn't freeze while they run.
-* convert segments into triangle meshes for faster rendering
+* ~~convert segments into triangle meshes for faster rendering~~
