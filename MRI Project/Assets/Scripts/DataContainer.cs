@@ -91,12 +91,12 @@ public class DataContainer : MonoBehaviour {
         return segments[ segments.Count - 1 ];
     }
 
-    public bool[,,] selectBlackPixels() {
+    public bool[,,] selectBlackPixels(byte threshold) {
         bool[,,] black = new bool[ m_layerWidth, m_layerHeight, m_numLayers ];
         for( int a = 0; a < black.GetLength( 0 ); a++ ) {
             for( int b = 0; b < black.GetLength( 1 ); b++ ) {
                 for( int c = 0; c < black.GetLength( 2 ); c++ ) {
-                    black[ a, b, c ] = this.getOriginalPixelByte( a, b, c ) == 0;
+                    black[ a, b, c ] = this.getOriginalPixelByte( a, b, c ) < threshold;
                 }
             }
         }

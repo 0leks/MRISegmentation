@@ -270,18 +270,19 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_legendScript.LoadLegendFromSegmentationHandler();
     }
 
-
+    int threshold = 130;
     void Update() {
         if( Input.GetKeyDown( "p" ) ) {
-            bool[,,] black = m_data.selectBlackPixels();
+            bool[,,] black = m_data.selectBlackPixels( (byte)threshold );
             m_data.AddSegment( black );
             //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
-            bool[,,] inverted =  m_data.InvertSegment( m_data.GetSegment() );
+            bool[,,] inverted =  m_data.InvertSegment( black );
+            threshold = threshold - 20;
             segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
             ClearSeeds();
             m_data.ClearSegments();
             //m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
-            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 10 );
+            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 20 );
             Debug.LogError( "separated " + segments.Count + " segments" );
             int count = 0;
             foreach( bool[,,] segment in segments ) {
@@ -303,6 +304,9 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         if( Input.GetKeyDown( "g" ) ) {
             loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
+        }
+        if( Input.GetKeyDown( "b" ) ) {
+            m_data.ClearSegments();
         }
         if (Input.GetKeyDown("r")) {
             m_data.saveSegmentToFileAsText( m_data.GetSegment(), "testSegment.txt" );
