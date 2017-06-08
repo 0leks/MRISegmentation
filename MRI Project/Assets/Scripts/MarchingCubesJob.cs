@@ -23,6 +23,7 @@ public class MarchingCubesJob : ThreadedJob {
         newVertices = new List<Vector3>();
         newTriangles = new List<int>();
         createTriangleArrayFromSegment( m_segment, newTriangles, newVertices );
+        Debug.LogError( "finished marching cubes" );
     }
 
     // This runs in the main thread
@@ -89,10 +90,11 @@ public class MarchingCubesJob : ThreadedJob {
         //float xoffset = -0.5f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.5f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
 
         float zscale = 0.5f / segment.GetLength( 2 );
+        zscale = 0.5f / 100;
         float xscale = 0.5f / segment.GetLength( 0 );
         float yscale = 0.5f / segment.GetLength( 1 );
         float xoffset = -0.5f, yoffset = -0.5f, zoffset = -0.5f;
-        
+
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );
         int[] conversion = new int[ numberOfVertices ];
         for( int i = 0; i < conversion.Length; i++ ) { conversion[ i ] = -1; }
@@ -137,8 +139,16 @@ public class MarchingCubesJob : ThreadedJob {
                 keys.Add( key );
             }
         }
+        Debug.Log( " Finished converting ");
         for( int t = 0; t < triangles.Count; t++ ) {
             triangles[ t ] = conversion2[ triangles[ t ] ];
+        }
+        int count = triangles.Count;
+        Debug.Log( "After combining vertexes vertices.Count = " + vertices.Count + ", triangles.Count = " + triangles.Count );
+        for( int t = 0; t < count; t += 3 ) {
+            triangles.Add( triangles[ t + 2 ] );
+            triangles.Add( triangles[ t + 1 ] );
+            triangles.Add( triangles[ t ] );
         }
         Debug.Log( "After combining vertexes vertices.Count = " + vertices.Count + ", triangles.Count = " + triangles.Count );
         //tempVertices2.Add( new Vector3(

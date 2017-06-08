@@ -207,6 +207,22 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_legendScript.LoadLegendFromSegmentationHandler();
         GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
     }
+    int index = 0;
+    public void StartMarchingCubesThread2() {
+        List<bool[,,]> segments = m_data.GetSegments();
+        Debug.LogError( "currently " + segments.Count + " segments" );
+        if( index < segments.Count ) {
+            Debug.LogError( "Running marching cubes on segment " + index );
+            MarchingCubesJob marchingCubesJob = new MarchingCubesJob( this, m_data, segments[ index ] );
+            m_runningThreads.Add( marchingCubesJob );
+            marchingCubesJob.StartThread();
+            index++;
+        }
+        else {
+            index = 0;
+            GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        }
+    }
     public void StartMarchingCubesThread() {
         List<bool[,,]> segments = m_data.GetSegments();
         Debug.LogError( "currently " + segments.Count + " segments" );
@@ -225,9 +241,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         if( true ) {
             mesh.normals = computeNormals( mesh.vertices, mesh.triangles );
             Color32[] col = new Color32[ mesh.vertices.Length ];
+            Color dullColor = new Color( UnityEngine.Random.value/2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f );
             for( int i = 0; i < mesh.normals.Length; i++ ) {
                 //col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
-                col[ i ] = new Color( Mathf.Abs( 0.0f - mesh.normals[ i ].x ), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
+                //col[ i ] = new Color( Mathf.Abs( 0.0f - mesh.normals[ i ].x ), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
+                col[ i ] = dullColor;
             }
             mesh.colors32 = col;
         }
@@ -236,7 +254,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         grabScript1.AddGrabbable( newCube );
         grabScript2.AddGrabbable( newCube );
-        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        StartMarchingCubesThread2();
     }
 
     public void StartMaxFlowSegmentationTimedThread() {
@@ -255,13 +273,15 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     void Update() {
         if( Input.GetKeyDown( "p" ) ) {
-            m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
+            bool[,,] black = m_data.selectBlackPixels();
+            m_data.AddSegment( black );
+            //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
             bool[,,] inverted =  m_data.InvertSegment( m_data.GetSegment() );
             segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
             ClearSeeds();
             m_data.ClearSegments();
-            m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
-            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 1000 );
+            //m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
+            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 10 );
             Debug.LogError( "separated " + segments.Count + " segments" );
             int count = 0;
             foreach( bool[,,] segment in segments ) {
@@ -275,9 +295,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
                         }
                     }
                 }
-                m_data.saveSegmentToFileAsText( segment, "segments/" +  ++count + "after" + segmentVolume + ".txt" );
+                //m_data.saveSegmentToFileAsText( segment, "segments/" +  ++count + "after" + segmentVolume + ".txt" );
                 m_data.AddSegment( segment );
             }
+            GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
             //m_legendScript.LoadLegendFromSegmentationHandler();
         }
         if( Input.GetKeyDown( "g" ) ) {
@@ -295,7 +316,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             m_twoDDisplay.disableTwoDDisplay();
         }
         if( Input.GetKeyDown( "m" ) ) {
-            StartMarchingCubesThread();
+            StartMarchingCubesThread2();
         }
         // Update each thread to see if it is done yet.
         for( int index = m_runningThreads.Count - 1; index >= 0; index-- ) {
@@ -308,16 +329,28 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     public Vector3[] computeNormals( Vector3[] vertices, int[] triangles ) {
 
-        int numTriangles = triangles.Length / 3;
+        Debug.Log( "Has " + triangles.Length + " triangles" );
+        int numTriangles = triangles.Length / 3 /2; // only look through first half of triangles, not the backwards facing ones.
         Vector3[] normals = new Vector3[ vertices.Length ];
         for( int t = 0; t < numTriangles; t++ ) {
-            Vector3 normal = Vector3.Cross( vertices[ triangles[ t * 3 + 1 ] ] - vertices[ triangles[ t * 3 ] ],
-                                                vertices[ triangles[ t * 3 + 2 ] ] - vertices[ triangles[ t * 3 ] ] );
+            Vector3 vec1 = vertices[ triangles[ t * 3 + 1 ] ] - vertices[ triangles[ t * 3 ] ];
+            Vector3 vec2 = vertices[ triangles[ t * 3 + 2 ] ] - vertices[ triangles[ t * 3 ] ];
+            vec1 = Vector3.Normalize( vec1 );
+            vec2 = Vector3.Normalize( vec2 );
+            Vector3 normal = Vector3.Cross( vec1, vec2);
             normal = Vector3.Normalize( normal );
             for( int i = 0; i < 3; i++ ) {
                 normals[ triangles[ t * 3 + i ] ] = normal;
             }
         }
+        //for( int i = 0; i < normals.Length; i++ ) {
+        //    if( normals[i] == null ) {
+        //        Debug.Log("Normal is null");
+        //    }
+        //    if( Vector3.Magnitude(normals[i]) < 0.999999999 ) {
+        //        Debug.Log( "normal is " + Vector3.Magnitude( normals[ i ] ) );
+        //    }
+        //}
         return normals;
     }
 }

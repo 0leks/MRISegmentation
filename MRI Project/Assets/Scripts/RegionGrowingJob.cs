@@ -20,6 +20,22 @@ public class RegionGrowingJob : ThreadedJob {
     protected override void ThreadFunction() {
         Debug.LogError( "beginning flood fill segmenting" );
         visited = DoFloodFillSegmentation();
+        //int count = 0;
+        //for( int a = 0; a < visited.GetLength( 2 ); a++ ) {
+        //    for( int b = 0; b < visited.GetLength( 0 ); b++ ) {
+        //        string row = "";
+        //        for( int c = 0; c < visited.GetLength( 1 ); c++ ) {
+        //            if( visited[a, b, c] ) {
+        //                row += "#";
+        //            }
+        //            else {
+        //                row += "-";
+        //            }
+        //        }
+        //        Debug.Log( row  + count ++);
+        //    }
+        //    Debug.Log( "~~~" + count++ );
+        //}
         Debug.LogError( "finished flood fill segmenting" );
     }
 

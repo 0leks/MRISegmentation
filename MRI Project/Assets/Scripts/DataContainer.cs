@@ -59,6 +59,7 @@ public class DataContainer : MonoBehaviour {
         m_numLayers = numLayers;
         originalTextures = new Texture2D[ getNumLayers() ];
 
+        //int count = 0;
         for (int layerIndex = 0; layerIndex < getNumLayers(); layerIndex++) {
             string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + layerIndex.ToString().PadLeft(3, '0') + ".png";
             Texture2D layerTexture = LoadLayer(filePath);
@@ -70,11 +71,14 @@ public class DataContainer : MonoBehaviour {
                 originalFloatData = new float[m_layerWidth, m_layerHeight, m_numLayers ];
                 originalByteData = new byte[m_layerWidth, m_layerHeight, m_numLayers];
             }
-            for (int x = 0; x < m_layerWidth; x++) {
-                for (int y = 0; y < m_layerHeight; y++) {
-                    originalFloatData[ x, y, layerIndex] = layerTexture.GetPixel(-x, -y).r;
-                    originalByteData[ x, y, layerIndex ] = (byte) ( originalFloatData[ x, y, layerIndex ] * 255); // Assuming the values are from 0 to 1 initially
+            for (int x = 1; x <= m_layerWidth; x++) {
+                //string row = "";
+                for (int y = 1; y <= m_layerHeight; y++) {
+                    originalFloatData[ x-1, y-1, layerIndex] = layerTexture.GetPixel(-x, -y).r;
+                    //row += originalFloatData[ x-1, y-1, layerIndex ] + ", " ;
+                    originalByteData[ x-1, y-1, layerIndex ] = (byte) ( originalFloatData[ x-1, y-1, layerIndex ] * 255); // Assuming the values are from 0 to 1 initially
                 }
+                //Debug.Log( row  + layerIndex + count++);
             }
             //saveTextureToFile(originalScans, scanIndex, "Saved Texture " + scanIndex + ".png");
         }
@@ -85,6 +89,18 @@ public class DataContainer : MonoBehaviour {
     }
     public bool[,,] GetSegment() {
         return segments[ segments.Count - 1 ];
+    }
+
+    public bool[,,] selectBlackPixels() {
+        bool[,,] black = new bool[ m_layerWidth, m_layerHeight, m_numLayers ];
+        for( int a = 0; a < black.GetLength( 0 ); a++ ) {
+            for( int b = 0; b < black.GetLength( 1 ); b++ ) {
+                for( int c = 0; c < black.GetLength( 2 ); c++ ) {
+                    black[ a, b, c ] = this.getOriginalPixelByte( a, b, c ) == 0;
+                }
+            }
+        }
+        return black;
     }
 
     public bool[,,] InvertSegment( bool[,,] segment ) {
@@ -98,13 +114,15 @@ public class DataContainer : MonoBehaviour {
         }
         return inverted;
     }
-    public List<bool[,,]> SeparateSegment( bool[,,] segment, int minimumVolume ) {
+    public List<bool[,,]> SeparateSegment( bool[,,] segment, int maxSegments ) {
         // do DFS from each point unless its already visited. Each iteration of DFS increment group counter
         // finally for each group create a new bool[,,] and assign values to true where the group is.
         bool[,,] segmentCopy = (bool[,,]) segment.Clone();
         List<bool[,,]> segments = new List<bool[,,]>();
+        List<int> segmentVolumes = new List<int>();
         Stack<Point> searchArea = new Stack<Point>();
 
+        int smallestVolume = -1;
         for( int a = 0; a < segment.GetLength( 0 ); a++ ) {
             for( int b = 0; b < segment.GetLength( 1 ); b++ ) {
                 for( int c = 0; c < segment.GetLength( 2 ); c++ ) {
@@ -129,8 +147,25 @@ public class DataContainer : MonoBehaviour {
                                 }
                             }
                         }
-                        if( volume >= minimumVolume ) {
+                        if( volume > smallestVolume && segments.Count >= maxSegments ) {
+                            int minVolume = segmentVolumes[ 0 ];
+                            int minIndex = 0;
+                            for( int index = 1; index < segments.Count; index++ ) {
+                                if( segmentVolumes[ index ] < minVolume ) {
+                                    minVolume = segmentVolumes[ index ];
+                                    minIndex = index;
+                                }
+                            }
+                            segments.RemoveAt( minIndex );
+                            segmentVolumes.RemoveAt( minIndex );
                             segments.Add( group );
+                            segmentVolumes.Add( volume );
+                            smallestVolume = Math.Min( smallestVolume, volume );
+                        }
+                        else {
+                            smallestVolume = Math.Min( smallestVolume, volume );
+                            segments.Add( group );
+                            segmentVolumes.Add( volume );
                         }
                     }
                 }
@@ -252,7 +287,7 @@ public class DataContainer : MonoBehaviour {
 
     public void saveSegmentToFileAsText( bool[,,] segmentArray, string fileName ) {
         StreamWriter file = new StreamWriter( Application.dataPath + "/" + fileName );
-        //Debug.Log( "Saving segment to " + Application.dataPath + "/" + fileName );
+        Debug.Log( "Saving segment to " + Application.dataPath + "/" + fileName );
         file.WriteLine(segmentArray.GetLength( 0 ) + "," + segmentArray.GetLength( 1 ) + "," + segmentArray.GetLength( 2 ) );
         for( int a = 0; a < segmentArray.GetLength( 2 ); a++ ) {
             for( int b = 0; b < segmentArray.GetLength( 0 ); b++ ) {
