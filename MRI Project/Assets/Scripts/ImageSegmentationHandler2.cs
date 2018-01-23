@@ -22,6 +22,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public AudioSource m_ErrorAudio;
 
     public int m_xfreq, m_yfreq, m_zfreq;
+    public float zStretch;
 
     public string folderName;
     public string filePrefix;
@@ -270,35 +271,60 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_legendScript.LoadLegendFromSegmentationHandler();
     }
 
-    int threshold = 130;
-    void Update() {
-        if( Input.GetKeyDown( "p" ) ) {
-            bool[,,] black = m_data.selectBlackPixels( (byte)threshold );
-            m_data.AddSegment( black );
-            //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
-            bool[,,] inverted =  m_data.InvertSegment( black );
-            threshold = threshold - 20;
-            segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
-            ClearSeeds();
-            m_data.ClearSegments();
-            //m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
-            List<bool[,,]> segments = m_data.SeparateSegment( inverted, 20 );
-            Debug.LogError( "separated " + segments.Count + " segments" );
-            int count = 0;
-            foreach( bool[,,] segment in segments ) {
-                int segmentVolume = 0;
-                for( int a = 0; a < segment.GetLength( 0 ); a++ ) {
-                    for( int b = 0; b < segment.GetLength( 1 ); b++ ) {
-                        for( int c = 0; c < segment.GetLength( 2 ); c++ ) {
-                            if( segment[a, b, c] ) {
-                                segmentVolume++;
-                            }
+    int threshold = 30;
+    public void SelectBackground() {
+        bool[,,] black = m_data.selectBlackPixels( (byte) threshold );
+        //threshold = threshold - 20;
+        m_data.AddSegment( black );
+        m_legendScript.LoadLegendFromSegmentationHandler();
+    }
+
+    public void SelectAll() {
+        m_data.AddSegment( m_data.InvertSegment( new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ] ) );
+        m_legendScript.LoadLegendFromSegmentationHandler();
+    }
+
+    public void InvertSelection() {
+        bool[,,] inverted = m_data.InvertSegment( m_data.GetSegment() );
+        m_data.AddSegment( inverted );
+        m_legendScript.LoadLegendFromSegmentationHandler();
+    }
+
+    public void SeparateSegments() {
+        bool[,,] inverted = m_data.GetSegment();
+        List<bool[,,]> segments = m_data.SeparateSegment( inverted, 20 );
+        //m_data.saveSegmentToFileAsText( inverted, "segments/invert.txt" );
+        Debug.LogError( "separated " + segments.Count + " segments" );
+        ClearSeeds();
+        m_data.ClearSegments();
+        int count = 0;
+        foreach( bool[,,] segment in segments ) {
+            int segmentVolume = 0;
+            for( int a = 0; a < segment.GetLength( 0 ); a++ ) {
+                for( int b = 0; b < segment.GetLength( 1 ); b++ ) {
+                    for( int c = 0; c < segment.GetLength( 2 ); c++ ) {
+                        if( segment[ a, b, c ] ) {
+                            segmentVolume++;
                         }
                     }
                 }
-                //m_data.saveSegmentToFileAsText( segment, "segments/" +  ++count + "after" + segmentVolume + ".txt" );
-                m_data.AddSegment( segment );
             }
+            //m_data.saveSegmentToFileAsText( segment, "segments/" +  ++count + "after" + segmentVolume + ".txt" );
+            m_data.AddSegment( segment );
+        }
+    }
+
+    public void ClearSegmentsAndSeeds() {
+        ClearSeeds();
+        m_data.ClearSegments();
+    }
+
+    void Update() {
+        if( Input.GetKeyDown( "p" ) ) {
+            SelectBackground();
+            InvertSelection();
+            //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
+            SeparateSegments();
             GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
             //m_legendScript.LoadLegendFromSegmentationHandler();
         }

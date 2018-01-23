@@ -90,7 +90,7 @@ public class MarchingCubesJob : ThreadedJob {
         //float xoffset = -0.5f * segment.GetLength( 0 ) / segment.GetLength( 2 ), yoffset = -0.5f * segment.GetLength( 1 ) / segment.GetLength( 2 ), zoffset = -0.5f;
 
         float zscale = 0.5f / segment.GetLength( 2 );
-        zscale = 0.5f / 100;
+        zscale = m_segmentationHandler.zStretch / 512;
         float xscale = 0.5f / segment.GetLength( 0 );
         float yscale = 0.5f / segment.GetLength( 1 );
         float xoffset = -0.5f, yoffset = -0.5f, zoffset = -0.5f;

@@ -13,7 +13,7 @@ public class MenuButtonScript : MonoBehaviour {
     private bool canceled;
     private const float MAX_COUNTDOWN = 2.0f;
 
-    private Color restingColor = new Color( 0.1f, 0.1f, 0.1f, 0.1f );
+    private Color restingColor = new Color( 0.7f, 0.7f, 0.7f, 0.7f );
     private Color activeColor = new Color( 1, 1, 1, 1 );
     private Color activatedColor = new Color( 0, 1, 0, 1 );
     private Color canceledColor = new Color( 1, 0, 0, 1 );
@@ -56,12 +56,13 @@ public class MenuButtonScript : MonoBehaviour {
                 this.GetComponent<Button>().onClick.Invoke();
                 Debug.Log( "calling func" );
                 gameObject.GetComponent<Renderer>().material.color = activatedColor;
+                countdown = MAX_COUNTDOWN/2;
             }
             else {
                 gameObject.GetComponent<Renderer>().material.color = canceledColor;
+                countdown = MAX_COUNTDOWN;
                 canceled = true;
             }
-            countdown = MAX_COUNTDOWN;
             countingDown = true;
         }
     }
