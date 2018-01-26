@@ -1,4 +1,4 @@
-*.png
+*.jpg
 *.png.meta
 *Asset.asset
 *Asset.asset.meta
@@ -6,6 +6,7 @@
 *debugLog*.txt
 *colon.meta
 MRI Project/Assets/segments/*
+MRI Project/Assets/Resources/scans/*
 
 # =============== #
 # Unity generated #
