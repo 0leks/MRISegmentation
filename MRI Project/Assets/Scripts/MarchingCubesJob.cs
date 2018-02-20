@@ -93,6 +93,9 @@ public class MarchingCubesJob : ThreadedJob {
         zscale = m_segmentationHandler.zStretch / 512;
         float xscale = 0.5f / segment.GetLength( 0 );
         float yscale = 0.5f / segment.GetLength( 1 );
+        xscale = 0.1f;
+        yscale = 0.1f;
+        zscale = 0.1f;
         float xoffset = -0.5f, yoffset = -0.5f, zoffset = -0.5f;
 
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );
@@ -145,12 +148,12 @@ public class MarchingCubesJob : ThreadedJob {
         }
         int count = triangles.Count;
         Debug.Log( "After combining vertexes vertices.Count = " + vertices.Count + ", triangles.Count = " + triangles.Count );
-        for( int t = 0; t < count; t += 3 ) {
-            triangles.Add( triangles[ t + 2 ] );
-            triangles.Add( triangles[ t + 1 ] );
-            triangles.Add( triangles[ t ] );
-        }
-        Debug.Log( "After combining vertexes vertices.Count = " + vertices.Count + ", triangles.Count = " + triangles.Count );
+        //for( int t = 0; t < count; t += 3 ) {
+        //    triangles.Add( triangles[ t + 2 ] );
+        //    triangles.Add( triangles[ t + 1 ] );
+        //    triangles.Add( triangles[ t ] );
+        //}
+        //Debug.Log( "After combining vertexes vertices.Count = " + vertices.Count + ", triangles.Count = " + triangles.Count );
         //tempVertices2.Add( new Vector3(
         //            oldVertexX * xscale,
         //            oldVertexY * yscale,

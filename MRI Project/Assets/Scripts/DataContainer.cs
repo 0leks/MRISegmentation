@@ -38,6 +38,7 @@ public class DataContainer : MonoBehaviour {
         segments = new List<bool[,,]>();
     }
 
+
     public struct Point {
         public int x;
         public int y;
@@ -84,6 +85,9 @@ public class DataContainer : MonoBehaviour {
         }
     }
 
+    public byte[,,] getByteData() {
+        return originalByteData;
+    }
     public List<bool[,,]> GetSegments() {
         return segments;
     }

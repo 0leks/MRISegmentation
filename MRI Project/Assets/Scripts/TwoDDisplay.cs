@@ -51,12 +51,6 @@ public class TwoDDisplay : MonoBehaviour {
         if( Input.GetKeyDown( "space" ) ) {
             toggleTwoDDisplay();
         }
-        if( Input.GetKeyDown( "f" ) ) {
-            RegionGrowingButtonPressed();
-        }
-        if( Input.GetKeyDown( "s" ) ) {
-            MaxFlowButtonPressed();
-        }
     }
 
     public void disableTwoDDisplay() {
