@@ -93,9 +93,9 @@ public class MarchingCubesJob : ThreadedJob {
         zscale = m_segmentationHandler.zStretch / 512;
         float xscale = 0.5f / segment.GetLength( 0 );
         float yscale = 0.5f / segment.GetLength( 1 );
-        xscale = 0.1f;
-        yscale = 0.1f;
-        zscale = 0.1f;
+        //xscale = 0.1f;
+        //yscale = 0.1f;
+        //zscale = 0.1f;
         float xoffset = -0.5f, yoffset = -0.5f, zoffset = -0.5f;
 
         //Debug.LogError( "tempVertices.Length/3 should be equal to numberOfVertices " + tempVertices.Count / 3 + "=" + numberOfVertices );

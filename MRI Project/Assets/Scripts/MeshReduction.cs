@@ -60,7 +60,8 @@ public class MeshReduction : MonoBehaviour {
         ComputeNormalSums(vertices, triangles, normals, neighborCount);
         ComputeMagnitudesAndNormalize(normals, magnitudes, neighborCount);
 
-        bool finished = false;
+        // no mesh reduction, simply compute normals and assign vertex colors.
+        bool finished = true;
         int counter = 20;
         while (!finished) {
             counter--;

@@ -16,16 +16,19 @@ Shader "Custom/LegendFilter" {
 		_SliceAxis3Min("Slice along axis 3: min", Range(0,1)) = 0
 		_SliceAxis3Max("Slice along axis 3: max", Range(0,1)) = 1
 			// normalization of data intensity (has to be adjusted for each data set, also depends on the number of steps)
-			_Normalization("Intensity normalization", Float) = 1
+		_Normalization("Intensity normalization", Float) = 1
+
+		_OpaqueLayer("OpaqueLayer", Float) = 0
 	}
 
 		SubShader{
-
+			Tags { "Queue" = "Transparent"  "RenderType" = "Transparent" }
 		Pass{
-		Cull Off
-		//ZTest Always
-		ZWrite Off
-		Fog{ Mode off }
+			Cull Off
+			//ZTest Always
+			ZWrite Off
+			Blend SrcAlpha OneMinusSrcAlpha
+			Fog{ Mode off }
 
 		CGPROGRAM
 #pragma target 3.0
@@ -40,6 +43,7 @@ Shader "Custom/LegendFilter" {
 		float _SliceAxis2Min, _SliceAxis2Max;
 		float _SliceAxis3Min, _SliceAxis3Max;
 		float _Normalization;
+		float _OpaqueLayer;
 		float4 _UseAlpha;
 
 		// calculates intersection between a ray and a box
@@ -103,6 +107,10 @@ Shader "Custom/LegendFilter" {
 			data *= step(pos.y, _SliceAxis2Max);
 			data *= step(pos.z, _SliceAxis3Max);
 
+			// if z plane is equal to the opaque zplane, set the alpha to 1, otherwise leave it as is.
+
+
+
 			return data;
 		}
 
@@ -165,6 +173,7 @@ Shader "Custom/LegendFilter" {
 			//voxel_col.y = ray_pos.y;
 			//voxel_col.z = ray_pos.z;
 			voxel_col.a = _UseAlpha.x * voxel_col.x + _UseAlpha.a*voxel_col.a;
+			voxel_col.a += (step(_OpaqueLayer, ray_pos.y) - step(_OpaqueLayer + 0.05f, ray_pos.y)) * 1.0f;
 
 	#ifdef FRONT_TO_BACK
 
@@ -174,6 +183,7 @@ Shader "Custom/LegendFilter" {
 	#else
 			ray_col = (1 - voxel_col.a)*ray_col + voxel_col.a*voxel_col;
 	#endif
+			//ray_col.a = 0.1f;
 			ray_pos += ray_step;
 
 			//keep it between 0 and 1 for color
