@@ -15,6 +15,7 @@ Shader "Custom/LegendFilter" {
 		_SliceAxis2Max("Slice along axis 2: max", Range(0,1)) = 1
 		_SliceAxis3Min("Slice along axis 3: min", Range(0,1)) = 0
 		_SliceAxis3Max("Slice along axis 3: max", Range(0,1)) = 1
+		_DepthMult("Depth Mult", Range(0,100)) = 90
 			// normalization of data intensity (has to be adjusted for each data set, also depends on the number of steps)
 		_Normalization("Intensity normalization", Float) = 1
 
@@ -31,14 +32,16 @@ Shader "Custom/LegendFilter" {
 			Fog{ Mode off }
 
 		CGPROGRAM
-#pragma target 3.0
+//#pragma target 3.0
 #pragma vertex vert
 #pragma fragment frag
 
 #include "UnityCG.cginc"
 
+		sampler2D _CameraDepthTexture;
 		sampler3D Legend_Data;
 		sampler3D Cadaver_Data;
+		float _DepthMult;
 		float _SliceAxis1Min, _SliceAxis1Max;
 		float _SliceAxis2Min, _SliceAxis2Max;
 		float _SliceAxis3Min, _SliceAxis3Max;
@@ -77,6 +80,7 @@ Shader "Custom/LegendFilter" {
 			float4 pos : SV_POSITION;
 			float3 ray_o : TEXCOORD1; // ray origin
 			float3 ray_d : TEXCOORD2; // ray direction
+			float4 srcPos : TEXCOORD3;
 		};
 
 		// vertex program
@@ -86,9 +90,9 @@ Shader "Custom/LegendFilter" {
 
 			// calculate eye ray in object space
 			o.ray_d = -ObjSpaceViewDir(i.pos);
-			o.ray_o = i.pos.xyz - o.ray_d;
-			// calculate position on screen (unused)
 			o.pos = UnityObjectToClipPos(i.pos);
+			o.ray_o = i.pos.xyz - o.ray_d;
+			o.srcPos = ComputeScreenPos(o.pos);
 
 			return o;
 		}
@@ -134,11 +138,23 @@ Shader "Custom/LegendFilter" {
 
 
 	#define FRONT_TO_BACK // ray integration order (BACK_TO_FRONT not working when being inside the cube)
-	#define STEP_CNT 400 // should ideally be at least as large as data resolution, but strongly affects frame rate
+	#define STEP_CNT 200 // should ideally be at least as large as data resolution, but strongly affects frame rate
 
 		// fragment program
 		float4 frag(frag_input i) : COLOR
 		{
+
+			float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.srcPos)).r);
+			//half4 depth;
+
+			//depth.r = depthValue;
+			//depth.g = depthValue;
+			//depth.b = depthValue;
+
+			//depth.a = 1;
+			//return depth;
+			float stopDepth = depthValue;
+
 			i.ray_d = normalize(i.ray_d);
 		// calculate eye ray intersection with cube bounding box
 		float3 boxMin = { -0.5, -0.5, -0.5 };
@@ -162,10 +178,14 @@ Shader "Custom/LegendFilter" {
 		float3 ray_pos = pFar;
 		float3 ray_dir = pNear - pFar;
 #endif
-		float3 ray_step = normalize(ray_dir) * sqrt(3) / STEP_CNT;
+		//float3 ray_step = normalize(ray_dir) * sqrt(3) / STEP_CNT;
+		float3 ray_step = ray_dir * sqrt(3) / STEP_CNT;
 		float4 ray_col = 0;
 
-		[unroll(400)] for (int k = 0; k < STEP_CNT; k++)
+		int stopCount = STEP_CNT/2;
+		stopDepth *= _DepthMult;
+
+		[unroll(STEP_CNT)] for (int k = 0; k < STEP_CNT; k++)
 		{
 
 			float4 voxel_col = getData(ray_pos);
@@ -173,22 +193,26 @@ Shader "Custom/LegendFilter" {
 			//voxel_col.y = ray_pos.y;
 			//voxel_col.z = ray_pos.z;
 			voxel_col.a = _UseAlpha.x * voxel_col.x + _UseAlpha.a*voxel_col.a;
-			voxel_col.a += (step(_OpaqueLayer, ray_pos.y) - step(_OpaqueLayer + 0.05f, ray_pos.y)) * 1.0f;
+			//voxel_col.a += (step(_OpaqueLayer, ray_pos.y) - step(_OpaqueLayer + 0.05f, ray_pos.y)) * 1.0f;
+
 
 	#ifdef FRONT_TO_BACK
 
-			ray_col.rgb = ray_col.rgb + (1 - ray_col.a) * voxel_col.a * voxel_col.rgb;
-			ray_col.a = ray_col.a + (1 - ray_col.a) * voxel_col.a;
+			ray_col.rgb = ray_col.rgb + (1 - ray_col.a) * voxel_col.a * voxel_col.rgb;// *step(distance, stopDepth);
+			ray_col.a = ray_col.a + (1 - ray_col.a) * voxel_col.a * step(k, stopCount);// *step(distance, stopDepth);
 
 	#else
 			ray_col = (1 - voxel_col.a)*ray_col + voxel_col.a*voxel_col;
 	#endif
+
 			//ray_col.a = 0.1f;
 			ray_pos += ray_step;
 
 			//keep it between 0 and 1 for color
 			if (ray_pos.x < 0 || ray_pos.y < 0 || ray_pos.z < 0) break;
 			if (ray_pos.x > 1 || ray_pos.y > 1 || ray_pos.z > 1) break;
+			float distance = length(ray_pos - i.ray_o);
+			if (distance > stopDepth) break;
 		}
 		return ray_col*_Normalization; //gray to white
 		}
