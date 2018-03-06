@@ -15,11 +15,9 @@ Shader "Custom/LegendFilter" {
 		_SliceAxis2Max("Slice along axis 2: max", Range(0,1)) = 1
 		_SliceAxis3Min("Slice along axis 3: min", Range(0,1)) = 0
 		_SliceAxis3Max("Slice along axis 3: max", Range(0,1)) = 1
-		_DepthMult("Depth Mult", Range(0,100)) = 90
+		_DepthMult("Depth Mult", Range(-20, 20)) = 0
 			// normalization of data intensity (has to be adjusted for each data set, also depends on the number of steps)
 		_Normalization("Intensity normalization", Float) = 1
-
-		_OpaqueLayer("OpaqueLayer", Float) = 0
 	}
 
 		SubShader{
@@ -135,86 +133,66 @@ Shader "Custom/LegendFilter" {
 			return cadaverSample * legendSample;
 		}
 
-
-
-	#define FRONT_TO_BACK // ray integration order (BACK_TO_FRONT not working when being inside the cube)
 	#define STEP_CNT 200 // should ideally be at least as large as data resolution, but strongly affects frame rate
 
 		// fragment program
 		float4 frag(frag_input i) : COLOR
 		{
 
-			float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.srcPos)).r);
-			//half4 depth;
-
-			//depth.r = depthValue;
-			//depth.g = depthValue;
-			//depth.b = depthValue;
-
-			//depth.a = 1;
-			//return depth;
+			float depthValue = LinearEyeDepth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.srcPos)).r);
 			float stopDepth = depthValue;
+			float startDepth = _DepthMult;
 
 			i.ray_d = normalize(i.ray_d);
-		// calculate eye ray intersection with cube bounding box
-		float3 boxMin = { -0.5, -0.5, -0.5 };
-		float3 boxMax = { 0.5,  0.5,  0.5 };
-		float tNear, tFar;
-		bool hit = IntersectBox(i.ray_o, i.ray_d, boxMin, boxMax, tNear, tFar);
-		if (!hit) discard;
-		if (tNear < 0.0) tNear = 0.0;
-		// calculate intersection points
-		float3 pNear = i.ray_o + i.ray_d*tNear;
-		float3 pFar = i.ray_o + i.ray_d*tFar;
-		// convert to texture space
-		pNear = pNear + 0.5;
-		pFar = pFar + 0.5;
+			// calculate eye ray intersection with cube bounding box
+			float3 boxMin = { -0.5, -0.5, -0.5 };
+			float3 boxMax = { 0.5,  0.5,  0.5 };
+			float tNear, tFar;
+			bool hit = IntersectBox(i.ray_o, i.ray_d, boxMin, boxMax, tNear, tFar);
+			if (!hit) discard;
+			if (tNear < 0.0) tNear = 0.0;
+			// calculate intersection points
+			float3 pNear = i.ray_o + i.ray_d*tNear;
+			float3 pFar = i.ray_o + i.ray_d*tFar;
 
-		// march along ray inside the cube, accumulating color
-#ifdef FRONT_TO_BACK
-		float3 ray_pos = pNear;
-		float3 ray_dir = pFar - pNear;
-#else
-		float3 ray_pos = pFar;
-		float3 ray_dir = pNear - pFar;
-#endif
-		//float3 ray_step = normalize(ray_dir) * sqrt(3) / STEP_CNT;
-		float3 ray_step = ray_dir * sqrt(3) / STEP_CNT;
-		float4 ray_col = 0;
+			float fake_color = tFar - _DepthMult;
+			float3 rawpNear = pNear;
+			float3 rawpFar = pFar;
+			// convert to texture space
+			pNear = pNear + 0.5;
+			pFar = pFar + 0.5;
 
-		int stopCount = STEP_CNT/2;
-		stopDepth *= _DepthMult;
+			// march along ray inside the cube, accumulating color
+			float3 ray_pos = pNear;
+			float3 ray_dir = pFar - pNear;
+			float3 ray_step = ray_dir * sqrt(3) / STEP_CNT;
+			float4 ray_col = 0;
 
-		[unroll(STEP_CNT)] for (int k = 0; k < STEP_CNT; k++)
-		{
+			float3 raw_ray_pos = rawpNear;
+			float distance = length(raw_ray_pos - i.ray_o);
+			if (distance > stopDepth) return ray_col;
 
-			float4 voxel_col = getData(ray_pos);
-			//voxel_col.x = ray_pos.x;
-			//voxel_col.y = ray_pos.y;
-			//voxel_col.z = ray_pos.z;
-			voxel_col.a = _UseAlpha.x * voxel_col.x + _UseAlpha.a*voxel_col.a;
-			//voxel_col.a += (step(_OpaqueLayer, ray_pos.y) - step(_OpaqueLayer + 0.05f, ray_pos.y)) * 1.0f;
+			[unroll(STEP_CNT)] for (int k = 0; k < STEP_CNT; k++) {
+				float4 voxel_col = getData(ray_pos);
+				voxel_col.a = _UseAlpha.x * voxel_col.x + _UseAlpha.a*voxel_col.a;
+				float multiplier = step(startDepth, distance) * step(distance, stopDepth);
+				ray_col.rgb = ray_col.rgb + (1 - ray_col.a) * voxel_col.a * voxel_col.rgb * multiplier;// *step(distance, stopDepth);
+				ray_col.a = ray_col.a + (1 - ray_col.a) * voxel_col.a * multiplier;// *step(distance, stopDepth);
 
+				raw_ray_pos += ray_step;
+				distance = length(raw_ray_pos - i.ray_o);
 
-	#ifdef FRONT_TO_BACK
+				ray_pos = raw_ray_pos + 0.5f;
 
-			ray_col.rgb = ray_col.rgb + (1 - ray_col.a) * voxel_col.a * voxel_col.rgb;// *step(distance, stopDepth);
-			ray_col.a = ray_col.a + (1 - ray_col.a) * voxel_col.a * step(k, stopCount);// *step(distance, stopDepth);
-
-	#else
-			ray_col = (1 - voxel_col.a)*ray_col + voxel_col.a*voxel_col;
-	#endif
-
-			//ray_col.a = 0.1f;
-			ray_pos += ray_step;
-
-			//keep it between 0 and 1 for color
-			if (ray_pos.x < 0 || ray_pos.y < 0 || ray_pos.z < 0) break;
-			if (ray_pos.x > 1 || ray_pos.y > 1 || ray_pos.z > 1) break;
-			float distance = length(ray_pos - i.ray_o);
-			if (distance > stopDepth) break;
-		}
-		return ray_col*_Normalization; //gray to white
+				if (ray_pos.x < 0 || ray_pos.y < 0 || ray_pos.z < 0) break;
+				if (ray_pos.x > 1 || ray_pos.y > 1 || ray_pos.z > 1) break;
+				//if (distance > stopDepth) break;
+			}
+			//ray_col.x = fake_color;
+			//ray_col.y = fake_color;
+			//ray_col.z = fake_color;
+			//ray_col.a = 1;
+			return ray_col *_Normalization; //gray to white
 		}
 
 			ENDCG
