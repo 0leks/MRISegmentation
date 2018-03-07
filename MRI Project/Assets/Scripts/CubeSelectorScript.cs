@@ -6,6 +6,9 @@ public class CubeSelectorScript : MonoBehaviour {
 
     public GrabScript grabScript1;
 
+    public bool RightHand;
+    public GameObject Cube;
+
     // Use this for initialization
     void Start () {
 		
@@ -18,11 +21,21 @@ public class CubeSelectorScript : MonoBehaviour {
 
     void OnTriggerEnter( Collider col ) {
         Debug.Log( "Entered collision with " + col.gameObject.name );
+
+        if (RightHand && (col.gameObject.CompareTag("CubeCut")))
+        {
+            Cube.GetComponent<CubeCut>().moveOn = true;
+        }
         grabScript1.SelectedGameObject( col.gameObject, true );
     }
 
     void OnTriggerExit( Collider col ) {
         Debug.Log( "Exited collision with " + col.gameObject.name );
+
+        if (RightHand && (col.gameObject.CompareTag("CubeCut")))
+        {
+            Cube.GetComponent<CubeCut>().moveOn = false;
+        }
         grabScript1.SelectedGameObject( col.gameObject, false );
 
     }

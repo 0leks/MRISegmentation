@@ -320,7 +320,16 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     }
 
     void Update() {
-        if( Input.GetKeyDown( "p" ) ) {
+
+        if (Input.GetKeyDown("c"))
+        {
+            renderCube.GetComponent<CubeCut>().ToggleCut();
+        }
+        if (Input.GetKeyDown("u"))
+        {
+            renderCube.GetComponent<CubeCut>().ResetCut();
+        }
+        if ( Input.GetKeyDown( "p" ) ) {
             SelectBackground();
             InvertSelection();
             //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );

@@ -10,6 +10,10 @@ public class GrabScript : MonoBehaviour {
 
     public GameObject displayCube;
 
+    public GameObject CubeCut;
+    public bool RightHand;
+    private bool FirstGrab;
+
     private bool grabMoveState;
     private bool grabRotateState;
 
@@ -50,6 +54,29 @@ public class GrabScript : MonoBehaviour {
     }
 	
 	void Update () {
+
+        if (RightHand)
+        {
+            if (displayCube.GetComponent<CubeCut>().moveOn == true)
+            {
+                if (Input.GetAxis(moveButtonName) >= 1)
+                {
+                    if (FirstGrab)
+                    {
+                        displayCube.GetComponent<CubeCut>().Offset = CubeCut.transform.position - grabbingSphere.transform.position;
+                        FirstGrab = false;
+                    }
+                    displayCube.GetComponent<CubeCut>().grabbing = true;
+                }
+                else
+                {
+                    displayCube.GetComponent<CubeCut>().grabbing = false;
+                }
+                return;
+            }
+        }
+
+
         //Debug.Log(Input.GetAxis(buttonName));
 		if(!grabMoveState && Input.GetAxis(moveButtonName) >= 1 )
         {
@@ -111,6 +138,11 @@ public class GrabScript : MonoBehaviour {
 
     public void ReleaseObject()
     {
+        if (RightHand)
+        {
+            FirstGrab = false;
+        }
+
         grabMoveState = false;
         grabRotateState = false;
     }
