@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-using UnityEditor;
 using System.Collections.Generic;
 using System;
 
@@ -120,12 +119,6 @@ public class ScanLoaderScript : MonoBehaviour {
             int hundreds = ((scanIndex - ones - 10*tens ) % 1000 ) / 100;
 
             string filePath = "Assets/Scans/png-0" + hundreds + tens + ones + ".png";
-            //Debug.Log(filePath, panel);
-            TextureImporter imp = AssetImporter.GetAtPath(filePath) as TextureImporter;
-            imp.isReadable = true;
-            imp.textureType = TextureImporterType.Default;
-            AssetDatabase.ImportAsset(filePath, ImportAssetOptions.ForceUpdate);
-            //Texture2D scanone = (Texture2D)AssetDatabase.LoadAssetAtPath(filePath, typeof(Texture2D));
             Texture2D scanone = LoadImage(filePath);
 
 
