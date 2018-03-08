@@ -2,6 +2,7 @@
 *Asset.asset
 *debugLog.txt
 *debugLog*.txt
+*.log
 MRI Project/Assets/segments/*
 MRI Project/Assets/Resources/scans/*
 
