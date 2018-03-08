@@ -13,6 +13,8 @@ public class TwoDDisplay : MonoBehaviour {
 
     [SerializeField] private ImageSegmentationHandler2 m_segmentationHandler;
 
+    [SerializeField] private HandDepthChooserScript m_handDepthChooserScript;
+
     private Texture2D displayedTexture;
 
     private int guiWidth;
@@ -49,7 +51,8 @@ public class TwoDDisplay : MonoBehaviour {
             }
         }
         if( Input.GetKeyDown( "space" ) ) {
-            toggleTwoDDisplay();
+            //toggleTwoDDisplay();
+            m_handDepthChooserScript.toggleCut();
         }
         if( Input.GetKeyDown( "f" ) ) {
             RegionGrowingButtonPressed();

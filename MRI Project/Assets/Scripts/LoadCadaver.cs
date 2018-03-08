@@ -35,6 +35,8 @@ public class LoadCadaver : MonoBehaviour {
         int height = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( first.height ) / System.Math.Log( 2 ) ) );
         int numImages = m_Data.getNumLayers();
 
+        Debug.Log("Loading " + numImages + " images for the cube");
+
         //need to correspond with legend's z-axis
         for( int i = startIndex; i <= endIndex; i += indexIncrement ) {
             Texture2D anImage = new Texture2D( width, height );

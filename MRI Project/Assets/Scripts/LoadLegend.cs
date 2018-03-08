@@ -155,9 +155,9 @@ public class LoadLegend : MonoBehaviour
         setShaderSliceAxes(numImages, numSlices);
 
         //As a sanity check, don't actually write out files if running from a compiled binary.
-#if UNITY_EDITOR
-        writeLoadedAssetsToFile(legendVolume);
-#endif
+//#if UNITY_EDITOR
+//        writeLoadedAssetsToFile(legendVolume);
+//#endif
     }
     
     public void LoadLegendFromSegmentationHandler() {

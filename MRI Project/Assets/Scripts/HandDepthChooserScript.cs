@@ -11,6 +11,8 @@ public class HandDepthChooserScript : MonoBehaviour {
     private bool inside = false;
     private bool doCut = true;
 
+    public float overlap = 0.05f;
+
     // Use this for initialization
     void Start () {
     }
@@ -18,7 +20,8 @@ public class HandDepthChooserScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float distance = Vector3.Magnitude(GetComponent<Transform>().position - _camera.GetComponent<Transform>().position);
-        if( !inside || !doCut) {
+        distance -= overlap;
+        if ( !inside || !doCut) {
             distance = 0;
         }
         renderCube.GetComponent<Renderer>().material.SetFloat("_DepthMult", distance);

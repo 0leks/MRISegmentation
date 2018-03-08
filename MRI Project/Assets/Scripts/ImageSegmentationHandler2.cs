@@ -206,7 +206,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public void FinishedSegmentationCallback() {
         m_twoDDisplay.disableTwoDDisplay();
         m_legendScript.LoadLegendFromSegmentationHandler();
-        GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+        //GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
     }
     int index = 0;
     public void StartMarchingCubesThread2() {
@@ -334,7 +334,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             InvertSelection();
             //m_data.saveSegmentToFileAsText( m_data.GetSegment(), "segments/before.txt" );
             SeparateSegments();
-            GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
+            //GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
             //m_legendScript.LoadLegendFromSegmentationHandler();
         }
         if( Input.GetKeyDown( "g" ) ) {
@@ -347,6 +347,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             m_data.saveSegmentToFileAsText( m_data.GetSegment(), "testSegment.txt" );
             segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
             ClearSeeds();
+            SelectAll();
         }
         if( Input.GetKeyDown( "q" ) ) {
             segmentedTextures = m_data.loadSegmentFromTextFile( "testSegment.txt" );

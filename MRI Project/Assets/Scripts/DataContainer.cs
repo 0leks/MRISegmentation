@@ -19,6 +19,7 @@ public class DataContainer : MonoBehaviour {
 
 
     public int m_numLayers;
+    private bool loadedSettings = false;
     private int m_layerWidth;
     private int m_layerHeight;
 
@@ -36,6 +37,23 @@ public class DataContainer : MonoBehaviour {
         partOfBackground = new List<Point>();
 
         segments = new List<bool[,,]>();
+
+        loadNumberScans();
+    }
+
+    private void loadNumberScans() {
+        string path = "settings.txt";
+
+        //Read the text from directly from the test.txt file
+        StreamReader reader = new StreamReader(path);
+        string text = reader.ReadToEnd();
+        reader.Close();
+
+        int value = m_numLayers;
+        int.TryParse(text, out value);
+
+        m_numLayers = value;
+        Debug.Log("Loading " + m_numLayers + " layers");
     }
 
     public struct Point {
@@ -53,16 +71,28 @@ public class DataContainer : MonoBehaviour {
     }
 
     public void loadMedicalData( string folderName, string filePrefix, int startLayer, int numLayers) {
-
+        Debug.Log("Loading medical data " + numLayers + " layers");
         m_layerWidth = -1;
         m_layerHeight = -1;
         m_numLayers = numLayers;
         originalTextures = new Texture2D[ getNumLayers() ];
 
+        //int startIndex = 0;
+        //string folderPath = "scans/" + folderName + "/" + filePrefix;
+        //string folderPath2 = folderPath + startIndex.ToString().PadLeft(3, '0');
+        //Texture2D first = Resources.Load(folderPath2) as Texture2D;
+        //Debug.Log("Loaded " + folderPath2 + ", w" + first.width);
+
+
         //int count = 0;
         for (int layerIndex = 0; layerIndex < getNumLayers(); layerIndex++) {
-            string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + layerIndex.ToString().PadLeft(3, '0') + ".png";
-            Texture2D layerTexture = LoadLayer(filePath);
+            //string filePath = "Assets/Resources/scans/" + folderName + "/" + filePrefix + layerIndex.ToString().PadLeft(3, '0') + ".png";
+            string filePath = "scans/" + folderName + "/" + filePrefix + layerIndex.ToString().PadLeft(3, '0');
+            // Texture2D layerTexture = LoadLayer(filePath);
+            Texture2D temp = Resources.Load(filePath) as Texture2D;
+            Debug.Log("Loaded " + filePath);
+            Texture2D layerTexture = new Texture2D(temp.width, temp.height);
+            layerTexture.SetPixels(temp.GetPixels());
             originalTextures[layerIndex] = layerTexture;
             if (m_layerWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
             {
@@ -216,7 +246,13 @@ public class DataContainer : MonoBehaviour {
     }
     public int getWidth() {     return m_layerWidth;    }
     public int getHeight() {    return m_layerHeight;   }
-    public int getNumLayers() { return m_numLayers;     }
+    public int getNumLayers() {
+        if( !loadedSettings ) {
+            loadNumberScans();
+            loadedSettings = true;
+        }
+        return m_numLayers;
+    }
 
     public float getOriginalPixelFloat(int x, int y, int z) {
         return originalFloatData[ x, y, z ];
@@ -241,18 +277,21 @@ public class DataContainer : MonoBehaviour {
      * If the file at the specified path doesn't exist, it returns null.
      */
     public static Texture2D LoadLayer(string filePath) {
-        Texture2D tex = null;
-        byte[] fileData;
-        if (File.Exists(filePath)) {
-            fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(2, 2);
-            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-        }
-        else {
-            Debug.LogError("The file at " + filePath + " could not be found.");
-            throw new System.IO.FileNotFoundException(filePath);
-        }
-        return tex;
+
+        Texture2D first = Resources.Load(filePath) as Texture2D;
+        return first;
+        //Texture2D tex = null;
+        //byte[] fileData;
+        //if (File.Exists(filePath)) {
+        //    fileData = File.ReadAllBytes(filePath);
+        //    tex = new Texture2D(2, 2);
+        //    tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        //}
+        //else {
+        //    Debug.LogError("The file at " + filePath + " could not be found.");
+        //    throw new System.IO.FileNotFoundException(filePath);
+        //}
+        //return tex;
     }
 
     public bool[,,] loadSegmentFromTextFile( string fileName ) {
