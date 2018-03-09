@@ -6,6 +6,7 @@ public class CubeCut : MonoBehaviour {
 
     public GameObject MiniCube;
     public GameObject Pointer;
+    public string Vertical;
 
     public bool cutOn = false;
     public bool moveOn = false;
@@ -26,6 +27,19 @@ public class CubeCut : MonoBehaviour {
             if (moveOn && grabbing)
             {
                 MiniCube.transform.position = Pointer.transform.position + Offset;
+                
+                //scale 
+                if ((Input.GetAxis(Vertical) >= 0.25))
+                {
+                    MiniCube.transform.localScale = (1.01f) * (MiniCube.transform.localScale);
+                }
+
+                else if ((Input.GetAxis(Vertical) <= -0.25))
+                {
+                    MiniCube.transform.localScale = (0.99f) * (MiniCube.transform.localScale);
+                }
+                
+
             }
 
             //Set shader

@@ -20,7 +20,7 @@ public class CubeSelectorScript : MonoBehaviour {
 	}
 
     void OnTriggerEnter( Collider col ) {
-        Debug.Log( "Entered collision with " + col.gameObject.name );
+        //Debug.Log( "Entered collision with " + col.gameObject.name );
 
         if (RightHand && (col.gameObject.CompareTag("CubeCut")))
         {
@@ -30,7 +30,7 @@ public class CubeSelectorScript : MonoBehaviour {
     }
 
     void OnTriggerExit( Collider col ) {
-        Debug.Log( "Exited collision with " + col.gameObject.name );
+        //Debug.Log( "Exited collision with " + col.gameObject.name );
 
         if (RightHand && (col.gameObject.CompareTag("CubeCut")))
         {
