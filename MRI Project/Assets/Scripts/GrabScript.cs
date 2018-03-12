@@ -12,7 +12,8 @@ public class GrabScript : MonoBehaviour {
 
     public GameObject CubeCut;
     public bool RightHand;
-    private bool FirstGrab;
+    private bool FirstGrab = true;
+    private bool FirstPlaneGrab = true;
 
     private bool grabMoveState;
     private bool grabRotateState;
@@ -57,6 +58,69 @@ public class GrabScript : MonoBehaviour {
 
         if (RightHand)
         {
+
+            if (Input.GetAxis(moveButtonName) >= 1)
+            {
+
+                if (displayCube.GetComponent<CubeCut>().planeMoveOn == true)
+                {
+                    if (FirstPlaneGrab)
+                    {
+                        displayCube.GetComponent<CubeCut>().PlaneOffset = displayCube.GetComponent<CubeCut>().SelectedPlane.transform.position - grabbingSphere.transform.position;
+                        FirstPlaneGrab = false;
+                    }
+                    displayCube.GetComponent<CubeCut>().planeGrabbing = true;
+                    return;
+
+                }
+                else if (displayCube.GetComponent<CubeCut>().moveOn == true)
+                {
+                    if (FirstGrab)
+                    {
+                        displayCube.GetComponent<CubeCut>().Offset = CubeCut.transform.position - grabbingSphere.transform.position;
+                        FirstGrab = false;
+                    }
+                    displayCube.GetComponent<CubeCut>().grabbing = true;
+                    return;
+
+                }
+
+            }
+            else
+            {
+                displayCube.GetComponent<CubeCut>().planeGrabbing = false;
+                displayCube.GetComponent<CubeCut>().grabbing = false;
+                FirstGrab = true;
+                FirstPlaneGrab = true;
+
+            }
+
+        }
+
+
+            /*
+
+
+
+            if (displayCube.GetComponent<CubeCut>().planeMoveOn == true)
+            {
+                if (Input.GetAxis(moveButtonName) >= 1)
+                {
+                    if (FirstPlaneGrab)
+                    {
+                        displayCube.GetComponent<CubeCut>().PlaneOffset = displayCube.GetComponent<CubeCut>().SelectedPlane.transform.position - grabbingSphere.transform.position;
+                        FirstPlaneGrab = false;
+                    }
+                    displayCube.GetComponent<CubeCut>().planeGrabbing = true;
+                }
+                else
+                {
+                    displayCube.GetComponent<CubeCut>().planeGrabbing = false;
+                }
+                return;
+
+            }
+
             if (displayCube.GetComponent<CubeCut>().moveOn == true)
             {
                 if (Input.GetAxis(moveButtonName) >= 1)
@@ -74,7 +138,8 @@ public class GrabScript : MonoBehaviour {
                 }
                 return;
             }
-        }
+
+        */
 
 
         //Debug.Log(Input.GetAxis(buttonName));

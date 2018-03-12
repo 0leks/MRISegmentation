@@ -26,6 +26,12 @@ public class CubeSelectorScript : MonoBehaviour {
         {
             Cube.GetComponent<CubeCut>().moveOn = true;
         }
+        if (RightHand && (col.gameObject.CompareTag("CutoffPlane")))
+        {
+            Cube.GetComponent<CubeCut>().planeMoveOn = true;
+            Cube.GetComponent<CubeCut>().SelectedPlane = col.gameObject;
+        }
+        
         grabScript1.SelectedGameObject( col.gameObject, true );
     }
 
@@ -35,6 +41,11 @@ public class CubeSelectorScript : MonoBehaviour {
         if (RightHand && (col.gameObject.CompareTag("CubeCut")))
         {
             Cube.GetComponent<CubeCut>().moveOn = false;
+        }
+        if (RightHand && (col.gameObject.CompareTag("CutoffPlane")))
+        {
+            Cube.GetComponent<CubeCut>().planeMoveOn = false;
+            Cube.GetComponent<CubeCut>().SelectedPlane = null;
         }
         grabScript1.SelectedGameObject( col.gameObject, false );
 
