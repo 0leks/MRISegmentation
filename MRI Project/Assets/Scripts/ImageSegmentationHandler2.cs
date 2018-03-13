@@ -13,6 +13,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     
     public GameObject tempCube;
     public GameObject cubePrefab;
+    public GameObject wireFrameCubePrefab;
 
     public LoadLegend m_legendScript;
     public Slider m_mainSlider;
@@ -236,25 +237,56 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     }
     public void MarchingCubesFinished( List<Vector3> vertices, List<int> triangles ) {
         GameObject newCube = Instantiate<GameObject>( cubePrefab );
+        Vector3[] vert = vertices.ToArray();
+        
+        Vector3 minimum = vert[0];
+        Vector3 maximum = vert[0];
+        for ( int i = 1; i < vert.Length; i++ ) {
+            maximum.x = Math.Max(maximum.x, vert[i].x);
+            maximum.y = Math.Max(maximum.y, vert[i].y);
+            maximum.z = Math.Max(maximum.z, vert[i].z);
+
+            minimum.x = Math.Min(minimum.x, vert[i].x);
+            minimum.y = Math.Min(minimum.y, vert[i].y);
+            minimum.z = Math.Min(minimum.z, vert[i].z);
+        }
+        Vector3 center = (minimum + maximum) / 2;
+        Vector3 size = (maximum - minimum);
+        for (int i = 0; i < vert.Length; i++) {
+            vert[i] = vert[i] - center;
+        }
         Mesh mesh = new Mesh();
-        mesh.vertices = vertices.ToArray();
+        mesh.vertices = vert;
         mesh.triangles = triangles.ToArray();
-        if( true ) {
-            mesh.normals = computeNormals( mesh.vertices, mesh.triangles );
-            Color32[] col = new Color32[ mesh.vertices.Length ];
-            Color dullColor = new Color( UnityEngine.Random.value/2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f );
-            for( int i = 0; i < mesh.normals.Length; i++ ) {
+        if (true) {
+            mesh.normals = computeNormals(mesh.vertices, mesh.triangles);
+            Color32[] col = new Color32[mesh.vertices.Length];
+            Color dullColor = new Color(UnityEngine.Random.value / 2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f, UnityEngine.Random.value / 2 + 0.5f);
+            for (int i = 0; i < mesh.normals.Length; i++) {
                 //col[ i ] = new Color( mesh.normals[ i ].x, mesh.normals[ i ].y, mesh.normals[ i ].z, 1.0f );
                 //col[ i ] = new Color( Mathf.Abs( 0.0f - mesh.normals[ i ].x ), Mathf.Abs( 0.0f - mesh.normals[ i ].y ), Mathf.Abs( 0.0f - mesh.normals[ i ].z ), 1.0f );
-                col[ i ] = dullColor;
+                col[i] = dullColor;
             }
             mesh.colors32 = col;
         }
-
         newCube.GetComponent<MeshFilter>().mesh = mesh;
 
-        grabScript1.AddGrabbable( newCube );
-        grabScript2.AddGrabbable( newCube );
+
+
+        //newCube.GetComponent<BoxCollider>().center = center;
+        //newCube.GetComponent<BoxCollider>().size = size;
+
+        GameObject wireframe = Instantiate<GameObject>(wireFrameCubePrefab);
+        wireframe.transform.parent = newCube.transform;
+        wireframe.transform.localScale = size + new Vector3(0.001f, 0.001f, 0.001f);
+        wireframe.GetComponent<MeshRenderer>().enabled = false;
+        //wireframe.SetActive(true);
+
+        //newCube.GetComponent<WireFrameScript>().meshCube = wireframe;
+        newCube.transform.Translate(center);
+
+        grabScript1.AddGrabbable(wireframe);
+        grabScript2.AddGrabbable(wireframe);
         StartMarchingCubesThread2();
     }
 

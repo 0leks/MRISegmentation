@@ -19,6 +19,7 @@ public class GrabScript : MonoBehaviour {
     private bool grabRotateState;
 
     private List<GameObject> cubes;   // the object which is used to render segments
+    private List<GameObject> cubeParents;  
     private List<Vector3> offsets;
     private List<Quaternion> rotations;
     private List<bool> grabbedMove;
@@ -34,7 +35,13 @@ public class GrabScript : MonoBehaviour {
     }
 
     public void AddGrabbable(GameObject obj ) {
+        int l = obj.layer;
+        GameObject parent = obj;
+        while (parent.transform.parent != null && LayerMask.LayerToName(parent.transform.parent.gameObject.layer) == LayerMask.LayerToName(l)) {
+            parent = parent.transform.parent.gameObject;
+        }
         cubes.Add( obj );
+        cubeParents.Add(parent);
         offsets.Add( new Vector3( 0, 0, 0 ) );
         rotations.Add( new Quaternion() );
         grabbedMove.Add( false );
@@ -46,6 +53,7 @@ public class GrabScript : MonoBehaviour {
         grabMoveState = false;
         grabRotateState = false;
         cubes = new List<GameObject>();
+        cubeParents = new List<GameObject>();
         offsets = new List<Vector3>();
         rotations = new List<Quaternion>();
         grabbedMove = new List<bool>();
@@ -149,7 +157,7 @@ public class GrabScript : MonoBehaviour {
             grabMoveState = true;
             for( int index = 0; index < cubes.Count; index++ ) {
                 if( selected[index] ) {
-                    offsets[ index ] = cubes[ index ].transform.position - grabbingSphere.transform.position;
+                    offsets[ index ] = cubeParents[ index ].transform.position - grabbingSphere.transform.position;
                     grabbedMove[ index ] = true;
                 }
             }
@@ -170,7 +178,7 @@ public class GrabScript : MonoBehaviour {
             grabRotateState = true;
             for( int index = 0; index < cubes.Count; index++ ) {
                 if( selected[ index ] ) {
-                    rotations[ index ] = Quaternion.Inverse( grabbingSphere.transform.rotation ) * cubes[ index ].transform.rotation;
+                    rotations[ index ] = Quaternion.Inverse( grabbingSphere.transform.rotation ) * cubeParents[ index ].transform.rotation;
                     grabbedRotate[ index ] = true;
                 }
             }
@@ -188,14 +196,14 @@ public class GrabScript : MonoBehaviour {
         if (grabMoveState) {
             for( int index = 0; index < cubes.Count; index++ ) {
                 if( grabbedMove[index] ) {
-                    cubes[ index ].transform.position = grabbingSphere.transform.position + offsets[ index ];
+                    cubeParents[ index ].transform.position = grabbingSphere.transform.position + offsets[ index ];
                 }
             }
         }
         if(grabRotateState) {
             for( int index = 0; index < cubes.Count; index++ ) {
                 if( grabbedRotate[index] ) {
-                    cubes[ index ].transform.rotation = grabbingSphere.transform.rotation * rotations[ index ];
+                    cubeParents[ index ].transform.rotation = grabbingSphere.transform.rotation * rotations[ index ];
                 }
             }
         }
