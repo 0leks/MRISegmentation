@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeCut : MonoBehaviour {
+public class CubeCut : MonoBehaviour
+{
 
     public GameObject MiniCube;
     public GameObject Pointer;
@@ -16,6 +17,7 @@ public class CubeCut : MonoBehaviour {
     public bool planeMoveOn = false;
     public bool planeGrabbing = false;
     public Vector3 PlaneOffset;
+    private int PlaneNum;
 
     public GameObject RightPlane;
     public GameObject LeftPlane;
@@ -29,9 +31,10 @@ public class CubeCut : MonoBehaviour {
 
 
 
-    void Start () {
+    void Start()
+    {
         Offset = new Vector3(0, 0, 0);
-	}
+    }
 
 
     void Update()
@@ -42,23 +45,59 @@ public class CubeCut : MonoBehaviour {
             //move cutoff plane
             if (planeMoveOn && planeGrabbing)
             {
-                
+
                 oldCubePos = MiniCube.transform.position;
                 oldPlanePos = SelectedPlane.transform.position;
 
-                float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.right.normalized);
+                if (SelectedPlane == RightPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.right.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.right));
+                    AdaptMiniCubeRight(true);
+                }
+                else if (SelectedPlane == LeftPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.right.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.right));
+                    AdaptMiniCubeRight(false);
+                }
+                else if (SelectedPlane == UpPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.up.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.up));
+                    AdaptMiniCubeUp(true);
+                }
+                else if (SelectedPlane == DownPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.up.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.up));
+                    AdaptMiniCubeUp(false);
+                }
+                else if (SelectedPlane == ForwardPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.forward.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.forward));
+                    AdaptMiniCubeForward(true);
+                }
+                else if (SelectedPlane == BackwardPlane)
+                {
+                    float displacement = Vector3.Dot(Pointer.transform.position - oldPlanePos, MiniCube.transform.forward.normalized);
+                    SelectedPlane.transform.position += ((displacement) * (MiniCube.transform.forward));
+                    AdaptMiniCubeForward(false);
+                }
 
-                SelectedPlane.transform.position += ((displacement)*(MiniCube.transform.right));
 
-                AdaptMiniCube();
-                
+
+
+
             }
 
             //Update Position
             else if (moveOn && grabbing)
             {
+
                 MiniCube.transform.position = Pointer.transform.position + Offset;
-                
+
                 //scale 
                 if ((Input.GetAxis(Vertical) >= 0.25))
                 {
@@ -70,16 +109,12 @@ public class CubeCut : MonoBehaviour {
                     MiniCube.transform.localScale = (0.99f) * (MiniCube.transform.localScale);
                 }
 
-                Vector3 scaleOffset;
-
-                scaleOffset = new Vector3(MiniCube.transform.localScale.x / 2.0f, 0.0f, 0.0f);
-                RightPlane.transform.localPosition = MiniCube.transform.localPosition + scaleOffset;
-                LeftPlane.transform.localPosition = MiniCube.transform.localPosition - scaleOffset;
-
 
             }
 
-            
+
+            SetPlaneLocations();
+            SetPlaneScales();
 
 
             SetShader();
@@ -87,15 +122,73 @@ public class CubeCut : MonoBehaviour {
         }
     }
 
-    public void AdaptMiniCube()
+    public void AdaptMiniCubeRight(bool dir)
     {
+
         float diff = (SelectedPlane.transform.position - oldPlanePos).magnitude;
-        Vector3 newScale = new Vector3(MiniCube.transform.localScale.x + diff, MiniCube.transform.localScale.y, MiniCube.transform.localScale.z);
-        MiniCube.transform.localScale = newScale;
+        if (Vector3.Dot(SelectedPlane.transform.position - oldPlanePos, MiniCube.transform.right) < 0)
+        {
+            diff = -diff;
+        }
 
-        MiniCube.transform.position = (LeftPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        if (dir)
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x + diff, MiniCube.transform.localScale.y, MiniCube.transform.localScale.z);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (LeftPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
+        else
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x - diff, MiniCube.transform.localScale.y, MiniCube.transform.localScale.z);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (RightPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
+    }
 
+    public void AdaptMiniCubeUp(bool dir)
+    {
 
+        float diff = (SelectedPlane.transform.position - oldPlanePos).magnitude;
+        if (Vector3.Dot(SelectedPlane.transform.position - oldPlanePos, MiniCube.transform.up) < 0)
+        {
+            diff = -diff;
+        }
+
+        if (dir)
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x, MiniCube.transform.localScale.y + diff, MiniCube.transform.localScale.z);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (DownPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
+        else
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x, MiniCube.transform.localScale.y - diff, MiniCube.transform.localScale.z);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (UpPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
+    }
+
+    public void AdaptMiniCubeForward(bool dir)
+    {
+
+        float diff = (SelectedPlane.transform.position - oldPlanePos).magnitude;
+        if (Vector3.Dot(SelectedPlane.transform.position - oldPlanePos, MiniCube.transform.forward) < 0)
+        {
+            diff = -diff;
+        }
+
+        if (dir)
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x, MiniCube.transform.localScale.y, MiniCube.transform.localScale.z + diff);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (BackwardPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
+        else
+        {
+            Vector3 newScale = new Vector3(MiniCube.transform.localScale.x, MiniCube.transform.localScale.y, MiniCube.transform.localScale.z - diff);
+            MiniCube.transform.localScale = newScale;
+            MiniCube.transform.position = (ForwardPlane.transform.position + SelectedPlane.transform.position) / 2.0f;
+        }
     }
 
 
@@ -180,6 +273,41 @@ public class CubeCut : MonoBehaviour {
     }
 
 
+
+    public void SetPlaneScales()
+    {
+        //Change scales of the planes to reflect new minicube
+        Vector3 scaleVec = new Vector3(RightPlane.transform.localScale.x, (0.8f) * MiniCube.transform.localScale.y, (0.8f) * MiniCube.transform.localScale.z);
+        RightPlane.transform.localScale = scaleVec;
+        LeftPlane.transform.localScale = scaleVec;
+
+        scaleVec = new Vector3(UpPlane.transform.localScale.x, (0.8f) * MiniCube.transform.localScale.x, (0.8f) * MiniCube.transform.localScale.z);
+        UpPlane.transform.localScale = scaleVec;
+        DownPlane.transform.localScale = scaleVec;
+
+        scaleVec = new Vector3(ForwardPlane.transform.localScale.x, (0.8f) * MiniCube.transform.localScale.y, (0.8f) * MiniCube.transform.localScale.x);
+        ForwardPlane.transform.localScale = scaleVec;
+        BackwardPlane.transform.localScale = scaleVec;
+    }
+
+    public void SetPlaneLocations()
+    {
+        Vector3 scaleOffset;
+
+        scaleOffset = new Vector3(MiniCube.transform.localScale.x / 2.0f, 0.0f, 0.0f);
+        RightPlane.transform.localPosition = MiniCube.transform.localPosition + scaleOffset;
+        LeftPlane.transform.localPosition = MiniCube.transform.localPosition - scaleOffset;
+
+        scaleOffset = new Vector3(0.0f, MiniCube.transform.localScale.y / 2.0f, 0.0f);
+        UpPlane.transform.localPosition = MiniCube.transform.localPosition + scaleOffset;
+        DownPlane.transform.localPosition = MiniCube.transform.localPosition - scaleOffset;
+
+        scaleOffset = new Vector3(0.0f, 0.0f, MiniCube.transform.localScale.z / 2.0f);
+        ForwardPlane.transform.localPosition = MiniCube.transform.localPosition + scaleOffset;
+        BackwardPlane.transform.localPosition = MiniCube.transform.localPosition - scaleOffset;
+    }
+
+
     public void ToggleCut()
     {
         if (cutOn)
@@ -190,6 +318,10 @@ public class CubeCut : MonoBehaviour {
             MiniCube.SetActive(false);
             RightPlane.SetActive(false);
             LeftPlane.SetActive(false);
+            UpPlane.SetActive(false);
+            DownPlane.SetActive(false);
+            ForwardPlane.SetActive(false);
+            BackwardPlane.SetActive(false);
         }
         else
         {
@@ -199,9 +331,23 @@ public class CubeCut : MonoBehaviour {
             MiniCube.SetActive(true);
             RightPlane.SetActive(true);
             LeftPlane.SetActive(true);
+            UpPlane.SetActive(true);
+            DownPlane.SetActive(true);
+            ForwardPlane.SetActive(true);
+            BackwardPlane.SetActive(true);
 
+
+            /*
             RightPlane.transform.localPosition = new Vector3(0.25f,0.0f,0.0f);
             LeftPlane.transform.localPosition = new Vector3(-0.25f, 0.0f, 0.0f);
+            UpPlane.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);
+            DownPlane.transform.localPosition = new Vector3(0.0f, -0.25f, 0.0f);
+            ForwardPlane.transform.localPosition = new Vector3(0.0f, 0.0f, 0.25f);
+            BackwardPlane.transform.localPosition = new Vector3(0.0f, 0.0f, -0.25f);
+            */
+
+            SetPlaneLocations();
+            SetPlaneScales();
         }
     }
 

@@ -355,6 +355,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
         if (Input.GetKeyDown("c"))
         {
+            Debug.Log("HAPPENED");
             renderCube.GetComponent<CubeCut>().ToggleCut();
         }
         if (Input.GetKeyDown("u"))
