@@ -20,8 +20,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public float m_threshold;
     public bool m_3DFlow;
 
-    public AudioSource m_ErrorAudio;
-
     public int m_xfreq, m_yfreq, m_zfreq;
     public float zStretch;
 
@@ -39,7 +37,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 
     public bool m_viewCopiedTextures;
     public bool loadSegmentOnStart;
-    public bool m_useAlpha;
 
     private int guiWidth;
     private int guiHeight;
@@ -60,17 +57,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     void Start() {
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
-        if( m_useAlpha ) {
-            m_Renderer.material.SetVector("_UseAlpha", new Vector4(1, 0, 0, 0));
-        }
-        else {
-            m_Renderer.material.SetVector("_UseAlpha", new Vector4(0, 0, 0, 1));
-        }
         objectSeeds = new List<GameObject>();
         backgroundSeeds = new List<GameObject>();
         m_runningThreads = new List<ThreadedJob>();
         dataPath = Application.dataPath;
-        loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
+        loadMedicalData( folderName, filePrefix, 0, m_data.getNumLayers() );
     }
 
     public bool[,,] GetSegments() {
@@ -116,9 +107,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             seed.transform.parent = renderCube.transform;
             seed.transform.localScale = 0.02f * new Vector3(1, 1, 1); //  renderCube.transform.localScale;
         }
-        else {
-            m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
-        }
     }
     /**
      * This function is called from the 2D Display x and y are between 0 and 1 
@@ -146,9 +134,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             seed.transform.parent = renderCube.transform;
             seed.transform.localPosition = new Vector3( visualX, visualY, visualZ);
             seed.transform.localScale = 0.02f * new Vector3( 1, 1, 1 );
-        }
-        else {
-            //m_ErrorAudio.Play(); // If user tried to put seed outside of the cube, make an error sound
         }
     }
 
@@ -222,7 +207,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         else {
             index = 0;
-            GetComponent<AudioSource>().PlayOneShot( GetComponent<AudioSource>().clip, 1 );
         }
     }
     public void StartMarchingCubesThread() {
@@ -371,7 +355,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             //m_legendScript.LoadLegendFromSegmentationHandler();
         }
         if( Input.GetKeyDown( "g" ) ) {
-            loadMedicalData( folderName, filePrefix, 0, m_data.m_numLayers );
+            loadMedicalData( folderName, filePrefix, 0, m_data.getNumLayers());
         }
         if( Input.GetKeyDown( "b" ) ) {
             m_data.ClearSegments();

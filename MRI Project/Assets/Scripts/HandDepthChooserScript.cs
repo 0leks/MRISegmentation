@@ -21,7 +21,9 @@ public class HandDepthChooserScript : MonoBehaviour {
 	void Update () {
         float distance = Vector3.Magnitude(GetComponent<Transform>().position - _camera.GetComponent<Transform>().position);
         distance -= overlap;
-        if ( !inside || !doCut) {
+        // I think shouldnt suddenly stop when you go outside of the cube.
+        //if ( !inside || !doCut) {
+        if (!doCut) {
             distance = 0;
         }
         renderCube.GetComponent<Renderer>().material.SetFloat("_DepthMult", distance);
