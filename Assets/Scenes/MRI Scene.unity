@@ -2849,8 +2849,8 @@ MonoBehaviour:
   RButtonName: RTrigger
   LScript: {fileID: 218097342}
   RScript: {fileID: 199118536}
-  LController: 1
-  RController: 2
+  LControllerPosition: {fileID: 218097344}
+  RControllerPosition: {fileID: 199118538}
   LSphere: {fileID: 915467190}
   RSphere: {fileID: 1231879090}
   cube: {fileID: 20403351}
