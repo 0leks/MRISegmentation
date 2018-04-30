@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 135795561656589896}
   - component: {fileID: 23072713787075630}
   m_Layer: 0
-  m_Name: SeedObject
+  m_Name: ForegroundSeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

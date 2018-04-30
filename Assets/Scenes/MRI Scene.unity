@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 20403361}
   - component: {fileID: 20403362}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: Render Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2546,32 +2546,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_twoDDisplay: {fileID: 1673453031}
-  m_meshReduction: {fileID: 334420905}
   m_data: {fileID: 910856885}
-  cubePrefab: {fileID: 1888754210324850, guid: bb42e4a828b74e14fa7e29efb27bedf8, type: 2}
-  wireFrameCubePrefab: {fileID: 1986308776937136, guid: 328d732fe55f8294aa65bffc07dc610d,
-    type: 2}
-  m_legendScript: {fileID: 20403352}
-  m_mainSlider: {fileID: 10681339}
   m_threshold: 0.019
   m_3DFlow: 1
   m_xfreq: 4
   m_yfreq: 4
   m_zfreq: 2
+  cubePrefab: {fileID: 1888754210324850, guid: bb42e4a828b74e14fa7e29efb27bedf8, type: 2}
+  wireFrameCubePrefab: {fileID: 1986308776937136, guid: 328d732fe55f8294aa65bffc07dc610d,
+    type: 2}
   zStretch: 10
   folderName: colon
   filePrefix: pgm-0
-  segmentName: 
-  m_Renderer: {fileID: 20403355}
   renderCube: {fileID: 20403351}
-  seedObject: {fileID: 1356975195861840, guid: 3806232f0cf142d4088c310cb0b0fb97, type: 2}
-  seedBackground: {fileID: 1740804685926976, guid: 1680c33660497c6499881f8807b1dfb5,
+  foregroundSeed: {fileID: 1356975195861840, guid: 3806232f0cf142d4088c310cb0b0fb97,
     type: 2}
-  grabScript1: {fileID: 199118536}
-  grabScript2: {fileID: 218097342}
-  m_viewCopiedTextures: 0
+  backgroundSeed: {fileID: 1740804685926976, guid: 1680c33660497c6499881f8807b1dfb5,
+    type: 2}
+  LGrabScript: {fileID: 218097342}
+  RGrabScript: {fileID: 199118536}
   loadSegmentOnStart: 0
-  dataPath: 
+  m_legendScript: {fileID: 20403352}
 --- !u!4 &1154491395
 Transform:
   m_ObjectHideFlags: 0
