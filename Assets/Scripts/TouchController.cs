@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// This class sets the position of the player hand to the position of the Oculus Touch Controller
 public class TouchController : MonoBehaviour {
 
     public OVRInput.Controller controller;

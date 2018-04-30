@@ -13,8 +13,8 @@ public class ResizeScript : MonoBehaviour {
     public GrabScript RScript;
     
     // the two controllers, for getting their positions
-    public OVRInput.Controller LController;
-    public OVRInput.Controller RController;
+	public Transform LControllerPosition;
+    public Transform RControllerPosition;
 
     public GameObject LSphere;
     public GameObject RSphere;
@@ -40,7 +40,7 @@ public class ResizeScript : MonoBehaviour {
             LScript.enabled = false;
             RScript.enabled = false;
 
-            initialDistance = Vector3.Distance(OVRInput.GetLocalControllerPosition(LController), OVRInput.GetLocalControllerPosition(RController));
+			initialDistance = Vector3.Distance(LControllerPosition.localPosition, RControllerPosition.localPosition);
 
 
         }
@@ -53,7 +53,7 @@ public class ResizeScript : MonoBehaviour {
 
         if( grabState )
         {
-            float currentDistance = Vector3.Distance(OVRInput.GetLocalControllerPosition(LController), OVRInput.GetLocalControllerPosition(RController));
+			float currentDistance = Vector3.Distance(LControllerPosition.localPosition, RControllerPosition.localPosition);
             float ratio = cube.transform.localScale.x * currentDistance / initialDistance;
             initialDistance = currentDistance;
             cube.transform.localScale = new Vector3(ratio, ratio, ratio);
