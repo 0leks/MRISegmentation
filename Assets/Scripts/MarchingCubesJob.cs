@@ -82,7 +82,7 @@ public class MarchingCubesJob : ThreadedJob {
                 }
             }
         }
-        StreamWriter file = new StreamWriter( m_segmentationHandler.dataPath + "/MarchingCubesTest.txt" );
+		StreamWriter file = new StreamWriter( Application.dataPath + "/Output/" + "/MarchingCubesTest.txt" );
         //float zscale = 0.5f / segment.GetLength( 2 );
         //float xscale = zscale;// 0.5f / segment.GetLength( 0 );
         //float yscale = zscale;//0.5f / segment.GetLength( 1 );

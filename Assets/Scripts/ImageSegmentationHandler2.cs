@@ -7,69 +7,56 @@ using System.Collections.Generic;
 
 public class ImageSegmentationHandler2 : MonoBehaviour {
 
-    [SerializeField] private TwoDDisplay m_twoDDisplay;
-    [SerializeField] private MeshReduction m_meshReduction;
-    [SerializeField] private DataContainer m_data;
+    [SerializeField] private TwoDDisplay m_twoDDisplay;             // reference to 2D UI
+    [SerializeField] private DataContainer m_data;					// Data for segmentation
     
-    public GameObject cubePrefab;
-    public GameObject wireFrameCubePrefab;
+	// RegionGrowingJob
+	public float m_threshold;										// RegionGrowingJob sensitivity threshold
 
-    public LoadLegend m_legendScript;
-    public Slider m_mainSlider;
-    public float m_threshold;
-    public bool m_3DFlow;
+	// MaxFlowJob
+    public bool m_3DFlow;											// MaxFlowJob 2D or 3D approach					
+    public int m_xfreq, m_yfreq, m_zfreq;							// X, Y, and Z frequency for MaxFlowJob
 
-    public int m_xfreq, m_yfreq, m_zfreq;
-    public float zStretch;
+	// MarchingCubes
+	public GameObject cubePrefab;									// prefab used for marching cubes
+	public GameObject wireFrameCubePrefab;							// prefab used for marching cubes
+    public float zStretch;											// zStretch for MarchingCubes
 
-    public string folderName;
-    public string filePrefix;
-    public string segmentName;
+	// MRI data files info
+    public string folderName;										// name from which to load files
+    public string filePrefix;										// prefix of numbered MRI files
 
-    public MeshRenderer m_Renderer;
-    public GameObject renderCube;
-    public GameObject seedObject;
-    public GameObject seedBackground;
+	// GameObjects for cube and seeds
+    [SerializeField] private GameObject renderCube;
+	[SerializeField] private GameObject foregroundSeed;
+	[SerializeField] private GameObject backgroundSeed;
 
-    public GrabScript grabScript1;
-    public GrabScript grabScript2;
+	// Grab scripts
+	[SerializeField] private GrabScript LGrabScript;
+	[SerializeField] private GrabScript RGrabScript;
 
-    public bool m_viewCopiedTextures;
-    public bool loadSegmentOnStart;
+	// LoadLegend
+    public bool loadSegmentOnStart;									// setting to load segment on start for LoadLegend
+	public LoadLegend m_legendScript;								// TODO look at loadlegend first
+        
+	private List<GameObject> foregroundSeeds;						// keeps track of seed GameObjects
+	private List<GameObject> backgroundSeeds;						// keeps track of seed GameObjects
 
-    private int guiWidth;
-    private int guiHeight;
-    
-    private int edgesCounter;
-    
-    private bool[,,] segmentedTextures;
-
-    private List<GameObject> objectSeeds;
-    private List<GameObject> backgroundSeeds;
-
-    public string dataPath;
-    StreamWriter file;
-
-    private List<ThreadedJob> m_runningThreads;
+    private List<ThreadedJob> m_runningThreads;						// list of running threads
 
     // Use this for initialization
     void Start() {
         Debug.Log("Hello! I will start by loading in all of the mri scans and displaying them as 2D sprites");
         Debug.Log("THIS IS THE NUMBER 2 VERSION");
-        objectSeeds = new List<GameObject>();
+        foregroundSeeds = new List<GameObject>();
         backgroundSeeds = new List<GameObject>();
         m_runningThreads = new List<ThreadedJob>();
-        dataPath = Application.dataPath;
         loadMedicalData( folderName, filePrefix, 0, m_data.getNumLayers() );
     }
 
-    public bool[,,] GetSegments() {
-        return segmentedTextures;
-    }
 
     public void loadMedicalData(string folderName, string filePrefix, int startLayer, int numLayers) {
         m_data.loadMedicalData( folderName, filePrefix, startLayer, numLayers );
-        segmentedTextures = new bool[m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers()];
     }
 
     /**
@@ -83,7 +70,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             }
         }
         byte[] bytes = texture.EncodeToPNG();
-        File.WriteAllBytes(Application.dataPath + "/" + fileName + ".png", bytes);
+		File.WriteAllBytes(Application.dataPath + "/Output/" + fileName + ".png", bytes);
     }
 
     /** This function is called from a click on the 3D cube. */
@@ -95,11 +82,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             AddSeed(xCoord, yCoord, zCoord, objectSeed);
             GameObject seed;
             if (objectSeed) {
-                seed = Instantiate(seedObject);
-                objectSeeds.Add(seed);
+                seed = Instantiate(foregroundSeed);
+                foregroundSeeds.Add(seed);
             }
             else {
-                seed = Instantiate(seedBackground);
+                seed = Instantiate(backgroundSeed);
                 backgroundSeeds.Add(seed);
             }
             seed.transform.position = originalSpot;
@@ -123,11 +110,11 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
             float visualY = ( 1.0f * z / m_data.getNumLayers() ) - 0.5f;
             GameObject seed;
             if( objectSeed ) {
-                seed = Instantiate( seedObject );
-                objectSeeds.Add( seed );
+                seed = Instantiate( foregroundSeed );
+                foregroundSeeds.Add( seed );
             }
             else {
-                seed = Instantiate( seedBackground );
+                seed = Instantiate( backgroundSeed );
                 backgroundSeeds.Add( seed );
             }
             seed.transform.parent = renderCube.transform;
@@ -143,10 +130,10 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     public void ClearSeeds() {
         Debug.LogError( "Reset object and background seed list" );
         m_data.ClearSeeds();
-        foreach( GameObject obj in objectSeeds ) {
+        foreach( GameObject obj in foregroundSeeds ) {
             Destroy( obj );
         }
-        objectSeeds.Clear();
+        foregroundSeeds.Clear();
         foreach( GameObject obj in backgroundSeeds ) {
             Destroy( obj );
         }
@@ -268,15 +255,15 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         //newCube.GetComponent<WireFrameScript>().meshCube = wireframe;
         newCube.transform.Translate(center);
 
-        grabScript1.AddGrabbable(wireframe);
-        grabScript2.AddGrabbable(wireframe);
+        LGrabScript.AddGrabbable(wireframe);
+        RGrabScript.AddGrabbable(wireframe);
         StartMarchingCubesThread2();
     }
 
     public void StartMaxFlowSegmentationTimedThread() {
         Debug.LogError( "beginning timed max flow segmenting, currently doesnt do anything" );
         string filename = m_data.getNumLayers() + " " + m_data.getWidth() + " debugLog" + Time.time + ".txt";
-        file = new StreamWriter( filename );
+		StreamWriter file = new StreamWriter( Application.dataPath + "/Output/" + filename );
         Debug.LogError( " filename = " + filename );
         //RunMaxFlowSegmentationTimed();
         file.Close();
@@ -361,15 +348,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
         if (Input.GetKeyDown("r")) {
             m_data.saveSegmentToFileAsText( m_data.GetSegment(), "testSegment.txt" );
-            segmentedTextures = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
             ClearSeeds();
             SelectAll();
-        }
-        if( Input.GetKeyDown( "q" ) ) {
-            segmentedTextures = m_data.loadSegmentFromTextFile( "testSegment.txt" );
-            m_data.AddSegment( segmentedTextures );
-            m_legendScript.LoadLegendFromSegmentationHandler();
-            m_twoDDisplay.disableTwoDDisplay();
         }
         if( Input.GetKeyDown( "m" ) ) {
             StartMarchingCubesThread2();

@@ -62,6 +62,7 @@ public class TwoDDisplay : MonoBehaviour {
         }
     }
 
+
     public void disableTwoDDisplay() {
         if( drawGUI ) {
             toggleTwoDDisplay();
