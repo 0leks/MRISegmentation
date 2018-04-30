@@ -1,7 +1,0 @@
-RTrigger 12thaxis
-LTrigger 11
-RTrig2 10
-LTrig2 9
-ABut "joystick button 0"
-BBut "joystick button 1"
-Left Stick Button "joystick button 8"
