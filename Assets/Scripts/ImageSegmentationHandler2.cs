@@ -11,7 +11,6 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     [SerializeField] private MeshReduction m_meshReduction;
     [SerializeField] private DataContainer m_data;
     
-    public GameObject tempCube;
     public GameObject cubePrefab;
     public GameObject wireFrameCubePrefab;
 
