@@ -175,6 +175,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         maxFlowJob.StartThread();
         m_runningThreads.Add( maxFlowJob );
     }
+
+    // gets called in OnFinished of RegionGrowingJob and MaxFlowJob to have LoadLegend run its LoadSegments method
     public void FinishedSegmentationCallback() {
         m_twoDDisplay.disableTwoDDisplay();
         m_legendScript.LoadLegendFromSegmentationHandler();

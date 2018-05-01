@@ -4,12 +4,12 @@ using System.IO;
 using UnityEngine;
 
 public class MarchingCubesJob : ThreadedJob {
-    private ImageSegmentationHandler2 m_segmentationHandler;
-    private DataContainer m_data;
-    private bool[,,] m_segment;
+    private ImageSegmentationHandler2 m_segmentationHandler;       // used to communicate with the unnecessary portions of marchingCubes still in imageseghandler
+    private DataContainer m_data;                                  // access to data and its properties
+    private bool[,,] m_segment;                                    // current segment to triangulate
 
-    List<Vector3> newVertices = new List<Vector3>();
-    List<int> newTriangles = new List<int>();
+    List<Vector3> newVertices = new List<Vector3>();               // store the vertices of the new model
+    List<int> newTriangles = new List<int>();                      // store the triangles of the new model
 
     public MarchingCubesJob( ImageSegmentationHandler2 segmentationHandler, DataContainer data, bool[,,] segment ) {
         m_segmentationHandler = segmentationHandler;

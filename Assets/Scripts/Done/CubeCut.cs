@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO Shea rewrite for new code, leave for last
+
 public class CubeCut : MonoBehaviour
 {
 

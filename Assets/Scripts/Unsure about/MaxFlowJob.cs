@@ -3,15 +3,19 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Implementation of the ford-fulkerson max flow algorithm
+// https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm
+// TODO remove all unused methods and variables
+
 public class MaxFlowJob : ThreadedJob {
 
-    private ImageSegmentationHandler2 m_segmentationHandler;
-    private DataContainer m_data;
-    private int m_xyfreq;
-    private int m_zfreq;
-    private bool m_3DFlow;
+    private ImageSegmentationHandler2 m_segmentationHandler;        // calls FinishedSegmentationCallback method when complete (which calls LoadSegment in LoadLegend)
+    private DataContainer m_data;                                   // access to data and its properties
+    private int m_xyfreq;                                           // how many pixels per vertex to use for the graph
+    private int m_zfreq;                                            // how many pixels per vertex to use for the graph
+    private bool m_3DFlow;                                          // 3D vs 2D version of segmentation aglorithm (mainly effects numNeighbors)
 
-    bool[,,] segment;
+    bool[,,] segment;                                               // resulting filter to indicate foreground vs background 
 
     private float SIGMASQUARED = 0.0001f;
     private float SOURCESINKFLOW = 2.0f;
@@ -187,6 +191,11 @@ public class MaxFlowJob : ThreadedJob {
         //m_data.saveSegmentToFileAsImages( visited, "Resources/segment/segment" );
     }
 
+
+
+
+    // the capacity(flow) of the edges gets initialized and sets up the graph so that each vertex has a list of neighbors
+    // with the edge weights(flows) inversely proportional to the difference between the pixel intensities using e ^ (delta^2 / sigma^2 )
     public Vertex[,,] MaxFlowSetupBetterSampling( Vertex sink, Vertex source, int xfreq, int yfreq, int zfreq ) {
         int numNeighbors;
         int numEdges = 0;

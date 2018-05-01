@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Ensures segmentation methods run parallel
+
 public class ThreadedJob {
     private bool m_IsDone = false;
     private bool m_calledOnFinished = false;

@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Runs the flood fill / region grow
+// TODO add consistancy in naming of this segmentation process
+
 public class RegionGrowingJob : ThreadedJob {
 
-    private ImageSegmentationHandler2 m_segmentationHandler;
-    private DataContainer m_data;
-    private float m_threshold;
+    private ImageSegmentationHandler2 m_segmentationHandler;        // calls FinishedSegmentationCallback method when complete (which calls LoadSegment in LoadLegend)
+    private DataContainer m_data;                                   // access to data and its properties
+    private float m_threshold;                                      // max difference between pixel intensities allowed for neighbor to be included in foreground
 
-    private bool[,,] visited;
+    private bool[,,] visited;                                       // resulting filter to indicate foreground vs background 
 
     public RegionGrowingJob(ImageSegmentationHandler2 segmentationHandler, DataContainer data, float threshold) {
         m_segmentationHandler = segmentationHandler;
@@ -20,22 +23,6 @@ public class RegionGrowingJob : ThreadedJob {
     protected override void ThreadFunction() {
         Debug.LogError( "beginning flood fill segmenting" );
         visited = DoFloodFillSegmentation();
-        //int count = 0;
-        //for( int a = 0; a < visited.GetLength( 2 ); a++ ) {
-        //    for( int b = 0; b < visited.GetLength( 0 ); b++ ) {
-        //        string row = "";
-        //        for( int c = 0; c < visited.GetLength( 1 ); c++ ) {
-        //            if( visited[a, b, c] ) {
-        //                row += "#";
-        //            }
-        //            else {
-        //                row += "-";
-        //            }
-        //        }
-        //        Debug.Log( row  + count ++);
-        //    }
-        //    Debug.Log( "~~~" + count++ );
-        //}
         Debug.LogError( "finished flood fill segmenting" );
     }
 
@@ -47,6 +34,8 @@ public class RegionGrowingJob : ThreadedJob {
     }
 
     public bool[,,] DoFloodFillSegmentation() {
+
+        // TODO no need to create and return visted, just edit private class variable
         bool[,,] visited = new bool[ m_data.getWidth(), m_data.getHeight(), m_data.getNumLayers() ];
         Stack<DataContainer.Point> searchArea = new Stack<DataContainer.Point>();
         Stack<float> searchAreaFrom = new Stack<float>();
