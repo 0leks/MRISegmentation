@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class HandDepthChooserScript : MonoBehaviour {
 
+    public GameObject renderCube;			// MRI data render cube
+    public Transform _camera;
 
-
-    public GameObject renderCube;
-    public GameObject _camera;
     private bool inside = false;
     private bool doCut = true;
 
@@ -19,7 +18,7 @@ public class HandDepthChooserScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float distance = Vector3.Magnitude(GetComponent<Transform>().position - _camera.GetComponent<Transform>().position);
+        float distance = Vector3.Magnitude(GetComponent<Transform>().position - _camera.position);
         distance -= overlap;
         // I think shouldnt suddenly stop when you go outside of the cube.
         //if ( !inside || !doCut) {

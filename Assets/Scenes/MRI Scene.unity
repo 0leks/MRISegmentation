@@ -786,7 +786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8375b8619dfe8ce409615bee1472b7a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addObjectButtonName: BButton
+  addForegroundButtonName: BButton
   addBackgroundButtonName: AButton
   tipOfWand: {fileID: 1231879090}
   renderCube: {fileID: 20403351}
@@ -1121,7 +1121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299703003b7f46148b072f99010e2b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selector: {fileID: 0}
   menuButtonName: LStickButton
 --- !u!4 &485239076 stripped
 Transform:
@@ -2993,7 +2992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderCube: {fileID: 20403351}
-  _camera: {fileID: 361992956}
+  _camera: {fileID: 361992961}
   overlap: 0.03
 --- !u!1 &1236064005
 GameObject:
@@ -3425,11 +3424,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c0d9182f3d3004b8df0ea001ce1dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_mainSlider: {fileID: 10681339}
-  m_sliderCanvas: {fileID: 1504183716}
   data: {fileID: 910856885}
   m_segmentationHandler: {fileID: 1154491394}
   m_handDepthChooserScript: {fileID: 1231879097}
+  m_mainSlider: {fileID: 10681339}
+  m_sliderCanvas: {fileID: 1504183716}
 --- !u!4 &1675360685 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4769796006260598, guid: 369e5bec546080e408e5ef977a4cb48f,
