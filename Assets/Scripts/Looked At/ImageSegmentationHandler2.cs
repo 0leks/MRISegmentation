@@ -7,8 +7,11 @@ using System.Collections.Generic;
 
 public class ImageSegmentationHandler2 : MonoBehaviour {
 
+	// UI
     [SerializeField] private TwoDDisplay m_twoDDisplay;             // reference to 2D UI
-    [SerializeField] private DataContainer m_data;					// Data for segmentation
+    
+	// DataContainer
+	[SerializeField] private DataContainer m_data;					// Data for segmentation
     
 	// RegionGrowingJob
 	public float m_threshold;										// RegionGrowingJob sensitivity threshold
@@ -38,10 +41,12 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
 	// LoadLegend
     public bool loadSegmentOnStart;									// setting to load segment on start for LoadLegend
 	public LoadLegend m_legendScript;								// TODO look at loadlegend first
-        
+    
+	// seeds
 	private List<GameObject> foregroundSeeds;						// keeps track of seed GameObjects
 	private List<GameObject> backgroundSeeds;						// keeps track of seed GameObjects
 
+	// threads
     private List<ThreadedJob> m_runningThreads;						// list of running threads
 
     // Use this for initialization

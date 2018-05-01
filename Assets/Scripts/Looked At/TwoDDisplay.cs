@@ -5,22 +5,19 @@ using UnityEngine.UI;
 
 public class TwoDDisplay : MonoBehaviour {
 
+	[SerializeField] private DataContainer data;									// DataContainer for the loaded MRI data
+	[SerializeField] private ImageSegmentationHandler2 m_segmentationHandler;		// ImageSegmentationHandler reference (for segmenting)
+	[SerializeField] private HandDepthChooserScript m_handDepthChooserScript;		// HandDepthChooser reference (for toggling)
 
-    [SerializeField] private Slider m_mainSlider;
-    [SerializeField] private GameObject m_sliderCanvas;
+	// slider
+    [SerializeField] private Slider m_mainSlider;									// layer selection slider
+    [SerializeField] private GameObject m_sliderCanvas;								// canvas slider is in
 
-    [SerializeField] private DataContainer data;
-
-    [SerializeField] private ImageSegmentationHandler2 m_segmentationHandler;
-
-    [SerializeField] private HandDepthChooserScript m_handDepthChooserScript;
-
-    private Texture2D displayedTexture;
-
-    private int guiWidth;
+	// GUI
+    private int guiWidth;															
     private int guiHeight;
-
     private bool drawGUI;
+	private Texture2D displayedTexture;												// the MRI layer to display
 
     // Use this for initialization
     void Start () {

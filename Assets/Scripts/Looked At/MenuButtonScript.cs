@@ -5,14 +5,12 @@ using UnityEngine.UI;
 
 public class MenuButtonScript : MonoBehaviour {
 
-    public delegate void TestDelegate();
-    public TestDelegate method;
+	private float countdown;											// length button shows active when pressed (green highlight)
+	private bool countingDown;											// whether or not button was just hit (prevent double-presses)
+    private bool canceled;												// button press canceled or not
+    private const float MAX_COUNTDOWN = 2.0f;							// delay before non-canceled button press takes the next input
 
-    private float countdown;
-    private bool countingDown;
-    private bool canceled;
-    private const float MAX_COUNTDOWN = 2.0f;
-
+	// button state colors
     private Color restingColor = new Color( 0.7f, 0.7f, 0.7f, 0.7f );
     private Color activeColor = new Color( 1, 1, 1, 1 );
     private Color activatedColor = new Color( 0, 1, 0, 1 );
