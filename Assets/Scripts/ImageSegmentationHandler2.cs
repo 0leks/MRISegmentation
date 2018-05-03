@@ -79,14 +79,14 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
     }
 
     /** This function is called from a click on the 3D cube. */
-    public void AddSeedThreeD(float x, float y, float z, bool objectSeed, Vector3 originalSpot) {
+    public void AddSeedThreeD(float x, float y, float z, bool foregroundSeed, Vector3 originalSpot) {
         if (x > -0.5 && x < 0.5 && y > -0.5 && y < 0.5 && z > -0.5 && z < 0.5) {
             int xCoord = (int)((0.5f - x) * m_data.getWidth());
             int zCoord = (int)((y + 0.5f) * m_data.getNumLayers());
             int yCoord = (int)((0.5f - z) * m_data.getHeight());
-            AddSeed(xCoord, yCoord, zCoord, objectSeed);
+            AddSeed(xCoord, yCoord, zCoord, foregroundSeed);
             GameObject seed;
-            if (objectSeed) {
+            if (foregroundSeed) {
                 seed = Instantiate(foregroundSeed);
                 foregroundSeeds.Add(seed);
             }
@@ -103,18 +103,18 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
      * This function is called from the 2D Display x and y are between 0 and 1 
      *      Converts the 0 to 1 to -0.5 to 0.5 in order to add visual feedback just like 3D seeds.
      */
-    public void AddSeedTwoD(float x, float y, int z, bool objectSeed) {
+    public void AddSeedTwoD(float x, float y, int z, bool foregroundSeed) {
         int xCoord = (int) ( x * m_data.getWidth() );
         int yCoord = (int) ( y * m_data.getHeight() );
         Debug.Log( " clicked on = (" + x + "," + y + ")" );
         Debug.Log( " Coord of new seed = (" + xCoord + "," + yCoord + ")" );
         if( xCoord >= 0 && xCoord < m_data.getWidth() && yCoord >= 0 && yCoord < m_data.getHeight() ) {
-            AddSeed( xCoord, yCoord, z, objectSeed );
+            AddSeed( xCoord, yCoord, z, foregroundSeed );
             float visualX = 0.5f - x;
             float visualZ = 0.5f - y;
             float visualY = ( 1.0f * z / m_data.getNumLayers() ) - 0.5f;
             GameObject seed;
-            if( objectSeed ) {
+            if( foregroundSeed ) {
                 seed = Instantiate( foregroundSeed );
                 foregroundSeeds.Add( seed );
             }
@@ -128,8 +128,8 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         }
     }
 
-    private void AddSeed(int x, int y, int z, bool objectSeed) {
-        m_data.AddSeed( x, y, z, objectSeed );
+	private void AddSeed(int x, int y, int z, bool foregroundSeed) {
+        m_data.AddSeed( x, y, z, foregroundSeed );
     }
 
     public void ClearSeeds() {
@@ -280,6 +280,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_legendScript.LoadLegendFromSegmentationHandler();
     }
 		
+
     int threshold = 30;
     public void SelectBackground() {
         bool[,,] black = m_data.selectBlackPixels( (byte) threshold );
