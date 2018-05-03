@@ -279,7 +279,7 @@ public class ImageSegmentationHandler2 : MonoBehaviour {
         m_twoDDisplay.disableTwoDDisplay();
         m_legendScript.LoadLegendFromSegmentationHandler();
     }
-
+		
     int threshold = 30;
     public void SelectBackground() {
         bool[,,] black = m_data.selectBlackPixels( (byte) threshold );

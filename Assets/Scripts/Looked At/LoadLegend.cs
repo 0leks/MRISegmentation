@@ -9,31 +9,36 @@ using System.IO;
 /**
  * This script is responsible for loading the legend dataset. 
  * It writes an ouput vol tex data file that can then be set in material.
+ * 
+ * The legend is binary data that specifies which parts of the cadaver should be rendered.
+ * It is sent to the shader along with the cadaver data
  */
 public class LoadLegend : MonoBehaviour
 {
 
-    [SerializeField] private ImageSegmentationHandler2 m_SegmentationHandler;
-    [SerializeField] private DataContainer m_Data;
+    [SerializeField] private ImageSegmentationHandler2 m_SegmentationHandler;		// holds settings information
+    [SerializeField] private DataContainer m_Data;									// holds segment and Texture dimensions info
 
-    public int startIndex;
-    public int endIndex;
-    public int indexIncrement;
-    public string segmentName;
+	//// settings for loading segments from a file
+	// indices
+	[SerializeField] private int startIndex;										// starting layer
+	[SerializeField] private int endIndex;											// ending layer
+	[SerializeField] private int indexIncrement;									// load every X images
+	// segment file location
+	[SerializeField] private string segmentName;									// name of segment if loading the segment from a file
+	private static string LegendSystemPath = "";
+	private static string folderPath = "segment/";
+	private int systemID = 1;
+	private int subsystemID = 1;
+	private int bodyPartID = 1;
 
-    private List<Color> imageColors;
+    private List<Color> imageColors;												// intermediately stores colors before converting to Texture3D
 
-    private static string LegendSystemPath = "";
-
-    private static string folderPath = "segment/";
-    
-    private int systemID = 1;
-    private int subsystemID = 1;
-    private int bodyPartID = 1;
 
     // Use this for initialization
     void Start()
     {
+		
         //LegendSystemPath = Application.dataPath + "/Resources/Legend/segment";
         imageColors = new List<Color>();
 
@@ -41,6 +46,8 @@ public class LoadLegend : MonoBehaviour
         //TODO
         //string folderPath = LegendSystemPath + startIndex.ToString().PadLeft(4, '0');
         //folderPath = "Legend/segment0010.png";
+
+		// load segment from a file
         if (m_SegmentationHandler.loadSegmentOnStart)
         {
             Debug.Log("Loading legend from " + folderPath + segmentName);
@@ -96,6 +103,7 @@ public class LoadLegend : MonoBehaviour
         }
     }
 
+	// Update the 3D legend texture and send it to the shader
     void LoadSegments()
     {
         //LegendSystemPath = Application.dataPath + "/Resources/Legend/segment";
@@ -107,8 +115,11 @@ public class LoadLegend : MonoBehaviour
         //folderPath = "Legend/segment0010.png";
         //Debug.Log("Loading legend from " + folderPath);
 
+		// get the most recent segment
         bool[,,] segments = m_Data.GetSegment();
         
+		// Texture3D dimensions
+		// fancy math rounds width and height UP to the next highest power of 2 (257->512, 513->1024, etc.)
         int width = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getWidth() ) / System.Math.Log( 2 ) ) );
         int height = (int) System.Math.Pow( 2, System.Math.Ceiling( System.Math.Log( m_Data.getHeight() ) / System.Math.Log( 2 ) ) );
         int numImages = m_Data.getNumLayers();
@@ -145,7 +156,7 @@ public class LoadLegend : MonoBehaviour
 
         //Copy the data to the 3D texture.
         Color[] allColors = imageColors.ToArray();
-        legendVolume.SetPixels(allColors);
+		legendVolume.SetPixels(allColors);
         legendVolume.Apply();
 
         // assign it to the material of the parent object
@@ -160,6 +171,8 @@ public class LoadLegend : MonoBehaviour
 //#endif
     }
     
+
+	// Update the 3D legend texture and send it to the shader
     public void LoadLegendFromSegmentationHandler() {
         LoadSegments();
     }
@@ -174,6 +187,7 @@ public class LoadLegend : MonoBehaviour
         }
     }
 
+	// convert segment boolean array into legend 0 or 1 data
     private void addSegmentColorsToList( bool[,,] segments ) {
         for( int z = 0; z < segments.GetLength(2); z++ ) {
             for( int y = segments.GetLength( 1 ) - 1; y >= 0; y-- ) {

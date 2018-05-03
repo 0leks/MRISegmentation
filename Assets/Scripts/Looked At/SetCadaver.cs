@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+
+// loads cadaver data from a saved asset
+// TODO this should be combined into LoadCadaver
 public class SetCadaver : MonoBehaviour {
 
 

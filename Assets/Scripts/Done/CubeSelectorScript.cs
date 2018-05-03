@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// This class tracks when the hand is inside or outside of the cube
 public class CubeSelectorScript : MonoBehaviour {
 
     public GrabScript grabScript1;

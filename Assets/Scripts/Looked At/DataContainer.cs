@@ -25,9 +25,9 @@ public class DataContainer : MonoBehaviour {
     private int m_layerHeight;                              // height of each layer
 
     // Data
-    private Texture2D[] originalTextures;                   // keep track of original textures
-    private float[,,] originalFloatData;                    // TODO figure out what its used for
-    private byte[,,] originalByteData;                      // TODO figure out what its used for
+	private Texture2D[] originalTextures;                   // keep track of original textures (used for 2D MRI data display)
+    private float[,,] originalFloatData;                    // used by segmentation algorithms
+    private byte[,,] originalByteData;                      // used to select black pixels.. TODO float data can be used instead
     private List<bool[,,]> segments;                        // keeps track of pixels part of a segment [x,y,layer]
     
     // seed points
@@ -72,6 +72,8 @@ public class DataContainer : MonoBehaviour {
         }
     }
 
+
+	// load textures, byte, and float data from MRI files
     public void loadMedicalData( string folderName, string filePrefix, int startLayer, int numLayers) {
         Debug.Log("Loading medical data " + numLayers + " layers");
         m_layerWidth = -1;
@@ -96,7 +98,9 @@ public class DataContainer : MonoBehaviour {
             Texture2D layerTexture = new Texture2D(temp.width, temp.height);
             layerTexture.SetPixels(temp.GetPixels());
             originalTextures[layerIndex] = layerTexture;
-            if (m_layerWidth == -1) // m_scanWidth is -1 until it is initialized from the first texture read in
+
+			// m_scanWidth is -1 until it is initialized from the first texture read in
+            if (m_layerWidth == -1)
             {
                 m_layerWidth = layerTexture.width;
                 m_layerHeight = layerTexture.height;
@@ -119,6 +123,7 @@ public class DataContainer : MonoBehaviour {
     public List<bool[,,]> GetSegments() {
         return segments;
     }
+		
     public bool[,,] GetSegment() {
         return segments[ segments.Count - 1 ];
     }

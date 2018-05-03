@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+
+// This class adds keyboard+mouse controls for rotating, translating, and scaling the render cube
 public class Control : MonoBehaviour
 {
 

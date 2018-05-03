@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// this class handles manipulation of gameobjects by grabbing them
 public class GrabScript : MonoBehaviour {
 
-    public string moveButtonName; // the name of the button in the input manager
-    public string rotateButtonName; // the name of the button in the input manager
-    public GameObject grabbingSphere;
+    [SerializeField] private string moveButtonName; 				// the name of the button in the input manager
+	[SerializeField] private string rotateButtonName; 			// the name of the button in the input manager
+	[SerializeField] private GameObject grabbingSphere;
 
-    public GameObject displayCube;
+	[SerializeField] private GameObject displayCube;
 
-    public GameObject CubeCut;
-    public bool RightHand;
+	[SerializeField] private GameObject CubeCut;
+	[SerializeField] private bool RightHand;
     private bool FirstGrab = true;
     private bool FirstPlaneGrab = true;
-    public bool GrabbingPlane = false;
+	[SerializeField] private bool GrabbingPlane = false;
 
     private bool grabMoveState;
     private bool grabRotateState;

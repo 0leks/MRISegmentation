@@ -9,15 +9,25 @@ using System.IO;
 /**
  * This script is responsible for loading the cadaver dataset specified by the legend being loaded. 
  * It writes an ouput vol tex data file that can then be set in material.
+ * 
+ * The cadaver data is the Texture3D containing the MRI slide texture data
+ * It is passed to the shader along with the legend in order to render the cube.
  */
-public class LoadCadaver : MonoBehaviour {
-    private List<Color> imageColors;
-    //private static string folderPath = "scans/png-";
 
-    private Texture3D volumeData;
-    private LoadLegend legendLoader;
-    [SerializeField] private ImageSegmentationHandler2 segmentationHandler;
-    [SerializeField] private DataContainer m_Data;
+[RequireComponent(typeof(LoadLegend))]
+public class LoadCadaver : MonoBehaviour {
+	private List<Color> imageColors;										// intermediately stores colors before converting to Texture3D
+
+	private Texture3D volumeData;											// data for the shader (transfer function)
+    private LoadLegend legendLoader;										// LoadLegend reference for system/subsystem/body IDs
+    [SerializeField] private ImageSegmentationHandler2 segmentationHandler;	// ImageSegmentationHandler reference for image path info
+    [SerializeField] private DataContainer m_Data;							// DataContainer reference for # of layers to load
+
+	// Use this for initialization
+	void Start()
+	{
+		LoadScans();
+	}
 
     public void LoadScans() {
         //Get a ref to the legend loader script.
@@ -71,11 +81,7 @@ public class LoadCadaver : MonoBehaviour {
     public void LoadAgain() {
         GetComponent<Renderer>().material.SetTexture( "Cadaver_Data", volumeData );
     }
-    // Use this for initialization
-    void Start()
-    {
-        LoadScans();
-    }
+
 
     void addImageColorToList(Texture2D anImage)
     {
