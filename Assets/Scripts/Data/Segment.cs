@@ -167,4 +167,29 @@ public class Segment {
         }
         return segment;
     }
+
+    public static Texture3D GetPaddedTexture3DFromSegment (SegmentData segment)
+    {
+        List<Color> colors = new List<Color>();
+
+        // add a black pixel if part of segment, white if not
+        for (int x = 0; x < segment.width; x++)
+        {
+            for (int y = 0; y < segment.height; y++)
+            {
+                for (int layer = 0; layer < segment.depth; layer++)
+                {
+                    colors.Add(segment[x, y, layer] ? Color.black : Color.white);
+                }
+            }
+        }
+
+
+        int paddedWidth = Mathf.NextPowerOfTwo(segment.width);
+        int paddedHeight = Mathf.NextPowerOfTwo(segment.height);
+        int paddedDepth = Mathf.NextPowerOfTwo(segment.depth);
+        Texture3D result = new Texture3D(paddedWidth, paddedHeight, paddedDepth, TextureFormat.ARGB32, false);
+
+        return result;
+    }
 }
