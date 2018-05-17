@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,18 +11,76 @@ public class Scans {
 
     public struct ScansData
     {
-        public List<Texture2D> scanTextures;
+        public List<Texture2D> slices;          // each slice of the scan
         public Texture3D scanVolume;            // 3D volume for ray marching
-        public float[,,] scanIntensities;       // [x,y,layer] 0..1 grayscale
-                                                //       values of each pixel
+        public float[,,] intensities;           // [x,y,layer] 0..1 intensity where 0 is black, 1 is white
+
+
+        /// <summary>
+        ///     Load multiple scans as Texture2D's from files. Starting from
+        ///     file numbered 0000, up to the specified number of layers.
+        /// </summary>
+        /// <param name="path">Path to the file minus the numbered suffix.</param>
+        /// <param name="numLayers">Number of files to load.</param>
+        public void LoadSlicesFromFile (string path, int numSlices)
+        {
+            slices = LoadTexturesFromFiles(path, 0, numSlices, 1);
+        }
+
+        public void LoadSlicesFromFile (string path, int startIndex, int endIndex, int increment)
+        {
+            slices = new List<Texture2D>();
+
+            for (int i = startIndex; i < endIndex; i += increment)
+            {
+                slices.Add(Resources.Load(path + IndexToFileSuffix(i)) as Texture2D);
+            }
+        }
+
+        /// <summary>
+        ///     Generate intensities from scan slices. Requires
+        /// </summary>
+        /// <param name="scanTextures"></param>
+        public void SetupIntensities(List<Texture2D> scanTextures)
+        {
+            if (slices == null || slices.Count < 1)
+            {
+                throw new Exception("Scan slices must be loaded before intensities can be set up.");
+            }
+
+            int width = scanTextures[0].width;
+            int height = scanTextures[0].height;
+
+            float[,,] intentsities = new float[
+                width,
+                height,
+                scanTextures.Count];
+
+            // convert each layer into floats
+            for (int layer = 0; layer < scanTextures.Count; layer++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        // TODO: what are the negative indices doing?
+                        intentsities[x, y, layer] = scanTextures[layer].GetPixel(-(x + 1), -(y + 1)).r;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Convert an index to the appropriate file suffix
+        ///     for files with the format "{path}-####"
+        /// </summary>
+        private static string IndexToFileSuffix(int index)
+        {
+            return index.ToString().PadLeft(3, '0');
+        }
+
     }
 
-    /// <summary>
-    ///     Load multiple scans as Texture2D's from files. Starting from
-    ///     file numbered 0000, up to the specified number of layers.
-    /// </summary>
-    /// <param name="path">Path to the file minus the numbered suffix.</param>
-    /// <param name="numLayers">Number of files to load.</param>
     public static List<Texture2D> LoadTexturesFromFiles(string path, int numLayers)
     {
         return LoadTexturesFromFiles(path, 0, numLayers, 1);
@@ -105,13 +164,6 @@ public class Scans {
         return tex3D;
     }
 
-    /// <summary>
-    ///     Convert an index to the appropriate file suffix
-    ///     for files with the format "{path}-####"
-    /// </summary>
-    private static string IndexToFileSuffix (int index)
-    {
-        return index.ToString().PadLeft(3, '0');
-    }
+
 
 }

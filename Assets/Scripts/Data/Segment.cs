@@ -168,28 +168,63 @@ public class Segment {
         return segment;
     }
 
+    // Convert a segment into a Texture3D equivalent where black pixels are part of the
+    /// <summary>
+    ///     Convert a segment into a Texture3D equivalent where black pixels are part of the
+    ///     segment, and white pixels are not. The Texture3D's dimensions are rounded to the
+    ///     next nearest power of 2, any extra pixels are set to white.
+    /// </summary>
     public static Texture3D GetPaddedTexture3DFromSegment (SegmentData segment)
     {
         List<Color> colors = new List<Color>();
+        int paddedWidth = Mathf.NextPowerOfTwo(segment.width);
+        int paddedHeight = Mathf.NextPowerOfTwo(segment.height);
+        int paddedDepth = Mathf.NextPowerOfTwo(segment.depth);
 
         // add a black pixel if part of segment, white if not
-        for (int x = 0; x < segment.width; x++)
+        // TODO: I added padding since the empty textures below have padding. Will this break anything?
+        for (int x = 0; x < paddedWidth; x++)
         {
-            for (int y = 0; y < segment.height; y++)
+            for (int y = 0; y < paddedHeight; y++)
             {
-                for (int layer = 0; layer < segment.depth; layer++)
+                for (int layer = 0; layer < paddedDepth; layer++)
                 {
-                    colors.Add(segment[x, y, layer] ? Color.black : Color.white);
+                    if (x > segment.width || y > segment.height || layer > segment.depth)
+                    {
+                        colors.Add(Color.white);        // indices outside of the segment are not part of it
+                    }
+                    else
+                    {
+                        colors.Add(segment[x, y, layer] ? Color.black : Color.white);
+                    }
                 }
             }
         }
 
+        // pad the end with white pixels
+        Texture2D texturePadding = MakeSingleColorTexture(paddedWidth, paddedHeight, Color.white);
+        for (int layer = segment.depth; layer < paddedDepth; layer++)
+        {
+            colors.AddRange(texturePadding.GetPixels());
+        }
 
-        int paddedWidth = Mathf.NextPowerOfTwo(segment.width);
-        int paddedHeight = Mathf.NextPowerOfTwo(segment.height);
-        int paddedDepth = Mathf.NextPowerOfTwo(segment.depth);
         Texture3D result = new Texture3D(paddedWidth, paddedHeight, paddedDepth, TextureFormat.ARGB32, false);
+        result.SetPixels(colors.ToArray());
+        result.Apply();
 
+        return result;
+    }
+
+    private static Texture2D MakeSingleColorTexture (int width, int height, Color color)
+    {
+        Texture2D result = new Texture2D(width, height);
+        Color[] colors = result.GetPixels();
+        for (int i = 0; i < colors.Length; i++)
+        {
+            colors[i] = color;
+        }
+        result.SetPixels(colors);
+        result.Apply();
         return result;
     }
 }

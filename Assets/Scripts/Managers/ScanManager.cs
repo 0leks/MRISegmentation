@@ -26,9 +26,9 @@ public class ScanManager : MonoBehaviour {
 
     public void LoadScanData (List<Texture2D> scanTextures)
     {
-        m_ScanData.scanTextures = new List<Texture2D>(scanTextures);
-        m_ScanData.scanIntensities = Scans.GetIntensitiesFromTextures(m_ScanData.scanTextures);
-        m_ScanData.scanVolume = Scans.GetPaddedTexture3DFromTextures(m_ScanData.scanTextures);
+        m_ScanData.slices = new List<Texture2D>(scanTextures);
+        m_ScanData.intensities = Scans.GetIntensitiesFromTextures(m_ScanData.slices);
+        m_ScanData.scanVolume = Scans.GetPaddedTexture3DFromTextures(m_ScanData.slices);
     }
 
 }

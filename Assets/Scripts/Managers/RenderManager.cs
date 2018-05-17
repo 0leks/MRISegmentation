@@ -23,6 +23,6 @@ public class RenderManager : MonoBehaviour {
 
     void UpdateLegend (Texture3D legendVolume)
     {
-        
+        m_LegendRenderer.material.SetTexture("Legend_Data", legendVolume);
     }
 }
