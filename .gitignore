@@ -35,3 +35,7 @@ sysinfo.txt
 
 # OSX metadata
 .DS_Store
+
+# Random things the bad code generates
+*1_1_1-Asset.asset
+*1_1_1-Asset.asset.meta
