@@ -7,12 +7,17 @@ namespace SegmentationData
 {
     public class LegendVolume
     {
-        public Texture3D volume;
+        private Texture3D volume;
 
         public LegendVolume(LegendBooleans booleans)
         {
             volume = null;
             loadFromBooleans(booleans);
+        }
+
+        public Texture3D GetVolume ()
+        {
+            return volume;
         }
 
         /// <summary>
