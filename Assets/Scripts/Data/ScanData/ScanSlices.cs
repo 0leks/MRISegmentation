@@ -17,7 +17,11 @@ namespace ScanData
         public int width { get { return slices.width; } }
         public int height { get { return slices.height; } }
         public int Count { get { return slices.depth; } }
-        public enum SliceFormat { jpg, png };
+        public enum SliceFormat {
+            jpg3,   // 000.jpg
+            jpg4,   // 0000.jpg
+            png3
+        };
 
         public ScanSlices(Texture2DArray sliceArray)
         {
@@ -80,23 +84,39 @@ namespace ScanData
         public Texture2D LoadSingleSliceFromFile(string path, SliceFormat format, int index)
         {
             Texture2D result = new Texture2D(2, 2, TextureFormat.RGB24, false);
-            byte[] fileData = File.ReadAllBytes(path + FourDigitFileSuffix(index, format));
+            byte[] fileData = File.ReadAllBytes(path + DigitFileSuffix(index, format));
             result.LoadImage(fileData);
-            return result;
+
+            // Conversion to handle alternate file formats such as ARGB
+            Texture2D temp = new Texture2D(result.width, result.height);
+            temp.SetPixels(result.GetPixels());
+
+            return temp;
         }
 
         /// <summary>
         /// Convert an index to the appropriate file suffix. e.g. Format 'jpg' and
         /// index '0' returns "0000.jpg", index 1 returns "0001.jpg", and so on.</summary>
-        private string FourDigitFileSuffix(int index, SliceFormat format)
+        private string DigitFileSuffix(int index, SliceFormat format)
         {
-            string digits = index.ToString().PadLeft(4, '0');
-            if (format == SliceFormat.jpg)
+
+            if (format == SliceFormat.jpg3)
+            {
+                string digits = index.ToString().PadLeft(3, '0');
                 return digits + ".jpg";
-            if (format == SliceFormat.png)
+            }
+            else if (format == SliceFormat.jpg4)
+            {
+                string digits = index.ToString().PadLeft(4, '0');
+                return digits + ".jpg";
+            }
+            else if (format == SliceFormat.png3)
+            {
+                string digits = index.ToString().PadLeft(3, '0');
                 return digits + ".png";
+            }
             else
-                return digits;
+                return "";
         }
     }
 

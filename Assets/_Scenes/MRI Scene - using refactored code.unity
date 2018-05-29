@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af11cf30af77cd344ad0a57950a35096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ScanName: 0
   sliceCount: 64
   regionGrowThreshold: 0.004
   LegendRenderer: {fileID: 20403355}

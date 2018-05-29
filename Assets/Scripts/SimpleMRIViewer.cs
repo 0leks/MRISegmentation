@@ -7,6 +7,8 @@ using SegmentationData;
 
 public class SimpleMRIViewer : MonoBehaviour {
 
+    private enum ScanName{ heart, colon};
+    [SerializeField] private ScanName m_ScanName;
     [SerializeField] private int sliceCount;
     [SerializeField] private float regionGrowThreshold;
     [SerializeField] private Renderer LegendRenderer;
@@ -24,9 +26,23 @@ public class SimpleMRIViewer : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        string path;
+        ScanSlices.SliceFormat sliceFormat;
+        if (m_ScanName == ScanName.heart)
+        {
+            path = "/Resources/scans/heart/heart-";
+            sliceFormat = ScanSlices.SliceFormat.png3;
+        }
+        // m_ScanName == ScanName.colon
+        else
+        {
+            path = "/Resources/scans/colon/pgm-";
+            sliceFormat = ScanSlices.SliceFormat.jpg4;
+        }
+
         m_ScanSlices = new ScanSlices(
-            Application.dataPath + "/Resources/scans/colon/pgm-",
-            ScanSlices.SliceFormat.jpg,
+            Application.dataPath + path,
+            sliceFormat,
             sliceCount);
 
         m_ScanVolume = new ScanVolume(m_ScanSlices);
