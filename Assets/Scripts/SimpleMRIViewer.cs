@@ -41,14 +41,26 @@ public class SimpleMRIViewer : MonoBehaviour {
         LegendRenderer.material.SetTexture("Legend_Data", m_LegendVolume.GetVolume());
 
         m_ThreadManager = new ThreadManager();
-        m_SegmentationManager = new SegmentationManager(LegendRenderer, m_LegendVolume, m_ThreadManager, m_ScanIntensities);
+        // TODO: Currently not correctly updating m_LegendBooleans
+        m_SegmentationManager = new SegmentationManager(LegendRenderer, m_LegendVolume, m_ThreadManager, m_LegendBooleans, m_ScanIntensities);
 
-        m_SegmentationManager.AddSeedPoint(0f, 0f, 0f, true);
-        m_SegmentationManager.RegionGrow(regionGrowThreshold);
     }
 
     void Update()
     {
         m_ThreadManager.Update();
+
+        if (Input.GetKeyDown("r"))
+        {
+            m_SegmentationManager.AddSeedPoint(0f, 0f, 0f, true);
+            m_SegmentationManager.RegionGrow(regionGrowThreshold);
+        }
+
+        if (Input.GetKeyDown("i"))
+        {
+            m_LegendBooleans.Invert();
+            m_LegendVolume = new LegendVolume(m_LegendBooleans);
+            LegendRenderer.material.SetTexture("Legend_Data", m_LegendVolume.GetVolume());
+        }
     }
 }

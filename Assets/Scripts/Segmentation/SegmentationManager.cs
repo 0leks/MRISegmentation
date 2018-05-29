@@ -16,6 +16,7 @@ public class SegmentationManager
     private LegendVolume m_LegendVolume;
     private ThreadManager m_ThreadManager;
     private ScanIntensities m_ScanItensities;
+    private LegendBooleans m_LegendBooleans;
     private int m_Width;
     private int m_Height;
     private int m_Depth;
@@ -26,12 +27,13 @@ public class SegmentationManager
     private List<Vector3Int> m_BackgroundSeedPoints;
 
 
-    public SegmentationManager(Renderer legendRenderer, LegendVolume legendVolume, ThreadManager programThreadManager, ScanIntensities scanIntensities)
+    public SegmentationManager(Renderer legendRenderer, LegendVolume legendVolume, ThreadManager programThreadManager, LegendBooleans legendBooleans, ScanIntensities scanIntensities)
     {
         m_LegendRenderer = legendRenderer;
         m_LegendVolume = legendVolume;
         m_ThreadManager = programThreadManager;
         m_ScanItensities = scanIntensities;
+        m_LegendBooleans = legendBooleans;
         m_Width = scanIntensities.width;
         m_Height = scanIntensities.height;
         m_Depth = scanIntensities.depth;
@@ -56,7 +58,8 @@ public class SegmentationManager
     // gets called in OnFinished of RegionGrowingJob
     private void FinishedRegionGrow()
     {
-        UpdateShader(m_RegionGrowJob.GetLegendBooleans());
+        m_LegendBooleans = m_RegionGrowJob.GetLegendBooleans();
+        UpdateShader(m_LegendBooleans);
         m_RegionGrowJob = null;
     }
 
