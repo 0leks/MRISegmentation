@@ -87,11 +87,7 @@ namespace ScanData
             byte[] fileData = File.ReadAllBytes(path + DigitFileSuffix(index, format));
             result.LoadImage(fileData);
 
-            // Conversion to handle alternate file formats such as ARGB
-            Texture2D temp = new Texture2D(result.width, result.height);
-            temp.SetPixels(result.GetPixels());
-
-            return temp;
+            return result;
         }
 
         /// <summary>
