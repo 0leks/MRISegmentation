@@ -35,6 +35,9 @@ public class SegmentationManager
         m_Width = scanIntensities.width;
         m_Height = scanIntensities.height;
         m_Depth = scanIntensities.depth;
+
+        m_ForegroundSeedPoints = new List<Vector3Int>();
+        m_BackgroundSeedPoints = new List<Vector3Int>();
     }
 
     public void RegionGrow(float threshold)
@@ -69,14 +72,15 @@ public class SegmentationManager
         int xCoord = (int)((0.5f - x) * m_Width);
         int yCoord = (int)((0.5f - z) * m_Height);
         int zCoord = (int)((y + 0.5f) * m_Depth);
-        
+        Vector3Int seed = new Vector3Int(xCoord, yCoord, zCoord);
+
         if (foreground)
         {
-            m_ForegroundSeedPoints.Add(new Vector3Int(xCoord, yCoord, zCoord));
+            m_ForegroundSeedPoints.Add(seed);
         }
         else
         {
-            m_BackgroundSeedPoints.Add(new Vector3Int(xCoord, yCoord, zCoord));
+            m_BackgroundSeedPoints.Add(seed);
         }
     }
 

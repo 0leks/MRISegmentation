@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliceCount: 64
+  regionGrowThreshold: 0.004
   LegendRenderer: {fileID: 20403355}
 --- !u!23 &20403355
 MeshRenderer:

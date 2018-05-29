@@ -8,9 +8,9 @@ namespace ScanData
     public class ScanIntensities
     {
         private float[,,] intensities;       // [slice, x, y] 0..1 intensity where 0 is black, 1 is white
-        public int width { get { return intensities.GetLength(1); } }
-        public int height { get { return intensities.GetLength(2); } }
-        public int depth { get { return intensities.GetLength(3); } }
+        public int width { get { return intensities.GetLength(0); } }
+        public int height { get { return intensities.GetLength(1); } }
+        public int depth { get { return intensities.GetLength(2); } }
 
         public ScanIntensities (ScanSlices sliceData)
         {
