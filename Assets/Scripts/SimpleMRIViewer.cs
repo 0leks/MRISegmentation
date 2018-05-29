@@ -14,9 +14,7 @@ public class SimpleMRIViewer : MonoBehaviour {
     private ScanSlices m_ScanSlices;
     private ScanVolume m_ScanVolume;
     private ScanIntensities m_ScanIntensities;
-
-    private LegendBooleans m_LegendBooleans;
-    private LegendVolume m_LegendVolume;
+    private SeedPoints m_SeedPoints;
 
     private int lastSliceCount;
 
@@ -31,18 +29,20 @@ public class SimpleMRIViewer : MonoBehaviour {
             ScanSlices.SliceFormat.jpg,
             sliceCount);
 
-        m_ScanIntensities = new ScanIntensities(m_ScanSlices);
         m_ScanVolume = new ScanVolume(m_ScanSlices);
+        m_ScanIntensities = new ScanIntensities(m_ScanSlices);
+        m_SeedPoints = new SeedPoints(m_ScanIntensities.width, m_ScanIntensities.height, m_ScanIntensities.depth);
         LegendRenderer.material.SetTexture("Cadaver_Data", m_ScanVolume.GetVolume());
 
-        m_LegendBooleans = new LegendBooleans(m_ScanIntensities.width, m_ScanIntensities.height, m_ScanIntensities.depth);
-        m_LegendBooleans.Invert();
-        m_LegendVolume = new LegendVolume(m_LegendBooleans);
-        LegendRenderer.material.SetTexture("Legend_Data", m_LegendVolume.GetVolume());
+        LegendBooleans legendBooleans = new LegendBooleans(m_ScanIntensities.width, m_ScanIntensities.height, m_ScanIntensities.depth);
+        legendBooleans.Invert();
+        LegendVolume legendVolume = new LegendVolume(legendBooleans);
+        LegendRenderer.material.SetTexture("Legend_Data", legendVolume.GetVolume());
 
         m_ThreadManager = new ThreadManager();
         // TODO: Currently not correctly updating m_LegendBooleans
-        m_SegmentationManager = new SegmentationManager(LegendRenderer, m_LegendVolume, m_ThreadManager, m_LegendBooleans, m_ScanIntensities);
+        m_SegmentationManager = new SegmentationManager(m_ThreadManager, m_ScanIntensities, m_SeedPoints);
+        m_SegmentationManager.onSegmentationFinished += SegmentationFinished;
 
     }
 
@@ -52,15 +52,20 @@ public class SimpleMRIViewer : MonoBehaviour {
 
         if (Input.GetKeyDown("r"))
         {
-            m_SegmentationManager.AddSeedPoint(0f, 0f, 0f, true);
+            m_SeedPoints.AddSeedPoint(new Vector3(0f, 0f, 0f), true);
             m_SegmentationManager.RegionGrow(regionGrowThreshold);
         }
 
-        if (Input.GetKeyDown("i"))
-        {
-            m_LegendBooleans.Invert();
-            m_LegendVolume = new LegendVolume(m_LegendBooleans);
-            LegendRenderer.material.SetTexture("Legend_Data", m_LegendVolume.GetVolume());
-        }
+    }
+
+    private void SegmentationFinished(LegendBooleans legendBooleans)
+    {
+        UpdateLegendShader(legendBooleans);
+    }
+
+    private void UpdateLegendShader(LegendBooleans legendBooleans)
+    {
+        LegendVolume legendVolume = new LegendVolume(legendBooleans);
+        LegendRenderer.material.SetTexture("Legend_Data", legendVolume.GetVolume());
     }
 }

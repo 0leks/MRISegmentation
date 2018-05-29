@@ -36,7 +36,7 @@ namespace ScanData
         /// <param name="scanTextures"></param>
         public void GenerateIntensities(ScanSlices sliceData)
         {
-            if (sliceData.Count == null || sliceData.Count < 1)
+            if (sliceData == null || sliceData.Count < 1)
             {
                 throw new Exception("There are no slices to load from.");
             }

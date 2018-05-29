@@ -18,15 +18,15 @@ public class RegionGrow : ThreadedJob
     private float m_Threshold; // max difference between pixel intensities allowed for neighbor to be included in foreground
 
     private LegendBooleans m_LegendBooleans;
-    public Action onFinished; 
+    public Action<LegendBooleans> onFinished; 
 
-    public RegionGrow(ScanIntensities scanIntensities, List<Vector3Int> seedPoints, int width, int height, int depth, float threshold)
+    public RegionGrow(ScanIntensities scanIntensities, List<Vector3Int> seedPoints, float threshold)
     {
         m_ScanIntensities = scanIntensities;
         m_SeedPoints = seedPoints;
-        m_Width = width;
-        m_Height = height;
-        m_Depth = depth;
+        m_Width = scanIntensities.width;
+        m_Height = scanIntensities.height;
+        m_Depth = scanIntensities.depth;
         m_Threshold = threshold;
     }
 
@@ -47,7 +47,7 @@ public class RegionGrow : ThreadedJob
     protected override void OnFinished()
     {
         Debug.LogError("entered OnFinished for flood fill");
-        onFinished();
+        onFinished(m_LegendBooleans);
     }
 
     private void RegionGrowAlgorithm()
