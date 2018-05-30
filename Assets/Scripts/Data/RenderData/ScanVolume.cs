@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ScanData;
 
-namespace ScanData
+namespace RenderData
 {
     public class ScanVolume
     {

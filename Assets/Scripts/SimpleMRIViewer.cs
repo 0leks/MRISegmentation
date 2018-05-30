@@ -4,84 +4,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using ScanData;
 using SegmentationData;
+using RenderData;
 
 public class SimpleMRIViewer : MonoBehaviour {
 
-    private enum ScanName{ heart, colon};
-    [SerializeField] private ScanName m_ScanName;
-    [SerializeField] private int sliceCount;
-    [SerializeField] private float regionGrowThreshold;
-    [SerializeField] private Renderer LegendRenderer;
+	[SerializeField] private SegmentationThreadManager m_SegmentationThreadManager = new SegmentationThreadManager();
+	[SerializeField] private LegendShaderInterface m_LegendShaderInterface;
 
+	// Settings
+    private enum ScanName{ heart, colon};
+    [SerializeField] private ScanName m_ScanName;		// scan preset to load on start
+    [SerializeField] private int sliceCount;			// number of slices to load
+    [SerializeField] private float regionGrowThreshold;	// sensitivity threshold for region grow
+
+	// Data
     private ScanSlices m_ScanSlices;
     private ScanVolume m_ScanVolume;
     private ScanIntensities m_ScanIntensities;
-    private SeedPoints m_SeedPoints;
+	private SeedPoints m_SeedPoints;
 
-    private int lastSliceCount;
-
-    private ThreadManager m_ThreadManager;
-    private SegmentationManager m_SegmentationManager;
 
     // Use this for initialization
     void Start()
     {
-        string path;
-        ScanSlices.SliceFormat sliceFormat;
-        if (m_ScanName == ScanName.heart)
-        {
-            path = "/Resources/scans/heart/heart-";
-            sliceFormat = ScanSlices.SliceFormat.png3;
-        }
-        // m_ScanName == ScanName.colon
-        else
-        {
-            path = "/Resources/scans/colon/pgm-";
-            sliceFormat = ScanSlices.SliceFormat.jpg4;
-        }
-
-        m_ScanSlices = new ScanSlices(
-            Application.dataPath + path,
-            sliceFormat,
-            sliceCount);
-
-        m_ScanVolume = new ScanVolume(m_ScanSlices);
-        m_ScanIntensities = new ScanIntensities(m_ScanSlices);
-        m_SeedPoints = new SeedPoints(m_ScanIntensities.width, m_ScanIntensities.height, m_ScanIntensities.depth);
-        LegendRenderer.material.SetTexture("Cadaver_Data", m_ScanVolume.GetVolume());
-
-        LegendBooleans legendBooleans = new LegendBooleans(m_ScanIntensities.width, m_ScanIntensities.height, m_ScanIntensities.depth);
-        legendBooleans.Invert();
-        LegendVolume legendVolume = new LegendVolume(legendBooleans);
-        LegendRenderer.material.SetTexture("Legend_Data", legendVolume.GetVolume());
-
-        m_ThreadManager = new ThreadManager();
-        // TODO: Currently not correctly updating m_LegendBooleans
-        m_SegmentationManager = new SegmentationManager(m_ThreadManager, m_ScanIntensities, m_SeedPoints);
-        m_SegmentationManager.onSegmentationFinished += SegmentationFinished;
-
+		m_SegmentationThreadManager.onSegmentationFinished += UpdateShaderWithLegend;	// segmentation finished callback
+		LoadScanByName (m_ScanName);													// load scans
+		m_LegendShaderInterface.SendScanVolumeToShader (m_ScanVolume);					// send the scans to the shader for rendering
     }
 
     void Update()
     {
-        m_ThreadManager.Update();
+		m_SegmentationThreadManager.Update ();
 
         if (Input.GetKeyDown("r"))
         {
             m_SeedPoints.AddSeedPoint(new Vector3(0f, 0f, 0f), true);
-            m_SegmentationManager.RegionGrow(regionGrowThreshold);
+			m_SegmentationThreadManager.StartRegionGrow(m_ScanIntensities, m_SeedPoints, regionGrowThreshold);
         }
-
     }
+		
+	private void LoadScanByName (ScanName scanName) {
+        if (m_ScanName == ScanName.heart)
+			LoadScan ("/Resources/scans/heart/heart-", ScanSlices.SliceFormat.png3);
+        else
+			LoadScan ("/Resources/scans/colon/pgm-", ScanSlices.SliceFormat.jpg4);
+	}
 
-    private void SegmentationFinished(LegendBooleans legendBooleans)
-    {
-        UpdateLegendShader(legendBooleans);
-    }
+	private void LoadScan (string path, ScanSlices.SliceFormat sliceFormat)
+	{
+        m_ScanSlices = new ScanSlices(Application.dataPath + path, sliceFormat, sliceCount);
+        m_ScanVolume = new ScanVolume(m_ScanSlices);
+        m_ScanIntensities = new ScanIntensities(m_ScanSlices);
+		m_SeedPoints = new SeedPoints (m_ScanSlices.width, m_ScanSlices.height, m_ScanSlices.Count);
+	}
 
-    private void UpdateLegendShader(LegendBooleans legendBooleans)
+    private void UpdateShaderWithLegend(LegendBooleans legendBooleans)
     {
-        LegendVolume legendVolume = new LegendVolume(legendBooleans);
-        LegendRenderer.material.SetTexture("Legend_Data", legendVolume.GetVolume());
+		m_LegendShaderInterface.SendLegendToShader (new LegendVolume(legendBooleans));
     }
 }

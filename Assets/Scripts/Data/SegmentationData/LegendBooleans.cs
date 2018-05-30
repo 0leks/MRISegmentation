@@ -24,7 +24,7 @@ namespace SegmentationData
             depth = numSlices;
         }
 
-        public LegendBooleans(bool[,,] data)
+		public LegendBooleans(bool[,,] data)
         {
             this.booleans = (bool[,,])data.Clone();
             width = data.GetLength(0);

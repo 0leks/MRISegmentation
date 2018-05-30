@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44469842, g: 0.4942302, b: 0.57346106, a: 1}
+  m_IndirectSpecularColor: {r: 0.44469866, g: 0.4942298, b: 0.57346076, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 20403355}
   - component: {fileID: 20403352}
   - component: {fileID: 20403353}
+  - component: {fileID: 20403354}
   m_Layer: 8
   m_Name: Render Cube
   m_TagString: Untagged
@@ -159,9 +160,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af11cf30af77cd344ad0a57950a35096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_LegendShaderInterface: {fileID: 20403354}
   m_ScanName: 0
   sliceCount: 16
   regionGrowThreshold: 0.004
+--- !u!114 &20403354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 20403351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 334fdaba0ef7a41d8872358898927642, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   LegendRenderer: {fileID: 20403355}
 --- !u!23 &20403355
 MeshRenderer:

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ExtensionMethods;
+using SegmentationData;
 
-namespace SegmentationData
+namespace RenderData
 {
     public class LegendVolume
     {

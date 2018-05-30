@@ -29,7 +29,7 @@ namespace SegmentationData
         /// <param name="foreground">True if the seed is a part of the foreground, false part of the background</param>
         public void AddSeedPoint(Vector3 localPos, bool foreground)
         {
-            Vector3Int seed = CubeToPixelCoordinates(localPos);
+            Vector3Int seed = CubeToScanPixelCoordinates(localPos);
 
             if (foreground)
             {
@@ -41,7 +41,7 @@ namespace SegmentationData
             }
         }
 
-        private Vector3Int CubeToPixelCoordinates(Vector3 localPos)
+        private Vector3Int CubeToScanPixelCoordinates(Vector3 localPos)
         {
             int xCoord = (int)((0.5f - localPos.x) * DataWidth);
             int yCoord = (int)((0.5f - localPos.z) * DataHeight);

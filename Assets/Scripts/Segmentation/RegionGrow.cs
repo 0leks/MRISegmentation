@@ -10,6 +10,8 @@ using SegmentationData;
 public class RegionGrow : ThreadedJob
 {
 
+	private bool DEBUG = false;
+
     private ScanIntensities m_ScanIntensities;
     private List<Vector3Int> m_SeedPoints;
     private int m_Width;
@@ -38,15 +40,18 @@ public class RegionGrow : ThreadedJob
     // this runs in the new thread
     protected override void ThreadFunction()
     {
-        Debug.LogError("beginning flood fill segmenting");
+		if (DEBUG)
+			Debug.LogError("beginning flood fill segmenting");
         RegionGrowAlgorithm();
-        Debug.LogError("finished flood fill segmenting");
+		if (DEBUG)
+        	Debug.LogError("finished flood fill segmenting");
     }
 
     // This runs in the main thread
     protected override void OnFinished()
     {
-        Debug.LogError("entered OnFinished for flood fill");
+		if (DEBUG)
+			Debug.LogError("entered OnFinished for flood fill");
         onFinished(m_LegendBooleans);
     }
 
