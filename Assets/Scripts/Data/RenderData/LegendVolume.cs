@@ -9,11 +9,16 @@ namespace RenderData
     public class LegendVolume
     {
         private Texture3D volume;
+        private static Color OnColor = Color.black;
+        private static Color OffColor = Color.white;
+        public int width { get { return volume.width; } }
+        public int height { get { return volume.height; } }
+        public int depth { get { return volume.depth; } }
 
-        public LegendVolume(LegendBooleans booleans)
+        public LegendVolume(LegendBooleans booleans, bool loadInverted = false)
         {
             volume = null;
-            loadFromBooleans(booleans);
+            loadFromBooleans(booleans, loadInverted);
         }
 
         public Texture3D GetVolume ()
@@ -26,42 +31,26 @@ namespace RenderData
         ///     segment, and white pixels are not. The Texture3D's dimensions are rounded to the
         ///     next nearest power of 2, any extra pixels are set to white.
         /// </summary>
-        public void loadFromBooleans(LegendBooleans booleans)
+        public void loadFromBooleans(LegendBooleans booleans, bool loadInverted)
         {
             List<Color> pixels = new List<Color>();
-            int paddedWidth = Mathf.NextPowerOfTwo(booleans.width);
-            int paddedHeight = Mathf.NextPowerOfTwo(booleans.height);
-            int paddedDepth = Mathf.NextPowerOfTwo(booleans.depth);
 
             // add a black pixel if part of segment, white if not
-            // TODO: I added padding since the empty textures below have padding. Will this break anything?
-            for (int x = 0; x < paddedWidth; x++)
+            for (int x = 0; x < booleans.width; x++)
             {
-                for (int y = 0; y < paddedHeight; y++)
+                for (int y = 0; y < booleans.height; y++)
                 {
-                    for (int layer = 0; layer < paddedDepth; layer++)
+                    for (int layer = 0; layer < booleans.depth; layer++)
                     {
-                        if (x > booleans.width || y > booleans.height || layer > booleans.depth)
-                        {
-                            pixels.Add(Color.white);        // padded indices are not part of the segment
-                        }
+                        if (loadInverted)
+                            pixels.Add(booleans[x, y, layer] ? OffColor : OnColor);
                         else
-                        {
-                            pixels.Add(booleans[x, y, layer] ? Color.black : Color.white);
-                        }
+                            pixels.Add(booleans[x, y, layer] ? OnColor : OffColor);
                     }
                 }
             }
 
-            // pad the end with white pixels
-            Texture2D texturePadding = new Texture2D(paddedWidth, paddedHeight);
-            texturePadding.FillSingleColor(Color.white);
-            for (int layer = booleans.depth; layer < paddedDepth; layer++)
-            {
-                pixels.AddRange(texturePadding.GetPixels());
-            }
-
-            volume = new Texture3D(paddedWidth, paddedHeight, paddedDepth, TextureFormat.ARGB32, false);
+            volume = new Texture3D(booleans.width, booleans.height, booleans.depth, TextureFormat.ARGB32, false);
             volume.SetPixels(pixels.ToArray());
             volume.Apply();
         }

@@ -15,6 +15,7 @@ public class SimpleMRIViewer : MonoBehaviour {
     private enum ScanName{ heart, colon};
     [SerializeField] private ScanName m_ScanName;		// scan preset to load on start
     [SerializeField] private int sliceCount;			// number of slices to load
+    [SerializeField] private int loadIncrement;         // slice load increment: 1 for every slide, 2 for every other slide, etc.
     [SerializeField] private float regionGrowThreshold;	// sensitivity threshold for region grow
 
 	// Data
@@ -23,6 +24,7 @@ public class SimpleMRIViewer : MonoBehaviour {
     private ScanIntensities m_ScanIntensities;
 	private SeedPoints m_SeedPoints;
 
+    private LegendVolume showAll = null;
 
     // Use this for initialization
     void Start()
@@ -36,10 +38,21 @@ public class SimpleMRIViewer : MonoBehaviour {
     {
 		m_SegmentationThreadManager.Update ();
 
+        // region grow
         if (Input.GetKeyDown("r"))
         {
-            m_SeedPoints.AddSeedPoint(new Vector3(0f, 0f, 0f), true);
-			m_SegmentationThreadManager.StartRegionGrow(m_ScanIntensities, m_SeedPoints, regionGrowThreshold);
+            m_SeedPoints.AddSeedPoint(new Vector3Int(292, 302, 2), true);
+            m_SegmentationThreadManager.StartRegionGrow(m_ScanIntensities, m_SeedPoints, regionGrowThreshold);
+        }
+
+        // reset
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (showAll == null) {
+                LegendBooleans temp = new LegendBooleans(m_ScanSlices.width, m_ScanSlices.height, m_ScanSlices.Count);
+                showAll = new LegendVolume(temp, true);
+            }
+            m_LegendShaderInterface.SendLegendToShader(showAll);
         }
     }
 		
@@ -52,7 +65,7 @@ public class SimpleMRIViewer : MonoBehaviour {
 
 	private void LoadScan (string path, ScanSlices.SliceFormat sliceFormat)
 	{
-        m_ScanSlices = new ScanSlices(Application.dataPath + path, sliceFormat, sliceCount);
+        m_ScanSlices = new ScanSlices(Application.dataPath + path, sliceFormat, 0, sliceCount, loadIncrement);
         m_ScanVolume = new ScanVolume(m_ScanSlices);
         m_ScanIntensities = new ScanIntensities(m_ScanSlices);
 		m_SeedPoints = new SeedPoints (m_ScanSlices.width, m_ScanSlices.height, m_ScanSlices.Count);

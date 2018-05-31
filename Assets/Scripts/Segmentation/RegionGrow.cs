@@ -57,7 +57,6 @@ public class RegionGrow : ThreadedJob
 
     private void RegionGrowAlgorithm()
     {
-
         m_LegendBooleans = new LegendBooleans(m_Width, m_Height, m_Depth);
 
         Stack<Vector3Int> searchArea = new Stack<Vector3Int>();

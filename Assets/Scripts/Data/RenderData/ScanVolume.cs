@@ -9,12 +9,13 @@ namespace RenderData
     public class ScanVolume
     {
         private Texture3D volume;            // slices stored in a 3D volume ray marching
-        public int width, height, depth;
+        public int width { get { return volume.width; } }
+        public int height { get { return volume.height; } }
+        public int depth { get { return volume.depth; } }
 
         public ScanVolume(ScanSlices sliceData)
         {
             volume = null;
-            width = height = depth = 0;
             GenerateVolume(sliceData);
         }
 

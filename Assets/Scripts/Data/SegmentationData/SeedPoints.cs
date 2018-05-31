@@ -25,19 +25,22 @@ namespace SegmentationData
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="localPos">Location of the new seed point in cube coordinates</param>
+        /// <param name="cubeLocalPos">Location of the new seed point in cube coordinates</param>
         /// <param name="foreground">True if the seed is a part of the foreground, false part of the background</param>
-        public void AddSeedPoint(Vector3 localPos, bool foreground)
+        public void AddSeedPoint(Vector3 cubeLocalPos, bool foreground)
         {
-            Vector3Int seed = CubeToScanPixelCoordinates(localPos);
+            AddSeedPoint(CubeToScanPixelCoordinates(cubeLocalPos), foreground);
+        }
 
+        public void AddSeedPoint(Vector3Int seedCoords, bool foreground)
+        {
             if (foreground)
             {
-                m_ForegroundSeedPoints.Add(seed);
+                m_ForegroundSeedPoints.Add(seedCoords);
             }
             else
             {
-                m_BackgroundSeedPoints.Add(seed);
+                m_BackgroundSeedPoints.Add(seedCoords);
             }
         }
 

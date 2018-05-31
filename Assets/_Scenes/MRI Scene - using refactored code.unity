@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44469866, g: 0.4942298, b: 0.57346076, a: 1}
+  m_IndirectSpecularColor: {r: 0.44469842, g: 0.4942302, b: 0.57346106, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -162,8 +162,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LegendShaderInterface: {fileID: 20403354}
   m_ScanName: 0
-  sliceCount: 16
-  regionGrowThreshold: 0.004
+  sliceCount: 4
+  loadIncrement: 1
+  regionGrowThreshold: 0.019
 --- !u!114 &20403354
 MonoBehaviour:
   m_ObjectHideFlags: 0
